@@ -8,7 +8,7 @@ siteInfo <-
     "Rates5.rds"
   )))
 warm_period <- 30
-sim_period <- 200
+sim_period <- 365
 SA_factors <-  seq(0.5,1.5,0.1)
 sa_path <- file.path('.',
                      'Simulation and Alternatives',

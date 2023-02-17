@@ -36,7 +36,7 @@ if(full_case) {
   # Full Experiment Simulation Parameters (replications, warmup, etc) 
   numIters <- 20
   warm_period <- 30
-  sim_period <- 200
+  sim_period <- 365
 } else {
   # Test Experiment Simulation Parameters (replications, warmup, etc) 
   numIters <- 10
