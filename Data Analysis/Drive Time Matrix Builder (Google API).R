@@ -2,8 +2,8 @@ library(gmapsdistance)
 library(tictoc)
 library(ggmap)
 
-set.api.key("AIzaSyBTwMj--xFhVR4iSTl335-5iig6lpgRxZc")
-register_google("AIzaSyBTwMj--xFhVR4iSTl335-5iig6lpgRxZc")
+set.api.key(google_maps_api_key)
+register_google(google_maps_api_key)
 
 #siteInfo <- read_excel("Data/Function Requirements/Rates5.xlsx")
 df <- read_excel("Data/HCCIS/hosplist (1).xlsx",skip = 5) %>% setDT() %>% {function(i) i[,`...1` := NULL]}()
