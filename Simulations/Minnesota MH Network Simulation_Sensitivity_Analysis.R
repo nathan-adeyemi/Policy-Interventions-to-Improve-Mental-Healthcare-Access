@@ -445,7 +445,7 @@ MH.Network.sim <-
     list2env(readRDS(
       file = file.path(
         ".",
-        "Data",
+        "Simulations",
         "Function Requirements",
         "MH_Network_sim_input_list.rds"
       )
@@ -790,10 +790,14 @@ full_sim <-
     
     temp_path = path = file.path(
       '.',
-      'Simulation and Alternatives',
+      'Data',
       'Sensitivity Analysis Results',
       paste0(insert, '_temp_folder')
     )
+    
+    if(!dir.exists(temp_path)){
+      dir.create(temp_path)
+    }
 
     # Run actual simulation on clusters from above
     runs <-
@@ -801,17 +805,15 @@ full_sim <-
         replications = seq(num_iter),
         factors = multipliers
       ))
-    
-    if (length(list.files(temp_path)) != 0) {
-      last_run <-
-        max(as.numeric(gsub(
-          pattern = 'temp_|.rds',
-          replacement = '',
-          x = list.files(temp_path)
-        )))
-      runs <- runs[(last_run+1):nrow(runs)]
-    }
-      
+    # if (length(list.files(temp_path)) != 0) {
+    #   last_run <-
+    #     max(as.numeric(gsub(
+    #       pattern = 'temp_|.rds',
+    #       replacement = '',
+    #       x = list.files(temp_path)
+    #     )))
+    #   runs <- runs[(last_run+1):nrow(runs)]
+    # }
     results <- mclapply(
       X = seq(nrow(runs)),
       FUN = function(index) {
@@ -821,11 +823,18 @@ full_sim <-
           sort_by_prob = prob_sort,
           sensitivity_analysis_mult = runs[index, factors],
           n.parallel = 1,
-          resources = F,
+          resources = return_resources,
           SA_lambda_all = all_lambda_vary,
           SA_pr_acceptance = pr_accept_vary,
           SA_LoS = los_vary
-        )[, `:=`(replication = runs[index, replications], factor = runs[index, factors])]
+        )
+        
+        if(inherits(l,'list')){
+          l <- lapply(l,function(i) data.table(i)[, `:=`(replication = runs[index, replications], factor = runs[index, factors])])
+        } else {
+          l <- data.table(l)[, `:=`(replication = runs[index, replications], factor = runs[index, factors])]
+        }
+        
         saveRDS(
           l,
           file = file.path(temp_path,
