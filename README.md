@@ -18,4 +18,12 @@ This repo holds code for the paper [*Policy Intervention to Improve Mental Healt
 
 `Functions/` Directory holding custom function used throughout the project
 
-`Code/` Directory holding other code
+`Code/` Directory holding related code
+- `Intervention Results.R` Implements and analyzes interventions proposed in the original article
+- `Multiple Facility Check and Widened Check Radius.R` Deprecated version of the above `Intervention Results.R`
+- `Sensitivity Analysis.R` Performs sensitivity analysis on simulation inputs including
+    - Emergency Department -> Inpatient arrival rates 
+    - Inpatient Length of Stay
+    - Probability a hospital rejects a patients
+- `Warmup_and_Replications.R` Identifies how long the before the model reaches steady state
+
