@@ -1,6 +1,6 @@
 # Policy-Interventions-to-Improve-Mental-Healthcare-Access
 
-This repo holds code for the paper [*Policy Intervention to Improve Mental Health Access: A Discrete Event Simulation Study*](https://arxiv.org/abs/2304.13849). This project comprises of a discrete event simulation model detailing when and where patients presenting to the Emergency Department psychiatric receive inpatient care. Additionally, we include methods for determining simualtion input parameters given limited data availability for individual hospitals/healthcare providers, sensitivity analysis around these input paramters, and systemic modifications to reduce time spent in the healthcare system where patients do not receive psychiatric care.
+This repo holds code for the paper [*Policy Intervention to Improve Mental Health Access: A Discrete Event Simulation Study*](https://arxiv.org/abs/2304.13849). This project comprises of a discrete event simulation model detailing when and where patients presenting to the Emergency Department psychiatric receive inpatient care. Additionally, we include methods for determining simulation input parameters given limited data availability for individual hospitals/healthcare providers, sensitivity analysis around these input parameters, and systemic modifications to reduce time spent in the healthcare system where patients do not receive psychiatric care.
 
 # Directories and Files
 `Simulations/`Directory with all simulation models
@@ -19,7 +19,10 @@ This repo holds code for the paper [*Policy Intervention to Improve Mental Healt
 `Functions/` Directory holding custom function used throughout the project
 
 `Code/` Directory holding related code
-- `Intervention Results.R` Implements and analyzes interventions proposed in the original article
+- `Intervention Results.R` Implements and analyzes 3 interventions proposed in the original article
+    - Intervention 1: Request transfer to facilities with the highest likelihood to accept patients rather than the nearest inpatient unit
+    - Intervention 2: Request transfer to multiple facilities simultaneously. We evaluate the effect on average patient treatment delays while sending up to 8 transfer referrals concurrently. 
+    - Intervention 3: Combine interventions 1 & 2. 
 - `Multiple Facility Check and Widened Check Radius.R` Deprecated version of the above `Intervention Results.R`
 - `Sensitivity Analysis.R` Performs sensitivity analysis on simulation inputs including
     - Emergency Department -> Inpatient arrival rates 

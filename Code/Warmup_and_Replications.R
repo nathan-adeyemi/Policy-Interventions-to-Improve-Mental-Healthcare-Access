@@ -1,13 +1,13 @@
-results_path <- file.path("Data",'Simulation and Alternatives Results','Warmup and Replication Analysis Results')
+results_path <- file.path("Data",'Warmup and Replication Analysis Results')
 source(file.path('Simulations','Minnesota MH Network Simulation.R'))
 rep_results <- full_sim(num_iter = availableCores() - 1,
                         warmup = 0,
-                        sim_length = 1000,
+                        sim_length = 300,
                         save_files = F,
                         return_resources = T)
 
 saveRDS(rep_results,file.path(results_path,'raw_results.rds'))
-
+browser()
 patients <- rep_results[[1]]
 resources <- rep_results[[2]]
 patients <- patients[,`:=`(day_no = simtimer::sim_date(Enter.Timestamp * 3600),
