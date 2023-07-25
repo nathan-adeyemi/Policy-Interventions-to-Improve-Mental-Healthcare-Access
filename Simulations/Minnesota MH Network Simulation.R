@@ -792,13 +792,29 @@ full_sim <-
     # Run actual simulation on clusters from above
 
     if(!rep_parallel_combo){
-    results <- MH.Network.sim(
+      results <- mclapply(
+        X = seq(num_iter),
+        FUN = function(index) {
+          res <- MH.Network.sim(
             warm = warmup,
             sim_days = sim_length,
             sort_by_prob = prob_sort,
+            n.parallel = concurrent_requests,
             alg_input = new_sol,
             resources = return_resources
           )
+          if(return_resources){
+            patients <- rbindlist(lapply(res,function(dt) dt[,replication := index]),fill = T)
+            resources <- rbindlist(lapply(res,function(dt) dt[,replication := index]),fill = T)
+            res <- list('patients' = patients,
+                        'resources' = resources)
+          } else{
+            res <- lapply(res,function(dt) dt[, `:=`(replication = index)])
+          }
+          return(res)
+        },
+        mc.cores = availableCores() - 1
+      )
     } else {
       runs <-
         data.table(expand_grid(
@@ -818,7 +834,7 @@ full_sim <-
           )[, `:=`(replication = runs[index, replications], n.parallel = runs[index, n.concurrent])]
          
         },
-        mc.cores = availableCores()
+        mc.cores = availableCores() - 1
       )
     }
     
