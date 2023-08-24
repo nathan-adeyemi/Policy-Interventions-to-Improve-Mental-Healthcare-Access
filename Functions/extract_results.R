@@ -91,9 +91,7 @@ extract_results <- function(df,
     ret <- ret[, .(Mean = one.boot(data = `Simulation Confidence Interval`,FUN = mean,R = 500,na.rm = T)[['t0']],`Simulation Confidence Interval` = 
                      ci_as_text(signif(x = t.test(`Simulation Confidence Interval`,conf.level  = .95)$conf.int,
                                        digits = 4))),by = Age]
-  }else if (use_type) {
-    browser()
-    
+  }else if (use_type) {    
     ret <-
       rbind(df[, .(`Simulation Confidence Interval` = 
                      sapply(

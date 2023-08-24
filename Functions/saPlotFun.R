@@ -1,4 +1,4 @@
-saPlotFun <- function(inputData) {
+saPlotFun <- function(inputData, sa_metric) {
   ggplot(
     data = inputData,
     mapping = aes(
@@ -7,11 +7,12 @@ saPlotFun <- function(inputData) {
       group = `Patient Wait Metric`,
       linetype = `Patient Wait Metric`,
       color = `Patient Wait Metric`
-    )
-  ) + geom_point() + geom_smooth() +
+    )) + 
+    geom_point(alpha = 0.1) + 
+    geom_smooth() +
     scale_x_continuous(labels = scales::percent_format()) +
     scale_y_continuous(labels = scales::percent_format()) +
-    xlab('Percentage of Baseline ED Arrival Rate') +
-    ylab('% of Baseline Simulation\'s\nWait Time (in hrs.)') +
+    xlab(paste('Percentage of Baseline',sa_metric)) +
+    ylab('% of Baseline Simulation\'s\n Patient Wait Metric') +
     labs(color = 'Patient Wait Metric',linetype = 'Patient Wait Metric')
 }

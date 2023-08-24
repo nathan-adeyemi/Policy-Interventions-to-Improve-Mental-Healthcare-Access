@@ -19,14 +19,14 @@ This repo holds code for the paper [*Policy Intervention to Improve Mental Healt
 `Functions/` Directory holding custom function used throughout the project
 
 `Code/` Directory holding related code
-- `Intervention Results.R` Implements and analyzes 3 interventions proposed in the original article
+- `Baseline_and_Intervention_Analysis.R` Implements and analyzes 3 interventions proposed in the original article
     - Intervention 1: Request transfer to facilities with the highest likelihood to accept patients rather than the nearest inpatient unit
     - Intervention 2: Request transfer to multiple facilities simultaneously. We evaluate the effect on average patient treatment delays while sending up to 8 transfer referrals concurrently. 
     - Intervention 3: Combine interventions 1 & 2. 
-- `Multiple Facility Check and Widened Check Radius.R` Deprecated version of the above `Intervention Results.R`
-- `Sensitivity Analysis.R` Performs sensitivity analysis on simulation inputs including
+- `Sensitivity_Analysis.R` Performs sensitivity analysis on simulation inputs including
     - Emergency Department -> Inpatient arrival rates 
     - Inpatient Length of Stay
     - Probability a hospital rejects a patients
 - `Warmup_and_Replications.R` Identifies how long the before the model reaches steady state
+- `sbatch_scripts/` Bash scripts for calling HPC resources and deploying the above R code.
 

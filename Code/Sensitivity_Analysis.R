@@ -3,17 +3,16 @@ source('Simulations/Minnesota MH Network Simulation_Sensitivity_Analysis.R')
 args <- commandArgs(trailingOnly=TRUE)
 
 if(length(args) > 0){
-  args <- args[[1]]
+  args <- args[1]
 } else{
   args <- "ipLoS"
 }
 
-warm_period <- 30
+warm_period <- 50
 sim_period <- 365
 SA_factors <-  seq(0.5,1.5,0.1)
-sa_path <- file.path('.',
-                     'Data',
-                     'Sensitivity Analysis Results')
+sa_path <- file.path('.', 'Data','Sensitivity Analysis Results')
+
 
 if(!dir.exists(sa_path)){
   dir.create(sa_path)
@@ -24,7 +23,7 @@ sim_func <- function(vary_lambda_all = F,
                      vary_los = F,
                      vary_lambda_vuln = F) {
   results <- full_sim(
-    num_iter = 20,
+    num_iter = 30,
     parallel = TRUE,
     warmup = warm_period,
     sim_length = sim_period,
@@ -50,13 +49,13 @@ if(args == "edToIpLambda"){
                                      `Transfer\nCoordination Time` = mean(x = total_wait_time,na.rm = T),
                                      perc_factor = as.factor(paste0(as.character(as.integer(factor * 100)),'%'))),
                                  by = list(replication,factor)],
-                                # ][, .(`Transfer\nCoordination Time` = mean(total_wait_time),`Treatment Delay` = mean(TTP)), by = factor],
                          measure.vars = c('Transfer\nCoordination Time','Treatment Delay')
                          )
   
   varyLambdaPlot <-
     saPlotFun(varyLambdaTest[, value := (value / (.SD[factor == 1, value])), by = variable
-                             ][, `Patient Wait Metric` := variable])
+                             ][, `Patient Wait Metric` := variable],
+              sa_metric = 'ED Patient Arrival Rate')
   ggsave(
     filename = file.path(sa_path, 'arrival_rate_sensitivity_analysis.jpeg'),
     plot = varyLambdaPlot,
@@ -96,15 +95,17 @@ if(args == "ipAcceptance"){
   
   varyPrAcceptResources <- rbindlist(lapply(res,function(i) i[[2]]))
   
-  varyPrAcceptTest <- melt(varyPrAccept[, .(`Treatment Delay` = mean(x = TTP, na.rm = T), 
+  varyPrAcceptPlotData <- melt(varyPrAccept[, .(`Treatment Delay` = mean(x = TTP, na.rm = T), 
                                                             `Distance Travelled` = mean(x = Travel.Distance,na.rm = T),
                                                             perc_factor = as.factor(paste0(as.character(as.integer(factor * 100)),'%'))),
                                                         by = list(replication,factor)
                                                         ],
                          measure.vars = c('Distance Travelled','Treatment Delay')
-                         )[,value := (value/(.SD[factor == 1,value]) * 100),by = variable]
+                         )[,value := (value/(.SD[factor == 1,value])),by = variable]
   
-  varyPrAcceptPlot <- saPlotFun(varyPrAcceptTest[, `Patient Wait Metric` := variable])
+  varyPrAcceptPlot <-
+    saPlotFun(varyPrAcceptTest[, `Patient Wait Metric` := variable],
+              sa_metric = 'IP Unit Likelihood to Accept Transfer')
       
   ggsave(
     filename = file.path(sa_path, 'acceptance_rate_analysis.jpeg'),
@@ -128,7 +129,7 @@ if(args == "ipAcceptance"){
       mc.cores = length(SA_factors)
     )
   saveRDS(
-    list(varyPrAccept, varyPrAcceptResources, varyPr varyPrAcceptTest),
+    list(varyPrAccept, varyPrAcceptResources, varyPrAcceptTest),
     file.path(sa_path, 'Transfer Acceptance Rate Sensitivity Analysis Results.rds')
   )
   
@@ -150,29 +151,31 @@ if(args == "ipLoS"){
   
   res <- sim_func(vary_los = T)
   varyIpLoSPatients <-  rbindlist(lapply(res,function(i) i[[1]])
-                          )[,vulnerable_patient := (Age != 'Adult')
+                          )[,`:=`(vulnerable_patient = (Age != 'Adult'),placed = !is.na(total_wait_time))
                           ][,`:=`(TTP = sum(total_wait_time, Travel.time)),
                             by = list(Sim.ID, replication,factor)]
   varyIpLoSRescources <- rbindlist(lapply(res,function(i) i[[2]]))
                 
-  varyIpLoSTest <- melt(varyIpLoSPatients[type == 'Transfer'
+  varyIpLoSPlotData <- melt(varyIpLoSPatients[type == 'Transfer'
                                                ][, .(`Treatment Delay` = mean(x = TTP, na.rm = T), 
                                                         `Total Coordination Time` = mean(total_wait_time,na.rm = T),
                                                         `Distance Traveled` = mean(x = Travel.Distance,na.rm = T),
+                                                     `% Placed in IP Care` = mean(x = placed,na.rm = T),
                                                          perc_factor = as.factor(paste0(as.character(as.integer(factor * 100)),'%'))),
                                                      by = list(replication,factor,vulnerable_patient)],
-                           measure.vars = c('Distance Traveled','Treatment Delay','Total Coordination Time')
-  )[,value := (value/(.SD[factor == 1,value]) * 100),by = list(variable,vulnerable_patient)]
+                           measure.vars = c('Distance Traveled','Treatment Delay','Total Coordination Time','% Placed in IP Care')
+  )[,value := (value/(.SD[factor == 1,value])),by = list(variable,vulnerable_patient)]
   
-  varyIpLoSPlot <- saPlotFun(varyIpLoSTest[vulnerable_patient == T,
+  varyIpLoSPlot <- saPlotFun(inputData = varyIpLoSPlotData[vulnerable_patient == T,
                                            ][, `Patient Wait Metric` := variable
-                                             ][variable != 'Total Coordination Time'])
+                                             ][variable != 'Total Coordination Time'],
+                             sa_metric = 'IP Length of Stay')
     
   ggsave(
     filename = file.path(sa_path, 'LoS_analysis.jpeg'),
     plot = varyIpLoSPlot,
     width = 7,
-    height = 3,
+    height = 4,
     device = 'jpeg',
     dpi = 700
   )
@@ -189,8 +192,41 @@ if(args == "ipLoS"){
         ),
       mc.cores = length(SA_factors)
     )
+  
+  hccis <- data.table(read_excel("Data/HCCIS/hosplist (in use).xlsx",skip = 5))[,-1]
+  varyIpLoSPatients[hccis, origin_class := `MSA StatUrbans`,on = c(Site.Entered = "Hospital Name")]
+  varyIpLoSPatients[is.na(origin_class) & !(Site.Entered %in% c('Children\'s Minnesota', 'Mayo Clinic Hospital - Rochester','Mercy Hospital, Unity Campus')),origin_class := 'Urban']
+  varyIpLoSPatients[is.na(origin_class),origin_class := 'Rural']
+  varyIpLoSPatients[siteInfo,dest_class := `classification`, on = c(Transfer.Site = 'Facility_name')]
+  varyIpLoSPatients[,transfer_class_type := paste(origin_class,'->',dest_class,sep = '')]
+  num_transfers <- varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.(transfer_count = .N),by = list(factor,replication)]
+  
+  # Test whether there are significant differences in the rate of transfer between urban and rural facilities
+  varyIpLoSTransferRates <- 
+    varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.N,by = list(replication,factor,transfer_class_type)
+                 ][num_transfers, num := `transfer_count`, on = c('replication','factor')
+                   ][,rate := N/num * 100, by = list(replication,factor,transfer_class_type)
+                     ][,c(reg1 = as.list(coef(lm(rate ~ factor))),
+                          anova.1 = anova(lm(rate ~ factor))), by = transfer_class_type]
+  #[,as.list(boot.ci(one.boot(rate,mean,500,na.rm = T))),by = list(factor,transfer_class_type)]
+  
+  # Test whether there are significant differences in the rate of transfer between urban and rural facilities
+  varyIpLoSTransferRates2 <- 
+    varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.N,by = list(replication,factor,transfer_class_type)
+                      ][num_transfers, num := `transfer_count`, on = c('replication','factor')
+                        ][,rate := N/num * 100, by = list(replication,factor,transfer_class_type)
+                          ][,c(reg1 = as.list(coef(lm(rate ~ factor + transfer_class_type))),
+                               anova.1 = anova(lm(rate ~ factor + transfer_class_type)))]
+
+  varyIpLoSOccupancy <- 
+    varyIpLoSRescources[siteInfo,urban_class := `classification`, on = c(resource = 'Bed_Group')
+                        ][,`:=`(lag_diff = c(NA,diff(time)),
+                                occupancy = 100 * server/capacity),by = list(replication,resource,factor)
+                          ][,.(occupancy = weighted.mean(x = occupancy, w = lag_diff, na.rm = T),
+                               urban_class = unique(urban_class)), by = list(replication,resource,factor)]
+  
   saveRDS(
-    list(varyIpLoSPatients,varyIpLoSTest,varyIpLoSRescources, varyIpLoSTTP),
+    list(varyIpLoSPatients,varyIpLoSPlotData,varyIpLoSRescources, varyIpLoSTTP,varyIpLoSTransferRates),
     file.path(sa_path, 'Length of Stay Sensitivity Analysis Results.rds')
   )
 }

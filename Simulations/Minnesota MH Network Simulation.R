@@ -803,14 +803,13 @@ full_sim <-
             alg_input = new_sol,
             resources = return_resources
           )
-          if(return_resources){
-            patients <- rbindlist(lapply(res,function(dt) dt[,replication := index]),fill = T)
-            resources <- rbindlist(lapply(res,function(dt) dt[,replication := index]),fill = T)
-            res <- list('patients' = patients,
-                        'resources' = resources)
-          } else{
-            res <- lapply(res,function(dt) dt[, `:=`(replication = index)])
+          
+          if(inherits(res,'list')){
+            res <- lapply(res,function(i) data.table(i)[, `:=`(replication = index)])
+          } else {
+            res <- data.table(res)[, `:=`(replication = index)]
           }
+          
           return(res)
         },
         mc.cores = availableCores() - 1
@@ -824,36 +823,25 @@ full_sim <-
       results <- mclapply(
         X = seq(nrow(runs)),
         FUN = function(index){
-          MH.Network.sim(
+          res <- MH.Network.sim(
             warm = warmup,
             sim_days = sim_length,
             sort_by_prob = prob_sort,
             n.parallel = runs[index, n.concurrent],
             alg_input = new_sol,
             resources = return_resources
-          )[, `:=`(replication = runs[index, replications], n.parallel = runs[index, n.concurrent])]
+          )
+          
+          if(inherits(res,'list')){
+            res <- lapply(res,function(i) data.table(i)[, `:=`(replication = runs[index, replications], n.concurrent = runs[index, n.concurrent])])
+          } else {
+            res <- data.table(res)[, `:=`(replication = runs[index, replications], n.concurrent = runs[index, n.concurrent])]
+          }
          
         },
         mc.cores = availableCores() - 1
       )
     }
     
-    if (save_files) {
-      if (dir.exists(paths = file.path(temp_folder, paste0('Trial_', length(list.files(temp_folder)))))){
-        
-        if (length(list.files(file.path(temp_folder, paste0('Trial_', length(list.files(temp_folder)))))) == 0){
-          unlink(file.path(temp_folder, paste0('Trial_', length(list.files(temp_folder)))), recursive = T)
-        }
-      }
-      
-      dir.create(file.path(temp_folder, paste0('Trial_', length(list.files(temp_folder)) + 1)))
-      location = file.path(get('temp_folder',envir = .GlobalEnv),
-                           paste0("Trial_",length(list.files(temp_folder))))
-      
-      saveRDS(results['timestamps'],file.path(location,'Patients Results (All Replications).rds'))
-      if (return_resources){
-        saveRDS(results['resources'],file.path(location,'Resource Results (All Replications).rds'))
-      }
-    } 
     return(results)
   }
