@@ -1,5 +1,3 @@
-source("renv/activate.R")
-
 options(scipen = 999,
         digits = 6,
         echo = F)
