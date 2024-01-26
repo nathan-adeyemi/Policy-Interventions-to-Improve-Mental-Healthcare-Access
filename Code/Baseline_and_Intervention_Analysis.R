@@ -60,14 +60,15 @@ if(args == 'run_baseline'){
              n.parallel = 1,
              resources = T)
   
-  baseline_patients <- rbindlist(lapply(res,function(df) df[[1]]))
+  baseline_patients <- rbindlist(lapply(res,function(df) df[[1]])
+                                 )[, `:=`(TTP = sum(total_wait_time, 
+                                                    Travel.time)), 
+                                   by = list(Sim.ID,replication)]
   baseline_resources <- rbindlist(lapply(res,function(df) df[[2]]))
   
   baseline_results = list(
     average_TTP = extract_results(
-      df = baseline_patients[, `:=`(TTP = sum(total_wait_time, 
-                                              Travel.time)), 
-                             by = Sim.ID],
+      df = baseline_patients,
       metric = 'TTP',
       use_type = T,
       separate_vulnerable = T
@@ -141,7 +142,7 @@ if(args == 'run_int_1') {
   res <-
     sim_func(sort_by_prob = T,
              n.concurrent = 1,
-             resources = T)
+             resources = T)Lmaso
   
   int_1_patients <- rbindlist(lapply(res,function(df) df[[1]])
                               )[, `:=`(TTP = sum(total_wait_time, Travel.time)), by = Sim.ID]
@@ -285,48 +286,33 @@ if(args == 'run_int_1') {
                                by = list(replication,n.concurrent)],fill = T)
   
   int_2_tests <- list(
-    TTP_test =
-      kruskal.test(formula = TTP ~ n.concurrent,
-                   data = test_data_2),
-    
-    coord_time_test =
-      kruskal.test(formula = total_wait_time ~ n.concurrent,
-                   data = test_data_2),
-    
-    
-    coord_time_pairwise =
-      with(
-        test_data_2,
-        pairwise.wilcox.test(total_wait_time, n.concurrent, p.adjust.method = 'BH')
-      ),
-    
-    TTP_pairwise = with(
-      test_data_2,
-      pairwise.wilcox.test(total_wait_time, n.concurrent, p.adjust.method = 'BH')
-    )
-  )
+    int_2_testDF =
+      rbind(
+        test_data_2[,c(metrix = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
+        test_data_2[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
+        fill = TRUE),
+    coord_time_pairwise = test_data_2[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))],
+    TTP_pairwise = test_data_2[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))])
   
   # Boxplot of averages of concurrent arrivals
   int_2_boxplots <-
     ggplot(data = test_data_2[,`:=`(n.concurrent = as.factor(n.concurrent),
                                     `Transfer Coordination Time (hrs.)` = total_wait_time)
                               ][n.concurrent != 1],
-           mapping = aes(x = `Transfer Coordination Time (hrs.)`,
-                         group =  fct_relevel(n.concurrent,c('baseline', as.character(2:8))) ,
-                         fill = fct_relevel(n.concurrent,c('baseline', as.character(2:8))))) +
+           mapping = aes(y = `Transfer Coordination Time (hrs.)`,
+                         x =  fct_relevel(n.concurrent,c('baseline', as.character(2:int_2and3_concurrent))) ,
+                         fill = fct_relevel(n.concurrent,c('baseline', as.character(2:int_2and3_concurrent))))) +
     geom_boxplot() + 
-    guides(fill = guide_legend(title = "Number of\nConcurrrent\nReferrals")) + 
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()) + 
-    scale_fill_grey() + coord_flip()
+    geom_smooth() +
+    theme(legend.title = element_blank(),
+          legend.position = 'none') + 
+    xlab('Number of Concurrent Referrals') 
     
-  
     ggsave(
       filename = file.path(results_path, 'boxplot.jpeg'),
       plot = int_2_boxplots,
       width = 7,
-      height = 3,
+      height = 4,
       device = 'jpeg',
       dpi = 700
     )
@@ -402,49 +388,35 @@ if(args == 'run_int_1') {
                            ][, `:=`(TTP = sum(total_wait_time, Travel.time)), by = list(Sim.ID, replication,n.concurrent)
                              ][, .(TTP = mean(x = TTP, na.rm = T), 
                                    total_wait_time = mean(x = total_wait_time,na.rm = T)),
-                               by = list(replication,n.concurrent)],fill = T)
-  
+                               by = list(replication,n.concurrent)],fill = T
+                     )[n.concurrent == 'baseline',n.concurrent := 'Baseline Model w/\nDistance Prioritization']
+
   int_3_tests <- list(
-    TTP_test =
-      kruskal.test(formula = TTP ~ n.concurrent,
-                   data = test_data_3),
-    
-    coord_time_test =
-      kruskal.test(formula = total_wait_time ~ n.concurrent,
-                   data = test_data_3),
-    
-    coord_time_pairwise =
-      with(
-        test_data_3,
-        pairwise.wilcox.test(total_wait_time, n.concurrent, p.adjust.method = 'BH')
-      ),
-    
-    TTP_pairwise = with(
-      test_data_3,
-      pairwise.wilcox.test(total_wait_time, n.concurrent, p.adjust.method = 'BH')
-    )
-  )
+    int_3_testDF =
+      rbind(
+        test_data_3[,c(metrix = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
+        test_data_3[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
+        fill = TRUE),
+    coord_time_pairwise = test_data_3[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))],
+    TTP_pairwise = test_data_3[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))])
   
   # Boxplot of averages of concurrent arrivals
-  int_3_boxplots <- ggplot(data = test_data_3[,`:=`(n.concurrent = as.factor(n.concurrent),
+  int_3_boxplots <- 
+    ggplot(data = test_data_3[,`:=`(n.concurrent = as.factor(n.concurrent),
                                                   `Time-to-Placement (hrs.)` = TTP)],
-                           mapping = aes(x = `Time-to-Placement (hrs.)`,
-                                         group = fct_relevel(n.concurrent,c('baseline', as.character(seq(8)))),
-                                         fill = fct_relevel(n.concurrent,c('baseline', as.character(seq(8)))))) +
+                           mapping = aes(y = `Time-to-Placement (hrs.)`,
+                                         x = fct_relevel(n.concurrent,c('Baseline Model w/\nDistance Prioritization', as.character(seq(int_2and3_concurrent)))),
+                                         fill = fct_relevel(n.concurrent,c('Baseline Model w/\nDistance Prioritization', as.character(seq(int_2and3_concurrent)))))) +
     geom_boxplot() + 
-    guides(fill = guide_legend(title = "Number of\nConcurrrent\nReferrals")) + 
-    theme(axis.title.x = element_blank(),
-          axis.text.x = element_blank(),
-          axis.ticks.x = element_blank()) +
-    scale_fill_grey() + coord_flip()
-  
-  
+    theme(legend.title = element_blank(),
+          legend.position = 'none') + 
+    xlab('Number of Concurrent Referrals') 
   
   ggsave(
     filename = file.path(results_path, 'boxplot.jpeg'),
     plot = int_3_boxplots,
     width = 7,
-    height = 3,
+    height = 4,
     device = 'jpeg',
     dpi = 700
   )

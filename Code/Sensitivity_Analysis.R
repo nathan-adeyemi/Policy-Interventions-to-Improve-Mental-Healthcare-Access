@@ -153,7 +153,8 @@ if(args == "ipLoS"){
   varyIpLoSPatients <-  rbindlist(lapply(res,function(i) i[[1]])
                           )[,`:=`(vulnerable_patient = (Age != 'Adult'),placed = !is.na(total_wait_time))
                           ][,`:=`(TTP = sum(total_wait_time, Travel.time)),
-                            by = list(Sim.ID, replication,factor)]
+                            by = list(Sim.ID, replication,factor)
+                            ][,day_no := floor(IP.Arrival.Timestamp/24)]
   varyIpLoSRescources <- rbindlist(lapply(res,function(i) i[[2]]))
                 
   varyIpLoSPlotData <- melt(varyIpLoSPatients[type == 'Transfer'
@@ -200,14 +201,21 @@ if(args == "ipLoS"){
   varyIpLoSPatients[siteInfo,dest_class := `classification`, on = c(Transfer.Site = 'Facility_name')]
   varyIpLoSPatients[,transfer_class_type := paste(origin_class,'->',dest_class,sep = '')]
   num_transfers <- varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.(transfer_count = .N),by = list(factor,replication)]
+  std_rate <- 
+    varyIpLoSPatients[factor == 1.0 & 
+                      type == 'Transfer' & 
+                      !is.na(Transfer.Site),.N,by = list(transfer_class_type,replication,day_no)
+                    ][,.(avg_rate = mean(N)),by = list(replication,transfer_class_type)
+                      ][,.(avg_rate = mean(avg_rate)),by = transfer_class_type]
   
   # Test whether there are significant differences in the rate of transfer between urban and rural facilities
   varyIpLoSTransferRates <- 
-    varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.N,by = list(replication,factor,transfer_class_type)
-                 ][num_transfers, num := `transfer_count`, on = c('replication','factor')
-                   ][,rate := N/num * 100, by = list(replication,factor,transfer_class_type)
-                     ][,c(reg1 = as.list(coef(lm(rate ~ factor))),
-                          anova.1 = anova(lm(rate ~ factor))), by = transfer_class_type]
+    varyIpLoSPatients[type == 'Transfer' & !is.na(Transfer.Site),.N,by = list(replication,factor,transfer_class_type,day_no)
+                 ][,.(mean_rate = mean(N)), by = list(replication,factor,transfer_class_type)
+                   ][std_rate, std_rate := `avg_rate`, on = c(transfer_class_type = 'transfer_class_type')
+                     ][,perc_change := 100 * (std_rate - mean_rate)/std_rate
+                       ][,c(reg1 = as.list(coef(lm(perc_change ~ factor))),
+                            anova.1 = anova(lm(perc_change ~ factor))), by = transfer_class_type]
   #[,as.list(boot.ci(one.boot(rate,mean,500,na.rm = T))),by = list(factor,transfer_class_type)]
   
   # Test whether there are significant differences in the rate of transfer between urban and rural facilities
@@ -218,12 +226,17 @@ if(args == "ipLoS"){
                           ][,c(reg1 = as.list(coef(lm(rate ~ factor + transfer_class_type))),
                                anova.1 = anova(lm(rate ~ factor + transfer_class_type)))]
 
-  varyIpLoSOccupancy <- 
-    varyIpLoSRescources[siteInfo,urban_class := `classification`, on = c(resource = 'Bed_Group')
+  lagged_occupancy <- 
+    varyIpLoSResources[siteInfo,urban_class := `classification`, on = c(resource = 'Bed_Group')
                         ][,`:=`(lag_diff = c(NA,diff(time)),
                                 occupancy = 100 * server/capacity),by = list(replication,resource,factor)
-                          ][,.(occupancy = weighted.mean(x = occupancy, w = lag_diff, na.rm = T),
-                               urban_class = unique(urban_class)), by = list(replication,resource,factor)]
+                          ][!is.na(lag_diff),.(occupancy = weighted.mean(x = occupancy, w = lag_diff, na.rm = T),
+                               urban_class = unique(urban_class)), by = list(replication,resource,factor)
+                            ]
+  ipUnitTests <- lagged_occupancy[,c(urban_class = unique(urban_class),
+                                 reg1 = as.list(coef(lm(occupancy ~ factor))),
+                                 anova.1 = as.list(anova(lm(occupancy ~ factor)))), by = resource]
+  urbanTests <- lagged_occupancy[,c(reg1 = as.list(coef(lm(occupancy ~ urban_class + factor + urban_class:factor))))]
   
   saveRDS(
     list(varyIpLoSPatients,varyIpLoSPlotData,varyIpLoSRescources, varyIpLoSTTP,varyIpLoSTransferRates),
