@@ -1,0 +1,31 @@
+name: ed_ip_simulation
+channels:
+  - conda-forge
+  - r
+  - defaults
+dependencies:
+  - r-essentials
+  - r-tidyverse
+  - r-data.table
+  - r-readxl
+  - r-openxlsx
+  - r-writexl
+  - r-tictoc
+  - r-gtools
+  - r-ps
+  - r-lubridate
+  - r-fitdistrplus
+  - r-boot
+  - r-simpleboot
+  - r-EnvStats
+  - r-simmer
+  - r-simmer.plot
+  - r-simtimer
+  - r-doParallel
+  - r-pbmcapply
+  - r-parallelly
+  - r-ggplot2
+  - radian
+  - python>=3.11
+
+prefix: /home/adeyemi.n/.conda/envs/ed_ip_simulation
