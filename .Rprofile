@@ -1,17 +1,18 @@
+source(file.path(Sys.getenv(
+   if (.Platform$OS.type == "windows") "USERPROFILE" else "HOME"
+ ), ".vscode-R", "init.R"))
+
 options(scipen = 999,
-        digits = 6,
-        echo = F)
+        digits = 6)
 
 # Utilities ----------------------------
-library(tidyverse)
 library(data.table)
-library(readxl)
 library(openxlsx)
 library(writexl)
 library(tictoc)
 library(gtools)
-library(ps)
 library(lubridate)
+library(tidyverse)
 
 # Packages for Statistics/Bootstrapping/etc. ------------------------------
 library(fitdistrplus)
@@ -21,13 +22,11 @@ library(EnvStats)
 
 # Packages for Discrete Event Simulation ----------------------------------
 library(simmer)
-library(simmer.plot)
 library(simtimer)
 
 # Packages for Parallel Processing ----------------------------------------
 library(doParallel)
-library(pbmcapply)
-library(parallelly)
+
 
 # library(PMCMRplus)
 invisible(lapply(X = file.path('.','Functions',list.files(path = file.path('.','Functions'))), FUN = source))

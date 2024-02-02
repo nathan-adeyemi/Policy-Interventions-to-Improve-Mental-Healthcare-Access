@@ -4,10 +4,9 @@ channels:
   - r
   - defaults
 dependencies:
+  - r-base=4.2.0
   - r-essentials
-  - r-tidyverse
   - r-data.table
-  - r-readxl
   - r-openxlsx
   - r-writexl
   - r-tictoc
@@ -19,11 +18,8 @@ dependencies:
   - r-simpleboot
   - r-EnvStats
   - r-simmer
-  - r-simmer.plot
   - r-simtimer
   - r-doParallel
-  - r-pbmcapply
-  - r-parallelly
   - r-ggplot2
   - radian
   - python>=3.11

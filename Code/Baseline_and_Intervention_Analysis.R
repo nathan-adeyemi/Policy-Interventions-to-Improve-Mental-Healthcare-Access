@@ -17,18 +17,6 @@ results_path <-
     ifelse(test = args == 'run_baseline',yes = 'Baseline Results',no = 'Intervention Results')
   )
 
-# # Test Experiment Simulation Parameters (replications, warmup, etc) 
-# numIters <- 3
-# warm_period <- 1
-# sim_period <- 5
-# results_path <-
-#   file.path(
-#     '.',
-#     'Deprecated Results',
-#     'testing',
-#     ifelse(test = args == 'run_baseline',yes = 'Baseline Results',no = 'Intervention Results')
-#   )
-
 int_2and3_concurrent <- 8
 sim_func <- function(sort_by_prob, 
                      n.parallel,
@@ -45,6 +33,12 @@ sim_func <- function(sort_by_prob,
     return_resources = resources,
     rep_parallel_combo = test_concurrent)
   return(results)
+}
+
+format_sim_patient_data <- function(df,FUN) {
+  return(df[, `:=`(TTP = rowSums(.SD,na.rm=T)),.SDcols = c('total_wait_time','Travel.time')
+            ][,`:=`(vulnerable_patient = (Age != 'Adult')), by = list(Sim.ID, replication,n.concurrent,type)
+             ][TTP > 0,lapply(.SD,FUN,na.rm = T), .SDcols = c('TTP','total_wait_time','Travel.Distance'), by = list(replication,n.concurrent,type,vulnerable_patient)])
 }
 
 
@@ -93,14 +87,21 @@ if(args == 'run_baseline'){
       separate_vulnerable = T
     ),
     transfer_within_25 = extract_results(
-      df = baseline_patients[type == 'Transfer'][, `:=`(in_range = Travel.Distance <= 25)],
+      df = baseline_patients[type == 'Transfer'][, `:=`(in_range = Travel.Distance <= 25 & Travel.Distance > 10)],
       metric = 'in_range',
       use_type = F,
       separate_vulnerable = T
     ),
     transfer_within_50 = extract_results(
       df = baseline_patients[type == 'Transfer'
-                             ][, `:=`(in_range = Travel.Distance <= 50)],
+                             ][, `:=`(in_range = Travel.Distance <= 50 & Travel.Distance > 25)],
+      metric = 'in_range',
+      use_type = F,
+      separate_vulnerable = T
+    ),
+    transfer_within_50 = extract_results(
+      df = baseline_patients[type == 'Transfer'
+                             ][, `:=`(in_range = Travel.Distance > 50 )],
       metric = 'in_range',
       use_type = F,
       separate_vulnerable = T
@@ -113,19 +114,15 @@ if(args == 'run_baseline'){
       resource = T
     )
   )
-  baseline_test_data <- baseline_patients[,vulnerable_patient := (Age != 'Adult'),
-                                   by = list(Sim.ID, replication)
-                                   ][vulnerable_patient == T & type == 'Transfer'
-                                     ][, `:=`(TTP = sum(total_wait_time, Travel.time)), by = list(Sim.ID, replication)
-                                       ][, .(TTP = mean(x = TTP, na.rm = T), 
-                                             total_wait_time = mean(x = total_wait_time,na.rm = T)),
-                                         by = list(replication)][,n.concurrent := 'baseline']
+
+  
+                                  
   saveRDS(
     list(baseline_patients, baseline_resources,baseline_results),
     file = file.path(results_path, 'baseline_data_and_results.rds')
   )
   
-  saveRDS(baseline_test_data,file = file.path(results_path,'baseline_test_data.rds'))
+  saveRDS(baseline_patients,file = file.path("Data","Intervention Results","baseline_test_data.rds"))
   openxlsx::write.xlsx(baseline_results,
                        file = file.path(results_path, 'Baseline_Processed_Results.xlsx'))
   rm(list = c('baseline_resources'))
@@ -142,7 +139,7 @@ if(args == 'run_int_1') {
   res <-
     sim_func(sort_by_prob = T,
              n.concurrent = 1,
-             resources = T)Lmaso
+             resources = T)
   
   int_1_patients <- rbindlist(lapply(res,function(df) df[[1]])
                               )[, `:=`(TTP = sum(total_wait_time, Travel.time)), by = Sim.ID]
@@ -157,68 +154,25 @@ if(args == 'run_int_1') {
       separate_vulnerable = T
     )
   
-  int_1_TTP_test_data <-
-    rbind(int_1_patients[, `:=`(df = 'intervention_1')], 
-          baseline_patients[, `:=`(df = 'baseline')], 
-          fill = T)[, .(TTP = one.boot(data = TTP,
-                                           FUN = mean,
-                                           R = 500,na.rm = T)[['t0']],
-                        total_wait_time =one.boot(data = total_wait_time,
-                                                  FUN = mean,
-                                                  R = 500,na.rm = T)[['t0']]),
-                        by = list(type,`Vulnerable Patient`,replication,df)]
-  
-  int_1_TTP_test <-
-    t.test(formula = TTP ~ df, 
-           data = int_1_TTP_test_data[`Vulnerable Patient` == T & type == 'Transfer'])
-  
-  int_1_TTP_test_np <-
-    wilcox.test(
-      TTP ~ df,
-      data = int_1_TTP_test_data[`Vulnerable Patient` == T &
-                                   type == 'Transfer'],
-      na.rm = TRUE,
-      paired = FALSE,
-      exact = FALSE,
-      conf.int = TRUE
-    )
-  
-  int_1_total_wait_time_test <-
-    t.test(formula = total_wait_time ~ df, 
-           data = int_1_TTP_test_data[`Vulnerable Patient` == T & type == 'Transfer'])
-  
-  int_1_total_wait_time_test_np <-
-    wilcox.test(
-      total_wait_time ~ df,
-      data = int_1_TTP_test_data[`Vulnerable Patient` == T &
-                                   type == 'Transfer'],
-      na.rm = TRUE,
-      paired = FALSE,
-      exact = FALSE,
-      conf.int = TRUE
-    )
+  int_1_test_data <- format_sim_patient_data(rbind(int_1_patients,baseline_patients,fill = T),mean)
   
   
-  int_1_TTP_test_nonVuln <- t.test(x = int_1_TTP_test_data[`Vulnerable Patient` == F & 
-                                                             type == 'Transfer' & 
-                                                             df == 'intervention_1',TTP],
-                                   y = int_1_TTP_test_data[`Vulnerable Patient` == F & 
-                                                             type == 'Transfer' & 
-                                                             df == 'baseline',TTP])
-  int_1_TTP_test_internal <- t.test(x = int_1_TTP_test_data[type == 'Internal' & 
-                                                              df == 'intervention_1',TTP],
-                                    y = int_1_TTP_test_data[type == 'Internal' & 
-                                                              df == 'baseline',TTP])
+  int_1_tests  <-  list(
+      treatment_delay = wilcox.test(formula = TTP ~ n.concurrent,  data = int_1_test_data[vulnerable_patient == T & type == 'Transfer'],na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      treatment_delay_1_sides = wilcox.test(x = int_1_test_data[vulnerable_patient == T & type == 'Transfer' & n.concurrent == 'Baseline',TTP], int_1_test_data[vulnerable_patient == T & type == 'Transfer' & n.concurrent == 'Intervention_1',TTP] ,na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE,alternative = 'g'),
+      coordination_time = wilcox.test(formula = total_wait_time ~ n.concurrent, data = int_1_test_data[vulnerable_patient == T & type == 'Transfer'],na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      treatment_delay_adult = wilcox.test(TTP ~ n.concurrent,data = int_1_test_data[type == 'Transfer' & vulnerable_patient == F],na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      coordination_time_adult = wilcox.test(total_wait_time ~ n.concurrent,data = int_1_test_data[type == 'Transfer' & vulnerable_patient == F],na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      transfer_distance_vulnerable = wilcox.test(Travel.Distance ~ n.concurrent,data = int_1_test_data[vulnerable_patient == T &type == 'Transfer'], na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      transfer_distance_adult = wilcox.test(Travel.Distance ~ n.concurrent,data = int_1_test_data[vulnerable_patient == F &type == 'Transfer'], na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE),
+      treatment_delay_internal = wilcox.test(TTP ~ n.concurrent,data = int_1_test_data[type == 'Internal'],na.rm = TRUE,paired = FALSE,exact = FALSE,conf.int = TRUE)
+  )
   
   saveRDS(
     list(
       'Patients' = int_1_patients,
       'Resources' = int_1_resources,
-      "Treatment Delay Test" = int_1_TTP_test,
-      "Coordination Time Test" = int_1_total_wait_time_test_np,
-      "Adult Treatment Delay Test" = int_1_TTP_test_nonVuln,
-      "Internally Placed Test" = int_1_TTP_test_internal
-      
+      "tests" = int_1_tests
     ),
     file = file.path(results_path, 'data_and_results.rds')
   )
@@ -276,52 +230,56 @@ if(args == 'run_int_1') {
       ))[!is.na(`Simulation Confidence Interval`)]
   
 
-  test_data_2 <- rbind(baseline_test_data,
-                     int_2_patients[,vulnerable_patient := (Age != 'Adult'),
-                         by = list(Sim.ID, replication,n.concurrent)
-                         ][vulnerable_patient == T& type == 'Transfer'
-                           ][, `:=`(TTP = sum(total_wait_time, Travel.time)), by = list(Sim.ID, replication,n.concurrent)
-                             ][, .(TTP = mean(x = TTP, na.rm = T), 
-                                   total_wait_time = mean(x = total_wait_time,na.rm = T)),
-                               by = list(replication,n.concurrent)],fill = T)
-  
-  int_2_tests <- list(
-    int_2_testDF =
-      rbind(
-        test_data_2[,c(metrix = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
-        test_data_2[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
-        fill = TRUE),
-    coord_time_pairwise = test_data_2[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))],
-    TTP_pairwise = test_data_2[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))])
-  
+  int_2_results = lapply(X = list(mean,median),
+                        FUN = function(fn){
+                                          test_data = format_sim_patient_data(rbind(baseline_test_data,int_2_patients[n.concurrent != 1],fill=T),FUN = fn)
+                                          test_data_means = test_data[,lapply(.SD,mean),.SDcols = c('TTP','total_wait_time','Travel.Distance'),list(n.concurrent,type,vulnerable_patient)]
+                                          tests_df = rbind(
+                                              test_data[,c(metric = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
+                                              test_data[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
+                                              test_data[type == 'Transfer',c(metric = 'Travel.Distance',as.list((kruskal.test(Travel.Distance ~ n.concurrent))))],
+                                              fill = TRUE)
+                                          coord_time_pairwise = test_data[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))]
+                                          TTP_pairwise = test_data[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))]
+                                          distance_pairwise = test_data[type == 'Transfer',as.list(pairwise.wilcox.test(Travel.Distance,n.concurrent,p.adjust.method = 'BH'))]
+
+                                          return(list(data=test_data,
+                                                      means_df = test_data_means,
+                                                      tests = tests_df, 
+                                                      coord_time_pairwise = coord_time_pairwise, 
+                                                      TTP_pairwise = TTP_pairwise, 
+                                                      distance_pairwise = distance_pairwise))
+                                            })
+    
   # Boxplot of averages of concurrent arrivals
   int_2_boxplots <-
-    ggplot(data = test_data_2[,`:=`(n.concurrent = as.factor(n.concurrent),
-                                    `Transfer Coordination Time (hrs.)` = total_wait_time)
-                              ][n.concurrent != 1],
-           mapping = aes(y = `Transfer Coordination Time (hrs.)`,
-                         x =  fct_relevel(n.concurrent,c('baseline', as.character(2:int_2and3_concurrent))) ,
-                         fill = fct_relevel(n.concurrent,c('baseline', as.character(2:int_2and3_concurrent))))) +
+    ggplot(data = melt(int_2_results[[1]]$data[TTP > 0 & type == 'Transfer' & vulnerable_patient == T,list('Avg. Total \n Coordination Time (hrs.)' = total_wait_time,"Avg. Treatment \n Delay (.hrs)" = TTP), by = n.concurrent][,n.concurrent := as.factor(n.concurrent)],id.vars = 'n.concurrent'),
+           mapping = aes(y = value,
+                         x =  fct_relevel(n.concurrent,c('Baseline', as.character(2:int_2and3_concurrent))) ,
+                         fill = variable)) +
     geom_boxplot() + 
-    geom_smooth() +
-    theme(legend.title = element_blank(),
-          legend.position = 'none') + 
-    xlab('Number of Concurrent Referrals') 
+    geom_smooth(mapping =  aes(y = value,
+                         x =  fct_relevel(n.concurrent,c('Baseline', as.character(2:int_2and3_concurrent))) ,
+                         linetype = variable)) +
+    xlab('Number of Concurrent Referrals') + 
+    ylab("Time (hrs.)") + 
+    labs(fill = 'Metric')
     
     ggsave(
-      filename = file.path(results_path, 'boxplot.jpeg'),
+      #filename = file.path(results_path, 'boxplot.jpeg'),
+      filename = "Manuscript/Sections/interventions/intervention_2_boxplot.jpeg",
       plot = int_2_boxplots,
       width = 7,
       height = 4,
       device = 'jpeg',
       dpi = 700
     )
+
   
   saveRDS(
     list(
       int_2_patients,
       int_2_resources,
-      int_2_coord,
       int_2_tests),
     file = file.path(results_path, 'data_and_results.rds')
   )  
@@ -360,60 +318,51 @@ if(args == 'run_int_1') {
   
   saveRDS(object = list(int_3_patients,int_3_resources),file = file.path(results_path,'data_and_results.rds'))
   
-  int_3_TTP <-
-    rbindlist(
-      l = lapply(
-        X = split(x = int_3_patients,
-                  by = 'n.concurrent'),
-        FUN = 
-          function(df) {
-            n.par <- unique(df[, n.concurrent])
-            df <- extract_results(
-              df = df[, `:=`(TTP = sum(total_wait_time, Travel.time)),
-                       by = list(Sim.ID, replication)],
-              metric = 'TTP',
-              use_type = T,
-              separate_vulnerable = T
-            )
-            return(df[, concurrent_referrals := n.par])
-          }
-      ))[!is.na(`Simulation Confidence Interval`)]
-  
   baseline_test_data <- readRDS(file = file.path(results_path,'baseline_test_data.rds'))
-  
-  test_data_3 <- rbind(baseline_test_data,
-                     int_3_patients[,vulnerable_patient := (Age != 'Adult'),
-                         by = list(Sim.ID, replication,n.concurrent)
-                         ][vulnerable_patient == T & type == 'Transfer'
-                           ][, `:=`(TTP = sum(total_wait_time, Travel.time)), by = list(Sim.ID, replication,n.concurrent)
-                             ][, .(TTP = mean(x = TTP, na.rm = T), 
-                                   total_wait_time = mean(x = total_wait_time,na.rm = T)),
-                               by = list(replication,n.concurrent)],fill = T
-                     )[n.concurrent == 'baseline',n.concurrent := 'Baseline Model w/\nDistance Prioritization']
 
-  int_3_tests <- list(
-    int_3_testDF =
-      rbind(
-        test_data_3[,c(metrix = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
-        test_data_3[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
-        fill = TRUE),
-    coord_time_pairwise = test_data_3[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))],
-    TTP_pairwise = test_data_3[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))])
-  
+  int_3_results = lapply(X = list(mean,median),
+                        FUN = function(fn){
+                                          test_data = rbind(baseline_test_data,format_sim_patient_data(int_3_patients,FUN = fn),fill=T)
+                                          test_data_means = test_data[,lapply(.SD,mean),.SDcols = c('TTP','total_wait_time','Travel.Distance'),list(n.concurrent,type,vulnerable_patient)]
+                                          tests_df = rbind(
+                                              test_data[,c(metric = 'TTP', as.list(kruskal.test(TTP ~ n.concurrent)))],
+                                              test_data[,c(metric = 'coordination',as.list(kruskal.test(total_wait_time ~ n.concurrent)))],
+                                              test_data[type == 'Transfer',c(metric = 'Travel.Distance',as.list((kruskal.test(Travel.Distance ~ n.concurrent))))],
+                                              fill = TRUE)
+                                          coord_time_pairwise = test_data[,as.list(pairwise.wilcox.test(total_wait_time,n.concurrent,p.adjust.method = 'BH'))]
+                                          TTP_pairwise = test_data[,as.list(pairwise.wilcox.test(TTP,n.concurrent,p.adjust.method = 'BH'))]
+                                          distance_pairwise = test_data[type == 'Transfer',as.list(pairwise.wilcox.test(Travel.Distance,n.concurrent,p.adjust.method = 'BH'))]
+
+                                          return(list(data=test_data,
+                                                      means_df = test_data_means,
+                                                      tests = tests_df, 
+                                                      coord_time_pairwise = coord_time_pairwise, 
+                                                      TTP_pairwise = TTP_pairwise, 
+                                                      distance_pairwise = distance_pairwise))
+                                            })
+
+
   # Boxplot of averages of concurrent arrivals
-  int_3_boxplots <- 
-    ggplot(data = test_data_3[,`:=`(n.concurrent = as.factor(n.concurrent),
-                                                  `Time-to-Placement (hrs.)` = TTP)],
-                           mapping = aes(y = `Time-to-Placement (hrs.)`,
-                                         x = fct_relevel(n.concurrent,c('Baseline Model w/\nDistance Prioritization', as.character(seq(int_2and3_concurrent)))),
-                                         fill = fct_relevel(n.concurrent,c('Baseline Model w/\nDistance Prioritization', as.character(seq(int_2and3_concurrent)))))) +
+  int_3_boxplots <-
+    ggplot(data = melt(int_3_results[[1]]$data[TTP > 0 & type == 'Transfer' & vulnerable_patient == T,list('Avg. Total \n Coordination Time (hrs.)' = total_wait_time,
+                                              "Avg. Treatment \n Delay (.hrs)" = TTP),
+                                              by = n.concurrent
+                                              ][,n.concurrent := as.factor(n.concurrent)],id.vars = 'n.concurrent'),
+           mapping = aes(y = value,
+                         x =  fct_relevel(n.concurrent,c('Baseline', as.character(1:int_2and3_concurrent))) ,
+                         fill = variable)) +
     geom_boxplot() + 
-    theme(legend.title = element_blank(),
-          legend.position = 'none') + 
-    xlab('Number of Concurrent Referrals') 
+    geom_smooth(mapping =  aes(y = value,
+                         x =  fct_relevel(n.concurrent,c('Baseline', as.character(1:int_2and3_concurrent))) ,
+                         linetype = variable)) +
+    xlab('Number of Concurrent Referrals') + 
+    ylab("Time (hrs.)") + 
+    labs(fill = 'Metric')
+    
   
   ggsave(
-    filename = file.path(results_path, 'boxplot.jpeg'),
+    #filename = file.path(results_path, 'boxplot.jpeg'),
+    filename="Manuscript/Sections/interventions/intervention_3_boxplot.jpeg",
     plot = int_3_boxplots,
     width = 7,
     height = 4,
@@ -424,8 +373,7 @@ if(args == 'run_int_1') {
   saveRDS(
     list(int_3_patients,
          int_3_resources,
-         int_3_TTP,
-         int_3_tests),
+         int_3_results),
     file = file.path(results_path, 'data_and_results.rds')
   )
   # rm(list = c('int_3_raw', 'int_3_TTP'))
