@@ -1,5 +1,5 @@
 rm('MH.Network.sim')
-source('Simulations/Minnesota MH Network Simulation_Sensitivity_Analysis.R')
+source('simulations/Minnesota MH Network Simulation_Sensitivity_Analysis.R')
 args <- commandArgs(trailingOnly=TRUE)
 
 if(length(args) > 0){

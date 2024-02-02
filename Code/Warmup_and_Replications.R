@@ -1,5 +1,5 @@
 results_path <- file.path("Data",'Warmup and Replication Analysis Results')
-source(file.path('Simulations','Minnesota MH Network Simulation.R'))
+source(file.path('simulations','Minnesota MH Network Simulation.R'))
 rep_results <- full_sim(num_iter = availableCores() - 1,
                         warmup = 0,
                         sim_length = 600,
