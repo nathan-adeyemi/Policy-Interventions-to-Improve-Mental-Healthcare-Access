@@ -1,5 +1,4 @@
-bs <- function(x) {
-  FUNCTION = val_func
+bs <- function(x, FUNCTION) {
   interval = 95
   interval_type = 'basic'
   # boot_confInt_target_val

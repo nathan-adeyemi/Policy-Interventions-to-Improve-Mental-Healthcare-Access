@@ -21,4 +21,4 @@ sensitivity_param=${input_SA_options[$SLURM_ARRAY_TASK_ID]}
 
 module load singularity/3.5.3
 
-singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "Code/Sensitivity_Analysis.R" "$sensitivity_param"
+singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "Code/experiments/Sensitivity_Analysis.R" "$sensitivity_param"

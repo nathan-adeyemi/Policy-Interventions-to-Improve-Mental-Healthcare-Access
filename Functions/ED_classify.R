@@ -146,12 +146,12 @@ timeOfDay <- function(input){
 
 weekday_factors <- function(data){
   rbind(data[,.(N = sum(N),day_of_week = unique(day_of_week)),by = Date
-             ][,.(AvgAdmits = mean(N)),by = day_of_week],
-        data[,.(N = sum(N),day_of_week = unique(day_of_week)),by = Date
-             ][,.(AvgAdmits = mean(N))],fill = T
+  ][,.(AvgAdmits = mean(N)),by = day_of_week],
+  data[,.(N = sum(N),day_of_week = unique(day_of_week)),by = Date
+  ][,.(AvgAdmits = mean(N))],fill = T
   )[,factor := AvgAdmits/(.SD[is.na(day_of_week),AvgAdmits])
-    ][!is.na(day_of_week)
-      ][order(day_of_week)]
+  ][!is.na(day_of_week)
+  ][order(day_of_week)]
 }
 
 time_of_day_factors <- function(data){
@@ -208,39 +208,42 @@ boot_confInt_val <-function(x,
 }
 
 boot_confInt_inputs <-function(x,
-                     FUNCTION,
-                     interval = 95,
-                     mean.only = FALSE,
-                     ci.only = FALSE) {
-    if(length(unique(x)) == 1 & length(x) > 10){
-      return(paste(x,' (',length(x),')'))
-    } else {
-      result <- one.boot(x,FUNCTION = FUNCTION ,R = 1000) %>%  boot.ci(conf = interval/100,type = 'basic')
-      if(!is.null(result)){
-        if (mean.only){
-          result <- result$t0
-        } else if(ci.only){
-          result <- result$basic[c(4,5)]  %>% round(digits = 3) %>% as.character() %>%
-            {function(x) paste0('(',x[1],",",x[2],")")}() %>% unlist() %>% paste0(collapse = ', ')
-        } else {
-          result <- list('t0' = result$t0   %>%  round(digits = 3)  %>% as.character(),
-                         int_name = result$basic[c(4,5)]  %>% round(digits = 3) %>% as.character() %>%
-                           {function(x) paste0('(',x[1],",",x[2],")")}())  %>% unlist() %>% paste0(collapse = ', ')
-        }
-        return(result)
+                               FUNCTION,
+                               interval = 95,
+                               mean.only = FALSE,
+                               ci.only = FALSE) {
+  if(length(unique(x)) == 1 & length(x) > 10){
+    return(paste(x,' (',length(x),')'))
+  } else {
+    result <- one.boot(x,FUNCTION = FUNCTION ,R = 1000) %>%  boot.ci(conf = interval/100,type = 'basic')
+    if(!is.null(result)){
+      if (mean.only){
+        result <- result$t0
+      } else if(ci.only){
+        result <- result$basic[c(4,5)]  %>% round(digits = 3) %>% as.character() %>%
+          {function(x) paste0('(',x[1],",",x[2],")")}() %>% unlist() %>% paste0(collapse = ', ')
+      } else {
+        result <- list('t0' = result$t0   %>%  round(digits = 3)  %>% as.character(),
+                       int_name = result$basic[c(4,5)]  %>% round(digits = 3) %>% as.character() %>%
+                         {function(x) paste0('(',x[1],",",x[2],")")}())  %>% unlist() %>% paste0(collapse = ', ')
       }
+      return(result)
     }
   }
+}
 
 dist_fit <- function(data){
-  data <- as.numeric(data)
-  if(length(na.omit(data)) >= 10){
-    dist_type <- names(which.min(mclapply(test_dists(data),function(i) i$aic)))
-    fit.estimate <- summary(fitdist(data,dist_type))$estimate
+  data <- c(remove_zeros(na.omit(as.numeric(data))))
+  if(length(data) >= 10){
+    dist_type <- lapply(test_dists(data),function(i) i$aic)
+    
+    tryCatch(expr = {dist_type <- which.min(dist_type)},
+             error = function(e){
+               browser()
+             })
+    fit.estimate <- summary(fitdist(data,names(dist_type)))$estimate
     return(list(parameter_estimates <- fit.estimate))
-  }else{
-    return(list(mean(data)))
-  }
+  } 
 }
 
 dist_cutoff <- function(max_quant,distribution){

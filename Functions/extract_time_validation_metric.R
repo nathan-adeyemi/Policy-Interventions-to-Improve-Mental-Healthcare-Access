@@ -1,70 +1,71 @@
-extract_time_validation_metric <- function(data,
-           val_group = NA,
-           metric = 'disp_to_dep',
-           val_func = {
-             function(i)
-               mean(i, na.rm = T)
-           }) {
-    
+extract_time_validation_metric <- function(data, val_group = NA, metric = 'disp_to_dep', val_func = mean, ...){
+    add_args = list(...)
+    sub_fn <- function(data,ci=FALSE,stat,arg_list){
+      if('probs' %in% names(arg_list)){
+        probs = arg_list$probs
+      }
+      
+      if('na.rm' %in% names(arg_list)){
+        remove_na = arg_list$na.rm
+      }
+      
+      if (!ci){
+        if(identical(stat,DescTools::Quantile)){
+          est_stat = DescTools::Quantile(data,probs = probs,na.rm = remove_na)
+        } else if (identical(stat,mean)){
+          est_stat = t.test(data)$estimate
+        } else {
+          est_stat = stat(data)
+        }
+      }else{
+        if(identical(stat,DescTools::Quantile)){
+          est_stat = DescTools::QuantileCI(x=data,probs = probs,na.rm = remove_na)
+          est_stat = ci_as_text(est_stat[c('lwr.ci','upr.ci')])
+        } else if (identical(stat,mean)){
+          est_stat = t.test(data)$conf.int
+        } else{
+          est_stat = bs(data,FUNCTION = stat)
+        }
+      }
+      
+      return(est_stat)
+    }
+  
     if (!any(is.na(val_group))) {
-      data$val_group <-
-        sapply(data[, age_group], function(i)
-          any(i == val_group)) %>% data.table()
+      # browser()
+      data$val_group = data$age_group != 'Adult'
       if(metric == 'count'){
-        data <- rbind(data[,.(count = sum(count)),by = list(val_group,prog_day_I)],data[,.(count = sum(count)),by = list(prog_day_I)],fill = T)
+        data <- rbind(data[,.(count = sum(count)),by = list(val_group,prog_day_I)],
+                      data[,.(count = sum(count)),by = list(prog_day_I)],
+                      fill = T)
       }
     } else {
       data[, val_group := age_group]
     }
-    
-    # Type refers to whether patients are Internally placed or Transferred (not all validation data frames have this)
-    if (!('type' %in% colnames(data))) {
-      data[, type := 'All']
+
+    if(metric %in% c('count','rejections','sites_contacted')){
+      split_list <-  'val_group'
+    }else{
+      split_list <- list(c('type', 'val_group'), 'type', 'val_group')
     }
-    x <-
-      rbindlist(list(data[, .(
-        Target = sapply(.SD, function(x) {
-          if (!any(c('count','rejections') == metric)) {
-            x = remove_outliers(x)
-          }
-          return(one.boot(x, val_func, 1000)$t0)
-        }),
-        CI = lapply(.SD, bs),
-        Count = .N
+    df <-
+      rbindlist(lapply(
+        X = split_list,
+        FUN = function(split)
+          data[, .(
+            Target = sapply(.SD, sub_fn, stat = val_func, arg_list = add_args),
+            CI = lapply(
+              X = .SD,
+              FUN = sub_fn,
+              stat = val_func,
+              ci = TRUE,
+              arg_list = add_args
+            ),
+            Count = .N
+          ), .SDcols = metric, by = split]
       ),
-      .SDcols = metric, by = list(val_group, type)],
-      data[, .(
-        Target =
-          sapply(.SD, function(x) {
-            if (!any(c('count','rejections') == metric)) {
-              x = remove_outliers(x)
-            }
-            return(one.boot(x, val_func, 1000)$t0)
-          }),
-        CI = lapply(.SD, bs),
-        Count = .N
-      ),
-      .SDcols = metric, by = list(val_group)],
-      data[, .(
-        Target =
-          sapply(.SD, function(x) {
-            if (!any(c('count','rejections') == metric)) {
-              x = remove_outliers(x)
-            }
-            return(one.boot(x, val_func, 1000)$t0)
-          }),
-        CI = lapply(.SD, bs),
-        Count = .N
-      ),
-      .SDcols = metric, by = list(type)]),
-      use.names = T,
-      fill = T)[CJ(val_group = val_group,
-                   type = type,
-                   unique = TRUE),
-                on = .(val_group, type)]
-    
-    if (!('type' %in% colnames(data))) {
-      x <- unique(x[, type := NULL])
-    }
-    return(x[!is.na(Target)])
-  }
+      fill = TRUE,
+      use.names = TRUE)
+
+    return(df[!is.na(Target)])
+}
