@@ -89,6 +89,13 @@ all_beds <-
     sheet = "All Patients Events"
   ))
 
+orig_generose_patients <- data.table(readxl::read_excel(
+  path = file.path('Data',
+                   'Mayo Clinic Data',
+                   'Psych Patients Combined.xlsx'),
+  sheet = 'Nasibeh ED Arrivals'
+))
+
 # Transferred ED -> IP Patient Data set (read data and modify) -------------------
 ed_transfer_list <- vector('list',ed_transfers[,.N])
 for( i in seq(ed_transfers[,.N])){
@@ -105,48 +112,73 @@ ed_transfers <-
     "Psychiatric Hospital w/ Planned Readmission"
   ) &
     ed_disp_final %in% c("Transfer to Health Care Facility", "Admit")
-  ][,`:=`(lower_contact = tolower(facility_contacted),
-          lower_receive = tolower(receiving_facility),
-          ED_name = {Vectorize(ED_classify)}(ED),
-          age_group = {Vectorize(age_classify)}(age),
-          ed_LoS = ed_LoS/60)
-  ][aliases,fac_contact_name := name, on = c(lower_contact = 'aliases')
-     ][aliases, rec_fac_name := name, on = c(lower_receive = 'aliases')
-        ][,`:=`(facility_contacted = fac_contact_name,
-                  receiving_facility = rec_fac_name)
-             ][,`:=`(fac_contact_name = NULL,
-                     rec_fac_name = NULL)]
-
-ed_transfers[grepl("decline|no|unable|on divert|acuity", add_info, ignore.case = T) & call_outcome != "Patient declined by facility", call_outcome := "Patient declined by facility"
-             ]
-indices <- ed_transfers[!is.na(receiving_facility), .I[which.max(event_ts)], by = patient_number]$V1
-ed_transfers[indices, call_outcome := "Patient accepted by facility"
+  ][,`:=`(facility_contacted = tolower(facility_contacted),
+          receiving_facility = tolower(receiving_facility))
+    # Merging with hospital alias and hospital system dataframes
+    ][aliases,facility_contacted := name, on = c(facility_contacted = 'aliases')
+      ][aliases, receiving_facility := name, on = c(receiving_facility = 'aliases')
+        ][hospital_systems,actual_contact := hospital_system,on = c(facility_contacted = 'name')
+          
+          # Properly assigning additional rejection call outcomes to the 
+          ][grepl("decline|no|unable|on divert|acuity", add_info, ignore.case = T) & call_outcome != "Patient declined by facility", call_outcome := "Patient declined by facility"
                ][, rejections := .SD[call_outcome == "Patient declined by facility",max(0,.N,na.rm = T)], by = patient_number
-                      ][is.na(facility_contacted) & !is.na(receiving_facility), facility_contacted := receiving_facility
-                        ][hospital_systems,actual_contact := hospital_system,on = c(facility_contacted = 'name')
-                          ][,`:=`(lower_contact = NULL,
-                                  lower_receive = NULL)
-                            ][is.na(actual_contact), actual_contact := facility_contacted]
-ed_transfers[call_outcome == 'Patient accepted by facility',
-             Travel.Distance := max({Vectorize(find_drive_distance)}(ED_name, receiving_facility),{Vectorize(find_drive_distance)}(ED_name, facility_contacted), na.rm = TRUE)][,Travel.Distance := max(Travel.Distance,na.rm = T),by=patient_number]
+                  ][is.na(actual_contact), actual_contact := facility_contacted
+                    ][call_outcome == 'Patient accepted by facility', ip_treatment_facility := receiving_facility,
+                    ][,ED_name := {Vectorize(ED_classify)}(ED)
+                     ][,`:=`(Travel.Distance = {Vectorize(find_drive_distance)}(ED_name, ip_treatment_facility),
+                             age_group = {Vectorize(age_classify)}(age),
+                             ed_LoS = ed_LoS/60)
+                      ][,`:=`(Travel.Distance = max(Travel.Distance,na.rm = T),
+                              first_event_ts = min(event_ts),
+                              final_event_ts = max(event_ts)),
+                        by=patient_number]
 
 multiple_rows = unlist(ed_transfers[,.N,by=patient_number][N>1,patient_number])
 accepted_patients <- unlist(ed_transfers[call_outcome == 'Patient accepted by facility',patient_number])
 boarding_patients <- intersect(multiple_rows,accepted_patients)
 
-transfer_boarding <- ed_transfers[patient_number %in% boarding_patients,
-             .(
-               vulnerable = unique(age_group != 'Adult'),
-               boarding_time = max(
-                 unique(ed_LoS - difftime(ed_disp_ts, ed_arrival, unit = 'hours')
-                 ),
-                 as.numeric(max(abs(
-                   difftime(.SD[call_outcome == 'Patient accepted by facility', event_ts], ed_disp_ts, unit = 'hours')
-                 ))),
-                 as.numeric(max(abs(
-                   difftime(.SD[call_outcome == 'Patient accepted by facility', event_ts], .SD[which.min(seq_along(patient_number)), event_ts], unit = 'hours')
-                 ))))
-             ), by = patient_number][, mean(boarding_time, na.rm = T),by = vulnerable]
+wrong_disp_ts_patients <- copy(ed_transfers[patient_number %in% boarding_patients,])[,`:=`(diff1 = abs(difftime(first_event_ts,ed_disp_ts,units = 'hours')), diff2 = abs(difftime(final_event_ts,ed_disp_ts,units = 'hours'))),by=patient_number][diff2 < diff1][,patient_number]
+ed_transfers <- ed_transfers[patient_number %in% wrong_disp_ts_patients, ed_disp_ts := min(event_ts),by = patient_number]
+
+transfer_boarding <-
+  ed_transfers[order(patient_number, event_ts), 
+               ][patient_number %in% boarding_patients, 
+                 `:=`(accept_time = min(.SD[grepl('accept',call_outcome),event_ts])),by = patient_number
+                 ][patient_number %in% boarding_patients,
+                  .(
+                    ED = unique(ED),
+                    age_group = unique(age_group),
+                    type = 'Transfer',
+                    ed_disp_ts = unique(ed_disp_ts),
+                    ESI = unique(ESI),
+                    vulnerable = unique(age_group != 'Adult'),
+                    ed_LoS = unique(ed_LoS),
+                    med_clearance = unique(as.numeric(abs(difftime(time1 = ed_arrival,
+                                                            time2 = min(ed_disp_ts,.SD[which.min(seq_along(patient_number)),event_ts]))))),
+                    post_coordination_time = .SD[which(grepl('accept', call_outcome)),
+                                                 as.numeric(abs(difftime(
+                                                   time1 = event_ts,
+                                                   time2 = ed_departure,
+                                                   unit = 'hours'
+                                                 )))], 
+                    boarding_time = unique(
+                      ed_LoS - difftime(
+                        time1 = ed_disp_ts,
+                        time2 = ed_arrival,
+                        unit = 'hours'
+                      )
+                    ),
+                    coordination_time = 
+                      max(.SD[call_outcome == 'Patient accepted by facility', as.numeric(abs(difftime(
+                        time1 = event_ts,
+                        time2 = ed_disp_ts,
+                        unit = 'hours'
+                      )))],
+                      .SD[1,
+                          as.numeric(abs(difftime(time1 = accept_time,
+                                   time2 = first_event_ts,
+                                   unit = 'hours')))])
+                  ), by = patient_number]
 
 # Internal ED -> IP Patients Dataset (read data and calculate time --------
 ed_bh_admits <-
@@ -162,12 +194,37 @@ ed_bh_admits <-
     units = "hours"
   ))), by = patient_number][, `:=`(
     type = "Internal",
-    age_group = {Vectorize(age_classify)}(age),
+    age_group = {
+      Vectorize(age_classify)
+    }(age),
     hospital_discharge_ts = NULL,
-    ip_unit = {Vectorize(unit_classify)}(ip_unit),
+    ip_unit = {
+      Vectorize(unit_classify)
+    }(ip_unit),
     ed_day = lubridate::wday(ed_arrival, label = T, abbr = T),
     year = lubridate::year(ip_admission_ts)
-  )]
+  )][, `:=`(post_coordination_time = as.numeric(max(abs(
+    difftime(
+      time1 = bed_assigned_ts,
+      time2 = bed_request_ts,
+      units = 'hours'
+    )
+  ),
+  abs(
+    difftime(
+      time1 = ip_admission_ts,
+      time2 = bed_assigned_ts,
+      units = 'hours'
+    )
+  ),
+  abs(
+    difftime(
+      time1 = ip_admission_ts,
+      time2 = bed_request_ts,
+      units = 'hours'
+    )
+  )))), by = patient_number
+  ][, ed_LoS := ed_LoS/60]
 
 admit_beds <- admit_beds[, destination_department := {Vectorize(unit_classify)}(destination_department)
                          ][, bed_transfer_instance := as.numeric(rownames(.SD)), by = patient_number
@@ -276,31 +333,30 @@ disp_to_dep_data <-
     ED = 'RST ROMB ED',
     age_group = age_group,
     ed_arrival = disp_ts,
-    ESI = ESI,
-    ed_LoS = ed_LoS/60,
+    ed_LoS = ed_LoS,
     boarding_hours = boarding_hours,
     type = 'Internal',
-    medical_clearance_hours = as.numeric(difftime(disp_ts,ed_arrival,unit = 'hours'))
+    medical_clearance_hours = as.numeric(difftime(
+      time1 = disp_ts,
+      time2 = ed_arrival,
+      unit = 'hours'
+    )),
+    post_coordination_time = post_coordination_time,
+    ESI = ESI
   )],
-  # unique(ed_transfers[ED == 'RST ROMB ED' &
-  unique(ed_transfers[patient_number %in% boarding_patients,
-                             .(ED = ED,
-                               age_group = age_group,
-                               type = 'Transfer',
-                               ESI = ESI,
-                               ed_LoS = ed_LoS,
-                               ed_arrival = ed_disp_ts,
-                               medical_clearance_hours = as.numeric(difftime(ed_disp_ts,ed_arrival,unit = 'hours')),
-                               boarding_hours = max(unique(
-                                 ed_LoS - difftime(ed_disp_ts, ed_arrival, unit = 'hours')
-                               ),
-                               as.numeric(max(abs(
-                                 difftime(.SD[call_outcome == 'Patient accepted by facility', event_ts], ed_disp_ts, unit = 'hours')
-                               ))),
-                               as.numeric(max(abs(
-                                 difftime(.SD[call_outcome == 'Patient accepted by facility', event_ts], .SD[which.min(seq_along(patient_number)), event_ts], unit = 'hours')
-                               ))))
-                             ), by = patient_number][, patient_number := NULL]),
+  unique(transfer_boarding[,
+                           .(
+                             ED = ED,
+                             ESI = ESI,
+                             age_group = age_group,
+                             type = 'Transfer',
+                             ed_LoS = ed_LoS,
+                             ed_arrival = ed_disp_ts,
+                             medical_clearance_hours = med_clearance,
+                             boarding_hours = boarding_time,
+                             coordination_time = coordination_time,
+                             post_coordination_time = post_coordination_time
+                           )]), 
   all_beds[event_type == 'Admission' &
              grepl('ROMB ED', location_description) &
              admit_source == "Non-Health Care Facility Point of Origin", list(age_group = {
@@ -370,12 +426,6 @@ unit_dynamics <-
                                                     by = idx],
            location_description,start,exit,idx,.keep_all = T)
 
-# ed_transfers <- ed_transfers[event_ts >= date_range[, min_date] & event_ts <= date_range[, max_date], 
-#                              ][grepl('Unspecified',ESI,ignore.case = T),ESI := NA_integer_
-#                                ][,ESI := as.numeric(ESI)
-#                                  ][,dates := as.Date(ed_arrival)
-#                                    ][date_list, prog_day_I := prog_day, on = .(dates)
-#                                      ][,dates := NULL]
 
 transferred_admits <- transferred_admits[event_ts >= date_range[, min_date] & event_ts <= date_range[, max_date], 
                                          ][,dates := as.Date(ip_start)

@@ -1,6 +1,13 @@
-# Call script to read in data  files and format\
+rm(list = ls())
+source('.Rprofile')
+# Call script to read in data  files and format
 source(
   file = file.path('Code','read_and_format','mayo_data.R')
+)
+
+# Call script to read in data  files and format\
+source(
+  file = file.path('Code','read_and_format','hccis_data.R')
 )
 
 # ED Arrival Rate Calculations ---------------------------------------------------------
@@ -214,9 +221,6 @@ mayo_interarrival_rates[, location_description :=
       })
   }(as.character(location_description))]
 
-source(file = file.path("Code",
-                        "data_analysis",
-                        "Build Siteinfo.R"))
 
 # Frequency of Age Among ED Arrivals ------------------------------------
 age_frequency = copy(disp_to_dep_data)[, .(Count = .N), by = age_group][, total := sum(Count)][, `:=`(Perc = Count / total)] %>%
@@ -252,22 +256,20 @@ empirical_dist = rbind(
    use.names = F)[, idx := as.numeric(as.factor(paste(patient_number, type, sep = "_")))
                   ][, `:=`(patient_number = NULL)
                     ][order(start, decreasing = F)
-                      ][location_description == "Mood Disorders Unit", location_description := "Adult Psych"
+                      ][location_description == "Mood Disorders Unit", `:=`(location_description = "Adult Psych", age = 55)
                         ][, .(ip_LoS = sum(as.numeric(difftime(exit, start, units = "hours"))),
-                              age = unique(age),
+                              age = unique({Vectorize(age_classify)}(age)),
                               location_description = unique(location_description),
                               type = unique(type)), by = idx
                           ][, .SD[1, ], by = idx
-                            ][, age := age.classify(age)
-                              ][,unit_mean_rate := one.boot(data = remove_outliers(ip_LoS),
+                              ][,unit_mean_rate := one.boot(data = (ip_LoS),
                                                        FUN = mean,
                                                        R = 500,
                                                        na.rm = T)$t0, by = location_description
-                                ][,age_mean_rate := one.boot(data = remove_outliers(ip_LoS),
+                                ][,age_mean_rate := one.boot(data = (ip_LoS),
                                                               FUN = mean,
                                                               R = 500,
                                                               na.rm = T)$t0, by = age]
-
 # External Hospital Probability of Accepting a Patient -----------------------------
 add_info_bed_mentions =
   paste0(
@@ -293,40 +295,15 @@ buffers <- unname(unlist(lapply(split(ed_transfers,by = 'patient_number'), funct
 buffers_params = dist_fit(buffers)
 
 # Internal Admit Review Time ----------------------------------------------
-# self_coord_estimates = dist_fit(ed_bh_admits[, disp_to_assign])
 self_coord_mean = one.boot(ed_bh_admits[, disp_to_assign], FUN = mean, R = 1000)
 
 self_coord_estimates = dist_fit(data = c(remove_zeros(data = na.omit(
   object = admit_beds[, bed_assign_timespan]
 ))))
 
-# Calculating facility coordination time means and distributions (individual hospitals)
-# coord_times =
-#   unique(setorder(ed_transfers[!grepl(paste0(
-#     "no availability|no beds|",
-#     "no capacity|no (.*) availability|no (.*) available|unavailable|",
-#     "no (.*) capacity|no (.*) beds|no (.*) bed|at capacity"),
-#   add_info,
-#   ignore.case = T
-#   ) & !grepl("\\<full\\>", add_info, ignore.case = T), ], event_ts)[, `:=`(
-#     t1 = min(event_ts),
-#     t2_v1 = max(event_ts),
-#     t2_v2 = max(.SD[call_outcome %in% c("Patient declined by facility", "Patient declined by facility"), event_ts])
-#   ),
-#   by = list(patient_number, facility_contacted)
-#   ][, .(review_time = {Vectorize(time_extract}(t1, t2_v1, t2_v2)),
-#     by = list(facility_contacted, patient_number)][!is.na(review_time), ])
-# 
-# fac_coord_times =
-#   coord_times[, .(
-#     Avg = mean(review_time),
-#     Dist = dist_fit(review_time),
-#     Count = .N
-#   ), by = .(facility_contacted)]
-
 # Calculating facility coordination time means and distributions (individual hospitals)----------
-
-coord_times <- ed_transfers[,.SD[.N > 1], by = list(actual_contact,patient_number)][,.(review_time = difftime(event_ts,data.table::shift(event_ts,type = 'lag'),units = 'hours')),by = list(actual_contact,patient_number)]
+coord_times <-
+  ed_transfers[, .SD[.N > 1], by = list(actual_contact, patient_number)][, .(review_time = difftime(event_ts, data.table::shift(event_ts, type = 'lag'), units = 'hours')), by = list(actual_contact, patient_number)]
 
 fac_coord_times =
   coord_times[, .(Avg = one.boot(data = review_time,
@@ -336,33 +313,78 @@ fac_coord_times =
                   Dist = dist_fit(review_time),
                   Count = .N),
               by = .(actual_contact)]
-bed_prep_data <- unlist(ed_bh_admits[,.(gap = abs(max(abs(bed_assigned_ts - bed_request_ts),
-                                                   abs(ip_admission_ts - bed_assigned_ts),
-                                                   abs(ip_admission_ts - bed_request_ts)))/3600), by = patient_number][,gap])
-
-
-bed_prep_params <- fitdist(as.numeric(bed_prep_data),distr = 'exp')
 
 overall_avg = coord_times[, one.boot(review_time, mean, R = 1000,na.rm = T)$t0]
 overall_dist = dist_fit(as.numeric(coord_times[, review_time]))
 
+# Calculating average post coordination time -----------------
+post_coordination_time <-
+  lapply(
+    X = c('Internal', 'Transfer'),
+    FUN = function(patient_type)
+      fitdist(as.numeric(disp_to_dep_data[type == patient_type, post_coordination_time]), distr = 'exp')
+  )
+names(post_coordination_time) <- c('Internal', 'Transfer')
+
+# Build the siteInfo dataframe and comnbine with previously calculated values ----------------
+source(file = file.path("Code",
+                        "data_analysis",
+                        "Build Siteinfo.R"))
 siteInfo <- siteInfo[hospital_systems,
                      hospital_system := hospital_system,
                      on = c(Facility_name = 'name')
                      ][is.na(hospital_system),hospital_system := Facility_name]
 
-
-# Assigning Request Review Time by Hospital Systems (when appropriate)
 siteInfo <-                                                                                                                                                                                                                                                                                                            
   siteInfo[,lowered_name := tolower(Facility_name)
            ][fac_coord_times, `:=`(Review_Info = as.numeric(Avg)), on = c("hospital_system == actual_contact")
              ][fac_coord_times, `:=`(Review_Params = Dist), on = c("hospital_system == actual_contact")
-                 ][,Acceptance_Prob := fac_accept_probs[,Acceptance_Prob][match(siteInfo$Facility_name,fac_accept_probs$facility_contacted)],
-                   ][,lowered_name := NULL][is.na(Acceptance_Prob) | 
-                                                        Acceptance_Prob == 0 |
-                                                        Acceptance_Prob == 1, Acceptance_Prob := overall_acceptance_prob] # Assign the overall probability of acceptance to any facility with an unrealistic p value or and Mayo Clinic
+               ][ fac_accept_probs, Acceptance_Prob := Acceptance_Prob, on = c('Facility_name'='facility_contacted')
+             # ][, Acceptance_Prob := overall_acceptance_prob
+                   ][,lowered_name := NULL
+                     ][is.na(Acceptance_Prob) | Acceptance_Prob == 0 |Acceptance_Prob == 1, 
+                       Acceptance_Prob := overall_acceptance_prob
+                       ][,Acceptance_Prob := Acceptance_Prob * 1.1]
 siteInfo <- siteInfo[which(lapply(siteInfo[,Review_Params],length)==0), `:=`(Review_Params = overall_dist,
                                                Review_Info = overall_avg)]
+
+
+# Barriers to Placement Prevalence --------------------
+
+n_gram_limit <- 5
+barrier_grams <-
+  rbindlist(data.table(anti_join(x = orig_generose_patients[, .(word = as.character(tstrsplit(
+    gsub(
+      pattern = '\\(\\([^()]*\\)\\)|\\([^()]*\\)',
+      replacement = '',
+      x = BarriersToPlacement
+    ),
+    split = ',(?![^()]*\\))',
+    fill = NA,
+    perl = T
+  ))), by = 'No'][,word := gsub('de tox|dx|de-tox', replacement = 'detox',word)][
+                  ,word := gsub('hx','history', word)][grepl('Yes|No', x = word, ignore.case = T), word := NA_character_, by = No],
+  y = stop_words))[!is.na(word),] %>% {function(data) lapply(seq(2:(n_gram_limit+1)), count_n_grams, dt = data, text_col = 'word')}(), fill = T) %>% 
+  dplyr::select(c(paste0('word_', seq(n_gram_limit)), 'n')) %>% 
+  filter(n > 10) %>% 
+  filter(!is.na(word_2)) %>% 
+  mutate(rate = n/max(orig_generose_patients$No)) %>% 
+  arrange(desc(n))
+
+barrier_grams <- barrier_grams[,.(barrier= do.call(paste,c(.SD[,paste0('word_',seq(5))],sep = ' ')),rate = rate)][,barrier := gsub(' NA',"",barrier)]
+barrier_rates <-
+  barrier_grams[barrier %in% c(
+    'substance abuse',
+    'behavioral dyscontrol',
+    'requires video monitoring',
+    'developmentally delayed',
+    'mn commitment act',
+    'medically complex',
+    'requires detox',
+    'legal history'
+  )]
+
+# Assign all the relevant data.frames/inputs/etc. to a input list that is read by the simulation --------------------
 hccis =
   data.table(readRDS(file = file.path("simulations", "function_requirements", "hccis.rds")))
 
@@ -387,12 +409,12 @@ sim_inputs =
     "age_frequency" = age_frequency,
     "hccis" = hccis,
     "empirical_dist" = empirical_dist,
-    "bed_prep_params" = bed_prep_params,
+    "post_coordination_time" = post_coordination_time,
     "self_coord_estimates" = self_coord_estimates,
     "distance.matrix" = distance.matrix,
-    "time.matrix" = time.matrix,
-    "esi_frequency" = esi_rate
-  )
+    "barrier_rates" = barrier_rates,
+    "time.matrix" = time.matrix
+    )
 saveRDS(
   object = sim_inputs,
   file = file.path(

@@ -128,8 +128,8 @@ ip_unit_metrics <-
                                        location_description = unique(location_description),
                                        type = unique(type)),by = idx
                                     ][,.SD[1,],by = idx
-                                      ][,.(Target = one.boot(remove_outliers(Total_LoS),{function(i) mean(i,na.rm = T)},500)$t0,
-                                         CI = signif(boot.ci(one.boot(remove_outliers(Total_LoS),{function(i) mean(i,na.rm = T)},500),.95,'basic')[['basic']],4) %>%
+                                      ][,.(Target = one.boot(Total_LoS,{function(i) mean(i,na.rm = T)},500)$t0,
+                                         CI = signif(boot.ci(one.boot(Total_LoS,{function(i) mean(i,na.rm = T)},500),.95,'basic')[['basic']],4) %>%
                                            {function(x) paste0('(',x[4],",",x[5],")")}()),
                                       by = list(location_description)
                                       ][,`:=`(variable = 'Length of Stay',val_group = location_description)] %>%

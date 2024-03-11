@@ -11,10 +11,10 @@ age.classify <- Vectorize(function(x){
   return(y)
 })
 
-three_ages <- Vectorize(function(i){
+combined_unit <- Vectorize(function(i){
   i <- as.character(i)
   test <- sapply(c('Adolescent','Adult','Geriatric'),function(x) grepl(x,i))
-  return(all(test))
+  return(all(all(c(sum(test) >= 2, grepl('Adolescent',i)))))
 })
 
 hccis <- 
@@ -38,32 +38,24 @@ siteInfo <-
 # Multiply avg patients per day by percentage of each age (Adults or geriatric in overall adult) to find adjusted arrival rates for each age range.
 # Only applicable if a site accomodates both age ranges i.e. this happens for Abbott pediatric because it takes both children and adolescents but not for Abbot
 # adults since they accomodate adults but not geriatric patients
-
 siteInfo <- siteInfo[,is.Adult := Age %in% c('Adult','Geriatric')
-                                 ][,triple := three_ages(Bed_Group)
-                                   ][triple == TRUE, `:=` (Admissions = Total.Admissions, 
-                                                           Patient.Days = Total.Patient.Days,
-                                                           site_IP_factor = Total.Admissions/(hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Total.Admissions]))
-                                     ][Age %in% c('Adult','Geriatric') & triple == FALSE,
-                                       `:=` (Admissions = Adult.Admissions,
-                                             Patient.Days = Adult.Days,
-                                             site_IP_factor = Adult.Admissions/hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Adult.Admissions])
-                                       ][triple == FALSE & Age %in% c('Child','Adolescent'),
-                                         `:=` (Admissions = Pediatric.Admissions,
-                                               Patient.Days = Pediatric.Days,
-                                               site_IP_factor = Pediatric.Admissions/hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Pediatric.Admissions])
-                                         ][,`:=`(arr_lambda = Admissions/(365*24), # Rate of non-ED arrivals is inverse of admissions per hour * percentage  
-                                                 LOS_rate = (Patient.Days*24)/Admissions) # Calculate average unit length of stay according
-                                             ][, setdiff(colnames(siteInfo), # Remove uneccesary columns
-                                                         c('Site','total_beds','Bed_Group','Facility_name','Age','Admissions',
-                                                           'Patient.Days','LOS_rate','arr_lambda','site_IP_factor')) := NULL]
+                                 ][,combined_unit := combined_unit(Bed_Group)
+                                   ][Age %in% c('Adult','Geriatric') & combined_unit == FALSE,
+                                       `:=` (site_IP_factor = Adult_Admissions/hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Adult_Admissions],
+                                             LOS_rate = (Adult_Days*24)/Adult_Admissions) # Calculate average unit length of stay according)
+                                       ][combined_unit == FALSE & Age %in% c('Child','Adolescent'),
+                                         `:=` (site_IP_factor = Pediatric_Admissions/hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Pediatric_Admissions],
+                                               LOS_rate = (Pediatric_Days *24)/Pediatric_Admissions)
+                                        ][combined_unit == TRUE , `:=` (site_IP_factor = Total_Admissions/(hccis[hccis_id == 'Mayo Clinic Hospital - Rochester',Total_Admissions]),
+                                                      LOS_rate = (Total_Patient_Days*24)/Total_Admissions) # Calculate average unit length of stay according)
+                                          ][, setdiff(colnames(siteInfo), # Remove uneccesary columns
+                                                              c('Site','total_beds','Bed_Group','Facility_name','Age',
+                                                                'Patient_Days','LOS_rate','arr_lambda','site_IP_factor')) := NULL
+                                                                ][unique(empirical_dist[,list(age,age_mean_rate)]),
+                                                                  mayo_los := age_mean_rate,on = c('Age' = 'age')
+                                                                  ][,`:=`(mayo_scale_param = mayo_los/LOS_rate,mayo_los = NULL)
+                                                                    ][grepl('Mayo Clinic Hospital - Rochester',Facility_name),mayo_scale_param := 1]
 
-siteInfo[Facility_name == siteInfo[is.na(LOS_rate),Facility_name],
-         `:=`(Admissions = max(Admissions,na.rm = T),
-              Patient.Days = max(Patient.Days,na.rm = T),
-              site_IP_factor = max(site_IP_factor,na.rm = T),
-              arr_lambda = max(arr_lambda,na.rm = T),
-              LOS_rate = max(LOS_rate,na.rm = T))]
 
 # mayo_hccis <- as.numeric(unique(siteInfo,by = 'Bed_Group')[grepl('Rochester',Facility_name)][,.(Total = sum(arr_lambda * 24))])
 # factors <- as.numeric(mayo_adjustment_factors[,factors := Avg/mayo_hccis]$factors)

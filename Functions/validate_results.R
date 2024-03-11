@@ -49,15 +49,17 @@ validate_results <- function(patients_df,
   
   resource_df <-
     resource_df[grepl('Mayo Rochester', resource, ignore.case = T),
-                ][order(replication, time, system)
-                  ][, `:=`(date_time = as.datetime(time * 3600, origin_date),
-                           day_num = as.numeric(as.factor(lubridate::date(as.datetime(time * 3600, origin_date))))),
-                    by = replication
-                    ][day_num >= warmup
-                      ][, `:=`(occupancy = 100 * (server/capacity),
-                               Delta = abs(as.numeric(difftime(date_time, data.table::shift(date_time, 1), 
-                                                             units = 'hours')))), 
-                      by = list(resource, replication)]
+                ][is.na(`External Transfer`),`External Transfer` := FALSE
+                  ][is.na(`ED Patient`), `ED Patient` := FALSE
+                    ][order(replication, time, system)
+                      ][, `:=`(date_time = as.datetime(time * 3600, origin_date),
+                               day_num = as.numeric(as.factor(lubridate::date(as.datetime(time * 3600, origin_date))))),
+                        by = replication
+                        ][day_num >= warmup
+                          ][, `:=`(occupancy = 100 * (server/capacity),
+                                   Delta = abs(as.numeric(difftime(date_time, data.table::shift(date_time, 1), 
+                                                                 units = 'hours')))), 
+                          by = list(resource, replication)]
 
   
   validation_frames <- list() #Collection of all validation data.frames
@@ -107,7 +109,6 @@ validate_results <- function(patients_df,
                                            differences = T)
       ][,`% Error` := Delta/`Target Value` * 100]
   
-  
   validation_frames$`IP Unit Queueing Metrics` <-
     rbindlist(
       list(
@@ -154,6 +155,10 @@ validate_results <- function(patients_df,
         ][, Delta := {Vectorize(validate_fun)}(text = `Simulation Confidence Interval`,
                                                true_val = Target,
                                                differences = T)]
+  
+  # copy(resource_df)[cap_change > 0 & grepl('Adult',resource)][,.N,by = list(replication,day_num,`External Transfer`,`ED Patient`)][,.(N = mean(N)),by = list(`External Transfer`,`ED Patient`,replication)][,.(`Simulation Confidence Interval` = t.test(N, conf.level = .95)$conf.int %>% signif(digits = 4) %>%{function(x) paste0("(", x[1], ",", x[2], ")")}()), by = list(`External Transfer`,`ED Patient`)]
+  
+  
   #### Inpatient Arrival Rate by type ####
   validation_frames$`Arrival Rates by Patient Type` <- 
     copy(resource_df
@@ -172,7 +177,8 @@ validate_results <- function(patients_df,
                replication,
                `ED Patient`,
                `External Transfer`)
-        ][is.na(Count), Count := 0
+        ][!(`ED Patient` == F & `External Transfer` == T),
+          ][is.na(Count), Count := 0
           ][, .(Count = one.boot(Count, mean, 500)$t0),
             by = list(replication,
                       resource,
@@ -291,7 +297,22 @@ validate_results <- function(patients_df,
                                              true_val = `Target Value`,
                                              differences = T)
         ][,`% Error` := Delta/`Target Value` * 100]
-
+  
+  admissions_by_facility <- copy(resources)[cap_change > 0 & is.na(patient), patient := generate_random_id(13) 
+  ][cap_change > 0,][siteInfo,facility := Facility_name, on = c('resource' = 'Bed_Group')
+  ][,.(admissions = length(unique(patient))),
+    by = list(facility,replication)
+  ][,.(admissions = mean(admissions)),by = facility
+  ][hccis, hccis_admissions := Total_Admissions, on = c('facility' = 'hccis_id')
+  ]
+  
+  validation_frames$admissions_by_facility <-
+    rbind(admissions_by_facility,
+          copy(admissions_by_facility)[,.(sum(admissions),sum(hccis_admissions))],
+          fill = TRUE
+          )[,perc_diff := 100 * (admissions - hccis_admissions)/hccis_admissions]
+  
+  
   
   return(validation_frames)
 }
