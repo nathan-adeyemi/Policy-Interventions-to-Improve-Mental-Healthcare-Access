@@ -11,8 +11,9 @@ post_process_arrival_output <-
                 'Transfer',
                 'Internal'
               )
-            )][order(replication, Enter.Timestamp)][, `:=`(total_wait_time = Transfer.Site.Found.Timestamp - Enter.Timestamp,
-                                                                                           Times.Rejected = NULL)][providers_df,  `:=`(unit = Bed_Group), on = c(Transfer.Trajectory = 'trajectory_num')]
+            )][order(replication, Enter.Timestamp)
+               ][, `:=`(total_wait_time = Transfer.Site.Found.Timestamp - Enter.Timestamp)
+                 ][providers_df,  `:=`(unit = Bed_Group), on = c(Transfer.Trajectory = 'trajectory_num')]
     }
     if (length(unique(df$replication)) == 1) {
       timestamps = format_attr_df(df)
@@ -40,7 +41,7 @@ post_process_externals <- function(attribute_df, hospital_df){
       value.var = 'value'
     )[hospital_df,  `:=`(unit = Bed_Group), on = c(Transfer.Site = 'Site')]
   }
-  
+
   if(length(unique(attribute_df$replication))==1){
     externals <- sub_fun(attribute_df)
   } else{
@@ -50,60 +51,62 @@ post_process_externals <- function(attribute_df, hospital_df){
         FUN = sub_fun
       ),
       fill = T,
-      use.names = T) 
+      use.names = T)
   }
-  
+
   return(externals)
 }
 
 post_process_resource_output <-
   function(df, attribute_df, arrivals_df, hospital_df){
-    
+
     sub_fun <- function(i) {
-      
+
+      curr_rep <- unique(df$replication)
+
       res <- lapply(
         X = unique(hospital_df$Bed_Group),
         FUN = function(test_unit){
-            
+
             df <- i[resource == test_unit][,cap_change := system - data.table::shift(system,type = 'lag'),by = resource][is.na(cap_change),cap_change := 1]
             increases <- df[cap_change > 0,]
             decreases <- df[cap_change < 0,]
-            
+
             increases <- increases[resource == test_unit][externals[unit == test_unit], `:=`(
               patient = name,
               `ED Patient` = F,
               origin = NA_character_,
               dest = NA_character_
-            ), on = c('time' = 'IP.Arrival.Timestamp'), roll = 'nearest'][arrivals_df[unit == test_unit], `:=`(
+            ), on = c('time' = 'IP.Arrival.Timestamp', 'replication' = 'replication'), roll = 'nearest'][arrivals_df[unit == test_unit], `:=`(
               patient = Sim.ID,
               `ED Patient` = T,
               origin = Site.Entered,
               dest = Transfer.Site,
               actual_start = IP.Arrival.Timestamp
-            ), on = c('time' = 'Transfer.Site.Found.Timestamp'), roll = 'nearest'][, `:=`(
+            ), on = c('time' = 'Enter.Timestamp', 'replication' = 'replication'), roll = 'nearest'][, `:=`(
               `External Transfer` = origin != dest,
               origin = NULL,
               dest = NULL
             )][`ED Patient` == T & !is.na(actual_start),time := actual_start][,actual_start := NULL]
-            
+
             decreases <- decreases[resource == test_unit][externals[unit == test_unit], `:=`(
               patient = name,
               `ED Patient` = F,
               origin = NA_character_,
               dest = NA_character_
-            ), on = c('time' = 'Finish.Timestamp'), roll = 'nearest'][arrivals_df[unit == test_unit], `:=`(
+            ), on = c('time' = 'Finish.Timestamp', 'replication' = 'replication'), roll = 'nearest'][arrivals_df[unit == test_unit], `:=`(
               patient = Sim.ID,
               `ED Patient` = T,
               origin = Site.Entered,
               dest = Transfer.Site
-            ), on = c('time' = 'Finish.Timestamp'), roll = 'nearest'][, `:=`(
+            ), on = c('time' = 'Finish.Timestamp', 'replication' = 'replication'), roll = 'nearest'][, `:=`(
               `External Transfer` = origin != dest,
               origin = NULL,
               dest = NULL
             )]
-            
+
             res <- rbind(increases,decreases)
-            
+
             return(res)
         })
       res <- rbindlist(res)

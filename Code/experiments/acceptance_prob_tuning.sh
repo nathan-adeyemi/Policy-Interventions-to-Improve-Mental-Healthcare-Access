@@ -26,11 +26,11 @@ if [ "$(uname)" == "Darwin" ]; then
         . "/Users/nadeyemi/anaconda3/etc/profile.d/mamba.sh"
     fi
 
-    cd /Users/nadeyemi/Library/CloudStorage/OneDrive-NortheasternUniversity/Graduate/Research/Minn_MH_Sim_Projects/cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
+    cd /Users/nadeyemi/Library/CloudStorage/OneDrive-NortheasternUniversity/Graduate/Research/Minn_MH_Sim_Projects/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     
     conda activate bed_allocation_proj
 
-    Rscript "Code/Validate_Simulation.R" "$port" "$acceptance_probs"
+    Rscript "Code/experiments/Validate_Simulation.R" "$port" "$acceptance_probs"
 else
     __conda_setup="$('/shared/centos7/anaconda3/2022.01/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
@@ -46,5 +46,5 @@ else
 
     cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     module load singularity/3.5.3
-    singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "Code/Validate_Simulation.R"  "$port" "$acceptance_probs"
+    singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "Code/experiments/Validate_Simulation.R"  "$port" "$acceptance_probs"
 fi

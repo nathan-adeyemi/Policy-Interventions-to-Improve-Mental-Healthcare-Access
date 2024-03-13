@@ -125,8 +125,8 @@ ip_interarrival_test_data = melt(copy(unit_dynamics),
                                                   time1 = value,
                                                   time2 = data.table::shift(value, 1),
                                                   units = "hours"
-                                                )), 
-                                   ip_admission_ts = value), 
+                                                )),
+                                   ip_admission_ts = value),
                             by = location_description][, `:=`(month = lubridate::month(ip_admission_ts, label = T, abbr = F),
                                                             day_of_week = lubridate::wday(ip_admission_ts, label = T, abbr = F),
                                                             time_of_day = {Vectorize(timeOfDay)}(ip_admission_ts),
@@ -194,7 +194,7 @@ mayo_interarrival_rates =
       ed_interarrival_test_data[, .(AvgAdmits = (mean(diff, na.rm = T))^
                                       -1)][, type := "Daily"]
     )[, `:=`(factor = AvgAdmits / .SD[type == "Daily", AvgAdmits], unit = "ED")][, location_description := NA],
-    
+
     rbind(
       ip_interarrival_test_data[ed_patient == F, .(AvgAdmits = (mean(timediff, na.rm = T))^
                                                      -1), by = list(location_description,
@@ -232,7 +232,7 @@ age_frequency = copy(disp_to_dep_data)[, .(Count = .N), by = age_group][, total 
 # Inpatient LoS Emprirical Distribution ------------------------
 empirical_dist = rbind(
    copy(all_ip_changes
-        )[location_description != "ED" & 
+        )[location_description != "ED" &
              event_end_date < Sys.Date()
           ][, `:=`(instance = as.numeric(rownames(.SD)),
                    unit_change = rleid(location_description)),
@@ -279,9 +279,9 @@ add_info_bed_mentions =
   )
 
 overall_acceptance_prob =
-  as.numeric(ed_transfers[!is.na(facility_contacted) & 
+  as.numeric(ed_transfers[!is.na(facility_contacted) &
                             !grepl(add_info_bed_mentions, add_info, ignore.case = T)
-                          ][, .(overall = 1 - nrow(.SD[call_outcome == "Patient declined by facility", ]) / 
+                          ][, .(overall = 1 - nrow(.SD[call_outcome == "Patient declined by facility", ]) /
                                    nrow(.SD[call_outcome %in% c("Patient declined by facility", "Patient accepted by facility")]))])
 # Change as Necessary
 fac_accept_probs =
@@ -309,7 +309,7 @@ fac_coord_times =
   coord_times[, .(Avg = one.boot(data = review_time,
                                  FUN = mean,
                                  R = 500,
-                                 na.rm = T)$t0, 
+                                 na.rm = T)$t0,
                   Dist = dist_fit(review_time),
                   Count = .N),
               by = .(actual_contact)]
@@ -335,14 +335,14 @@ siteInfo <- siteInfo[hospital_systems,
                      on = c(Facility_name = 'name')
                      ][is.na(hospital_system),hospital_system := Facility_name]
 
-siteInfo <-                                                                                                                                                                                                                                                                                                            
+siteInfo <-
   siteInfo[,lowered_name := tolower(Facility_name)
            ][fac_coord_times, `:=`(Review_Info = as.numeric(Avg)), on = c("hospital_system == actual_contact")
              ][fac_coord_times, `:=`(Review_Params = Dist), on = c("hospital_system == actual_contact")
                ][ fac_accept_probs, Acceptance_Prob := Acceptance_Prob, on = c('Facility_name'='facility_contacted')
              # ][, Acceptance_Prob := overall_acceptance_prob
                    ][,lowered_name := NULL
-                     ][is.na(Acceptance_Prob) | Acceptance_Prob == 0 |Acceptance_Prob == 1, 
+                     ][is.na(Acceptance_Prob) | Acceptance_Prob == 0 |Acceptance_Prob == 1,
                        Acceptance_Prob := overall_acceptance_prob
                        ][,Acceptance_Prob := Acceptance_Prob * 1.1]
 siteInfo <- siteInfo[which(lapply(siteInfo[,Review_Params],length)==0), `:=`(Review_Params = overall_dist,
@@ -364,11 +364,11 @@ barrier_grams <-
     perl = T
   ))), by = 'No'][,word := gsub('de tox|dx|de-tox', replacement = 'detox',word)][
                   ,word := gsub('hx','history', word)][grepl('Yes|No', x = word, ignore.case = T), word := NA_character_, by = No],
-  y = stop_words))[!is.na(word),] %>% {function(data) lapply(seq(2:(n_gram_limit+1)), count_n_grams, dt = data, text_col = 'word')}(), fill = T) %>% 
-  dplyr::select(c(paste0('word_', seq(n_gram_limit)), 'n')) %>% 
-  filter(n > 10) %>% 
-  filter(!is.na(word_2)) %>% 
-  mutate(rate = n/max(orig_generose_patients$No)) %>% 
+  y = stop_words))[!is.na(word),] %>% {function(data) lapply(seq(2:(n_gram_limit+1)), count_n_grams, dt = data, text_col = 'word')}(), fill = T) %>%
+  dplyr::select(c(paste0('word_', seq(n_gram_limit)), 'n')) %>%
+  filter(n > 10) %>%
+  filter(!is.na(word_2)) %>%
+  mutate(rate = n/max(orig_generose_patients$No)) %>%
   arrange(desc(n))
 
 barrier_grams <- barrier_grams[,.(barrier= do.call(paste,c(.SD[,paste0('word_',seq(5))],sep = ' ')),rate = rate)][,barrier := gsub(' NA',"",barrier)]
@@ -430,4 +430,10 @@ saveRDS(
     "function_requirements",
     "ip_facilities_info.rds"
 ))
+
+write.csv(x = copy(siteInfo)[,Review_Params := NULL],
+          file = file.path(
+            "simulations",
+            "function_requirements",
+            "ip_facilities_info.csv"))
 
