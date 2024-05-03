@@ -1,0 +1,328 @@
+[1] "Validation Results \n"
+$`Mayo Transfers Out by Day`
+   Vulnerable Patient target         95_CI 95_CI_contains_target 95_CI_Delta
+1:                 NA  0.903 (0.593,0.674)                 FALSE      -0.229
+2:              FALSE  0.602 (0.386,0.463)                 FALSE      -0.139
+3:               TRUE  0.302 (0.196,0.222)                 FALSE      -0.080
+   95_CI_percent_error         99_CI 99_CI_contains_target 99_CI_Delta
+1:            -25.3599 (0.579,0.689)                 FALSE      -0.214
+2:            -23.0897 (0.372,0.477)                 FALSE      -0.125
+3:            -26.4901 (0.192,0.227)                 FALSE      -0.075
+   99_CI_percent_error
+1:            -23.6988
+2:            -20.7641
+3:            -24.8344
+
+$`Mayo Transfers in by Day`
+   Vulnerable Patient target         95_CI 95_CI_contains_target 95_CI_Delta
+1:                 NA  1.240 (0.709,0.738)                 FALSE      -0.502
+2:              FALSE  0.612  (0.146,0.16)                 FALSE      -0.452
+3:               TRUE  0.624 (0.557,0.584)                 FALSE      -0.040
+   95_CI_percent_error         99_CI 99_CI_contains_target 99_CI_Delta
+1:           -40.48387 (0.704,0.744)                 FALSE      -0.496
+2:           -73.85621 (0.144,0.162)                 FALSE      -0.450
+3:            -6.41026 (0.552,0.589)                 FALSE      -0.035
+   99_CI_percent_error
+1:           -40.00000
+2:           -73.52941
+3:            -5.60897
+
+$`IP Unit Queueing Metrics`
+                 resource        Measure     Target           95_CI
+1:            Adult Psych Occupancy Rate  82.170000   (89.28,90.48)
+2: Child/Adolescent Psych Occupancy Rate  65.420000    (48.1,49.55)
+3:    Geriatric/Med Psych Occupancy Rate  84.560000   (87.67,88.96)
+4:            Adult Psych   Arrival Rate   4.017182   (3.346,3.412)
+5:    Geriatric/Med Psych   Arrival Rate   0.487973 (0.8577,0.8789)
+6: Child/Adolescent Psych   Arrival Rate   2.364261   (1.646,1.691)
+7:            Adult Psych Length of Stay 258.685659     (254,259.1)
+8: Child/Adolescent Psych Length of Stay 121.099322   (124.2,126.4)
+9:    Geriatric/Med Psych Length of Stay 326.835807   (328.6,337.3)
+   95_CI_contains_target 95_CI_delta          99_CI 99_CI_contains_target
+1:                 FALSE    7.110000  (89.08,90.68)                 FALSE
+2:                 FALSE  -15.870000   (47.84,49.8)                 FALSE
+3:                 FALSE    3.110000  (87.45,89.19)                 FALSE
+4:                 FALSE   -0.605182  (3.335,3.424)                 FALSE
+5:                 FALSE    0.369727 (0.854,0.8826)                 FALSE
+6:                 FALSE   -0.673261  (1.639,1.698)                 FALSE
+7:                  TRUE    0.000000  (253.1,259.9)                  TRUE
+8:                 FALSE    3.100678  (123.8,126.8)                 FALSE
+9:                 FALSE    1.764193  (327.1,338.8)                 FALSE
+   99_CI_delta
+1:    6.910000
+2:  -15.620000
+3:    2.890000
+4:   -0.593182
+5:    0.366027
+6:   -0.666261
+7:    0.000000
+8:    2.700678
+9:    0.264193
+
+$`Average ED Patient Wait Times`
+   Vulnerable Patient     type target         95_CI 95_CI_contains_target
+1:                 NA Internal   1.55 (2.117,2.287)                 FALSE
+2:                 NA Transfer   5.46 (10.27,10.88)                 FALSE
+3:              FALSE     <NA>   2.20  (3.743,4.11)                 FALSE
+4:              FALSE Internal   1.64 (2.036,2.242)                 FALSE
+5:              FALSE Transfer   5.85 (10.49,11.55)                 FALSE
+6:               TRUE     <NA>   1.82 (5.524,5.957)                 FALSE
+7:               TRUE Internal   1.38 (2.166,2.517)                 FALSE
+8:               TRUE Transfer   4.70 (9.809,10.63)                 FALSE
+   95_CI_Delta 95_CI_percent_error         99_CI 99_CI_contains_target
+1:       0.567             36.5806 (2.087,2.317)                 FALSE
+2:       4.810             88.0952 (10.16,10.99)                 FALSE
+3:       1.540             70.0000 (3.679,4.174)                 FALSE
+4:       0.396             24.1463 (2.001,2.277)                 FALSE
+5:       4.640             79.3162 (10.31,11.74)                 FALSE
+6:       3.700            203.2967 (5.449,6.033)                 FALSE
+7:       0.786             56.9565 (2.104,2.578)                 FALSE
+8:       5.110            108.7234 (9.667,10.77)                 FALSE
+   99_CI_Delta 99_CI_percent_error
+1:       0.537             34.6452
+2:       4.700             86.0806
+3:       1.480             67.2727
+4:       0.361             22.0122
+5:       4.460             76.2393
+6:       3.630            199.4505
+7:       0.724             52.4638
+8:       4.970            105.7447
+
+$`Median ED Patient Wait Time`
+   Vulnerable Patient     type target         95_CI 95_CI_contains_target
+1:                 NA Internal  0.978 (1.174,1.195)                 FALSE
+2:                 NA Transfer  3.150 (2.829,2.966)                 FALSE
+3:              FALSE     <NA>  1.080 (1.327,1.368)                 FALSE
+4:              FALSE Internal  0.990 (1.161,1.189)                 FALSE
+5:              FALSE Transfer  3.210 (3.131,3.439)                  TRUE
+6:               TRUE     <NA>  1.020 (1.526,1.586)                 FALSE
+7:               TRUE Internal  0.952 (1.183,1.245)                 FALSE
+8:               TRUE Transfer  2.960 (2.562,2.757)                 FALSE
+   95_CI_Delta 95_CI_percent_error         99_CI 99_CI_contains_target
+1:       0.196            20.04090  (1.17,1.199)                 FALSE
+2:      -0.184            -5.84127 (2.805,2.989)                 FALSE
+3:       0.247            22.87037  (1.32,1.376)                 FALSE
+4:       0.171            17.27273 (1.156,1.194)                 FALSE
+5:       0.000             0.00000 (3.078,3.492)                  TRUE
+6:       0.506            49.60784 (1.515,1.597)                 FALSE
+7:       0.231            24.26471 (1.172,1.256)                 FALSE
+8:      -0.203            -6.85811 (2.528,2.791)                 FALSE
+   99_CI_Delta 99_CI_percent_error
+1:       0.192            19.63190
+2:      -0.161            -5.11111
+3:       0.240            22.22222
+4:       0.166            16.76768
+5:       0.000             0.00000
+6:       0.495            48.52941
+7:       0.220            23.10924
+8:      -0.169            -5.70946
+
+$`Arrival Rates by Patient Type`
+                 resource External Transfer ED Patient      Measure    Target
+1:            Adult Psych             FALSE      FALSE Arrival Rate 1.2113402
+2:            Adult Psych             FALSE       TRUE Arrival Rate 2.4690722
+3:            Adult Psych              TRUE       TRUE Arrival Rate 0.3367698
+4:    Geriatric/Med Psych             FALSE      FALSE Arrival Rate 0.3161512
+5:    Geriatric/Med Psych             FALSE       TRUE Arrival Rate 0.1271478
+6:    Geriatric/Med Psych              TRUE       TRUE Arrival Rate 0.0446735
+7: Child/Adolescent Psych             FALSE      FALSE Arrival Rate 0.2955326
+8: Child/Adolescent Psych             FALSE       TRUE Arrival Rate 1.0481100
+9: Child/Adolescent Psych              TRUE       TRUE Arrival Rate 1.0206186
+             95_CI 95_CI_contains_target 95_CI_delta           99_CI
+1:    (1.17,1.209)                 FALSE -0.00234021   (1.163,1.216)
+2:   (2.006,2.065)                 FALSE -0.40407216   (1.996,2.075)
+3: (0.1469,0.1606)                 FALSE -0.17616976  (0.1445,0.163)
+4:  (0.2863,0.308)                 FALSE -0.00815120 (0.2825,0.3118)
+5: (0.3701,0.3882)                 FALSE  0.24295223  (0.367,0.3913)
+6: (0.1834,0.2006)                 FALSE  0.13872646 (0.1804,0.2036)
+7: (0.2996,0.3233)                 FALSE  0.00406735 (0.2955,0.3274)
+8: (0.9553,0.9981)                 FALSE -0.05000997  (0.9479,1.006)
+9: (0.3705,0.3901)                 FALSE -0.63051856 (0.3671,0.3936)
+   99_CI_contains_target 99_CI_delta
+1:                  TRUE   0.0000000
+2:                 FALSE  -0.3940722
+3:                 FALSE  -0.1737698
+4:                 FALSE  -0.0043512
+5:                 FALSE   0.2398522
+6:                 FALSE   0.1357265
+7:                  TRUE   0.0000000
+8:                 FALSE  -0.0421100
+9:                 FALSE  -0.6270186
+
+$admissions_by_facility
+                                                    facility
+ 1:                             Abbott Northwestern Hospital
+ 2:                             Abbott Northwestern Hospital
+ 3:                             Abbott Northwestern Hospital
+ 4:                                                      All
+ 5:                                                      All
+ 6:                                                      All
+ 7:                   Avera Marshall Regional Medical Center
+ 8:                   Avera Marshall Regional Medical Center
+ 9:                                 Cambridge Medical Center
+10:                                 Cambridge Medical Center
+11:                   Carris Health - Rice Memorial Hospital
+12:                   Carris Health - Rice Memorial Hospital
+13:                           CentraCare Health - Monticello
+14:                           CentraCare Health - Monticello
+15:                                     Children's Minnesota
+16:                                     Children's Minnesota
+17:                                 Essentia Health - Duluth
+18:                                 Essentia Health - Duluth
+19:                                 Essentia Health - Duluth
+20:                                           Fairview Range
+21:                                           Fairview Range
+22:                                      Hennepin Healthcare
+23:                                      Hennepin Healthcare
+24:                                        Hutchinson Health
+25:                                        Hutchinson Health
+26:                                        Hutchinson Health
+27:                                   Lake Region Healthcare
+28:                                   Lake Region Healthcare
+29:                                   Lake Region Healthcare
+30:                                   Lakewood Health System
+31:                                   Lakewood Health System
+32:                     M Health Fairview Southdale Hospital
+33:                     M Health Fairview Southdale Hospital
+34: M Health Fairview University of Minnesota Medical Center
+35: M Health Fairview University of Minnesota Medical Center
+36: M Health Fairview University of Minnesota Medical Center
+37:        Mayo Clinic Health System - Albert Lea and Austin
+38:        Mayo Clinic Health System - Albert Lea and Austin
+39:                     Mayo Clinic Health System in Mankato
+40:                     Mayo Clinic Health System in Mankato
+41:                         Mayo Clinic Hospital - Rochester
+42:                         Mayo Clinic Hospital - Rochester
+43:                         Mayo Clinic Hospital - Rochester
+44:                                 Meeker Memorial Hospital
+45:                                 Meeker Memorial Hospital
+46:                             Mercy Hospital, Unity Campus
+47:                             Mercy Hospital, Unity Campus
+48:                                 Mille Lacs Health System
+49:                                 Mille Lacs Health System
+50:                                   New Ulm Medical Center
+51:                                   New Ulm Medical Center
+52:                           North Memorial Health Hospital
+53:                           North Memorial Health Hospital
+54:                                        Owatonna Hospital
+55:                                        Owatonna Hospital
+56:                                              PrairieCare
+57:                                              PrairieCare
+58:                                          Regina Hospital
+59:                                          Regina Hospital
+60:                                         Regions Hospital
+61:                                         Regions Hospital
+62:                                 Ridgeview Medical Center
+63:                                 Ridgeview Medical Center
+64:                                  Saint Joseph's Hospital
+65:                                  Saint Joseph's Hospital
+66:                         Sanford Behavioral Health Center
+67:                         Sanford Behavioral Health Center
+68:                         Sanford Behavioral Health Center
+69:                                       St. Cloud Hospital
+70:                                       St. Cloud Hospital
+71:                                       St. Cloud Hospital
+72:                              St. Joseph's Medical Center
+73:                              St. Joseph's Medical Center
+74:                                      St. Luke's Hospital
+75:                                      St. Luke's Hospital
+76:                                          United Hospital
+77:                                          United Hospital
+78:                                          United Hospital
+79:                                   Winona Health Services
+80:                                   Winona Health Services
+                                                    facility
+                grouping        sim_CI admissions error
+ 1: pediatric_admissions     (702,782)        452   250
+ 2:     adult_admissions   (1579,1708)       1145   434
+ 3:     total_admissions   (2303,2479)       1597   706
+ 4: pediatric_admissions   (5156,5394)       6583 -1189
+ 5:     adult_admissions (17956,18326)      20813 -2487
+ 6:     total_admissions (23224,23693)      27409 -3716
+ 7:     adult_admissions     (115,172)        310  -138
+ 8:     total_admissions     (115,172)        310  -138
+ 9:     adult_admissions     (208,296)        394   -98
+10:     total_admissions     (208,296)        394   -98
+11:     adult_admissions     (187,251)        370  -119
+12:     total_admissions     (187,251)        388  -137
+13:     adult_admissions     (181,223)        142    39
+14:     total_admissions     (181,223)        142    39
+15: pediatric_admissions     (352,451)        349     3
+16:     total_admissions     (352,451)        391     0
+17: pediatric_admissions     (331,406)        525  -119
+18:     adult_admissions     (599,716)       1025  -309
+19:     total_admissions    (950,1101)       1550  -449
+20:     adult_admissions     (344,400)        649  -249
+21:     total_admissions     (344,400)        649  -249
+22:     adult_admissions    (951,1081)       1456  -375
+23:     total_admissions    (951,1081)       1461  -380
+24: pediatric_admissions     (169,229)        112    57
+25:     adult_admissions     (150,195)        305  -110
+26:     total_admissions     (352,422)        417     0
+27: pediatric_admissions       (59,91)         76     0
+28:     adult_admissions     (121,168)        196   -28
+29:     total_admissions     (191,249)        272   -23
+30:     adult_admissions       (58,91)         22    36
+31:     total_admissions       (58,91)         22    36
+32:     adult_admissions     (676,779)        439   237
+33:     total_admissions     (676,779)        439   237
+34: pediatric_admissions    (930,1008)        779   151
+35:     adult_admissions   (2311,2512)       2170   141
+36:     total_admissions   (3260,3461)       2950   310
+37:     adult_admissions     (253,318)        448  -130
+38:     total_admissions     (253,318)        448  -130
+39:     adult_admissions     (304,366)        290    14
+40:     total_admissions     (304,366)        291    13
+41: pediatric_admissions     (573,649)        824  -175
+42:     adult_admissions   (1469,1605)       1741  -136
+43:     total_admissions   (2076,2221)       2569  -348
+44:     adult_admissions      (88,114)         46    42
+45:     total_admissions      (88,114)         46    42
+46:     adult_admissions   (1607,1760)       1355   252
+47:     total_admissions   (1607,1760)       1355   252
+48:     adult_admissions       (24,47)        158  -111
+49:     total_admissions       (24,47)        158  -111
+50:     adult_admissions     (173,242)        298   -56
+51:     total_admissions     (173,242)        298   -56
+52:     adult_admissions     (596,679)        367   229
+53:     total_admissions     (596,679)        367   229
+54:     adult_admissions     (182,244)        301   -57
+55:     total_admissions     (182,244)        301   -57
+56: pediatric_admissions    (969,1074)       2826 -1752
+57:     total_admissions    (969,1074)       2826 -1752
+58:     adult_admissions       (41,80)         36     5
+59:     total_admissions       (41,80)         36     5
+60:     adult_admissions   (1486,1648)       1978  -330
+61:     total_admissions   (1486,1648)       1978  -330
+62:     adult_admissions      (74,117)         13    61
+63:     total_admissions      (74,117)         13    61
+64:     adult_admissions     (748,863)       1284  -421
+65:     total_admissions     (748,863)       1284  -421
+66: pediatric_admissions       (50,78)        110   -32
+67:     adult_admissions     (151,194)        117    34
+68:     total_admissions     (204,257)        227     0
+69: pediatric_admissions     (404,479)        196   208
+70:     adult_admissions     (676,765)        674     2
+71:     total_admissions   (1129,1226)        870   259
+72:     adult_admissions     (371,464)        358    13
+73:     total_admissions     (371,464)        358    13
+74:     adult_admissions     (338,445)        514   -69
+75:     total_admissions     (338,445)        519   -74
+76: pediatric_admissions     (396,431)        247   149
+77:     adult_admissions     (748,863)        651    97
+78:     total_admissions   (1178,1277)        898   280
+79:     adult_admissions      (60,131)         18    42
+80:     total_admissions      (60,131)         18    42
+                grouping        sim_CI admissions error
+
+$n_rejects
+   Vulnerable Patient target         95_CI 95_CI_contains_target 95_CI_Delta
+1:              FALSE  0.357 (1.872,2.057)                 FALSE        1.52
+2:               TRUE  0.213 (1.143,1.252)                 FALSE        0.93
+   95_CI_percent_error         99_CI 99_CI_contains_target 99_CI_Delta
+1:              425.77  (1.84,2.089)                 FALSE       1.480
+2:              436.62 (1.124,1.271)                 FALSE       0.911
+   99_CI_percent_error
+1:             414.566
+2:             427.700
+

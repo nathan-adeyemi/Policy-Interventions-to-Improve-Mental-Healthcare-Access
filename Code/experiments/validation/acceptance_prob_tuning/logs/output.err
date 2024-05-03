@@ -1,0 +1,27 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+2024-04-17 22:33:26,389	INFO worker.py:1715 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-04-17 22:33:28,865	INFO packaging.py:530 -- Creating a file package for local directory '/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access'.
+2024-04-17 22:33:29,599	WARNING packaging.py:405 -- File /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out is very large (16.93MiB). Consider adding this file to the 'excludes' list to skip uploading it: `ray.init(..., runtime_env={'excludes': ['/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out']})`
+2024-04-17 22:33:29,701	INFO packaging.py:358 -- Pushing file package 'gcs://_ray_pkg_7a8a16c3a7bf087a.zip' (21.81MiB) to Ray cluster...
+2024-04-17 22:33:29,826	INFO packaging.py:371 -- Successfully pushed file package 'gcs://_ray_pkg_7a8a16c3a7bf087a.zip'.
+2024-04-17 22:33:33,143	INFO tune.py:592 -- [output] This will use the new output engine with verbosity 1. To disable the new output and use the legacy output engine, set the environment variable RAY_AIR_NEW_OUTPUT=0. For more information, please see https://github.com/ray-project/ray/issues/36949
+2024-04-17 22:33:33,356	WARNING tune.py:916 -- AIR_VERBOSITY is set, ignoring passed-in ProgressReporter for now.
+slurmstepd: error: *** JOB 41876043 ON d0044 CANCELLED AT 2024-04-18T01:33:13 DUE TO TIME LIMIT ***

@@ -47,11 +47,12 @@ hccis[is.na(hccis)] <- 0
 hccis[, `:=`(
   Adult_Days = Adult_Non_ICU_Days + Adult_ICU_Days,
   Adult_Admissions = Adult_Non_ICU_Admissions + Adult_ICU_Admissions
-)]
+)][hospitals[,`Hospital Name` := gsub("[*]",replacement = '',x = `Hospital Name`)], urban := `MSA StatUrbans`, on = c('hccis_id' = 'Hospital Name')
+   ][,`:=`(ed_scale_param = ED_to_IP_Admissions / .SD[hccis_id == 'Mayo Clinic Hospital - Rochester', ED_to_IP_Admissions])]
 
 saveRDS(
   object = hccis,
   file = file.path("simulations", "function_requirements", "hccis.rds")
 )
-write_xlsx(x = hccis,
-           path = file.path('Data', 'HCCIS', 'hccis_ed_ips_2020.csv'))
+write.csv(x = hccis,
+           file = file.path('Data', 'HCCIS', 'hccis_ed_ips_2020.csv'))

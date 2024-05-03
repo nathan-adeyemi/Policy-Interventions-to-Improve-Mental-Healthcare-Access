@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --partition=short
-#SBATCH --time=04:00:00
+#SBATCH --time=22:00:00
 #SBATCH --nodes=1
-#SBATCH --mem=64GB
+#SBATCH --mem=256G
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=30
-#SBATCH --output=sbatch_out_files/validation.out 
-#SBATCH --error=sbatch_out_files/validation.err
+#SBATCH --cpus-per-task=120
+#SBATCH --output=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out 
+#SBATCH --error=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.err
 
 if [ "$(uname)" == "Darwin" ]; then
 
@@ -28,9 +28,9 @@ if [ "$(uname)" == "Darwin" ]; then
 
     cd /Users/nadeyemi/Library/CloudStorage/OneDrive-NortheasternUniversity/Graduate/Research/Minn_MH_Sim_Projects/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     
-    conda activate bed_allocation_proj
+    conda activate ed_ip_simulation
 
-    Rscript "Code/experiments/Validate_Simulation.R" "$port" "$acceptance_probs"
+    python "Code/experiments/acceptance_prob_tuning.py"
 else
     __conda_setup="$('/shared/centos7/anaconda3/2022.01/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
     if [ $? -eq 0 ]; then
@@ -42,9 +42,11 @@ else
             export PATH="/shared/centos7/anaconda3/2022.01/bin:$PATH"
         fi
     fi
+    cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     unset __conda_setup
 
-    cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     module load singularity/3.5.3
-    singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "Code/experiments/Validate_Simulation.R"  "$port" "$acceptance_probs"
+    conda activate ed_ip_simulation
+
+     /home/adeyemi.n/.conda/envs/ed_ip_simulation/bin/python3.11 "Code/experiments/acceptance_prob_tuning.py"
 fi

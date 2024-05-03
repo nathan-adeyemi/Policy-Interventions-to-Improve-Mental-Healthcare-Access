@@ -30,9 +30,9 @@ validate_fun <- function(text,
     
     if (differences == T) {
       if((true_val > max_val)){
-        return(true_val - max_val)
+        return(max_val - true_val)
       } else if (true_val < min_val) {
-        return(true_val - min_val)
+        return(min_val - true_val)
       } else {
         return(0)
       }

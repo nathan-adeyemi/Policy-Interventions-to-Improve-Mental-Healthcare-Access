@@ -1,3 +1,17 @@
+str_fuzzy_match <-
+  function(string,
+           df = aliases,
+           names_col = 'name',
+           alias_col = 'aliases') {
+    return(unlist(df[, ..names_col])[unlist(lapply(lapply(
+      map2(.x = string, .y = df[, ..alias_col], .f = stringdist), which.min
+    ), function(i)
+      return(ifelse(
+        is_empty(i), NA_integer_, i
+      ))))])
+  }
+
+
 # Read In Original Data ------------------------------------------------------
 all_names <- readxl::read_excel(path = file.path("Data","HCCIS","hosplist.xlsx"),
                         sheet = "Unique Facility Aliases") %>%
@@ -11,21 +25,16 @@ all_names <- readxl::read_excel(path = file.path("Data","HCCIS","hosplist.xlsx")
   }) %>%
   names()
 
-aliases <-
-  rbindlist(l = lapply(
-    X = apply(
-      X = data.table(readxl::read_excel(
-        path  = file.path("Data", "HCCIS", "hosplist.xlsx"),
-        sheet = "Unique Facility Aliases"
-      )),
-      MARGIN = 2,
-      FUN = na.omit
-    ),
-    FUN = function(i)
-      data.table(name = rep(i[1], length(unique(
-        i
-      ))), aliases = tolower(unique(i)))
-  ))[aliases != '0',]
+aliases <-data.table(readxl::read_excel(
+  path  = file.path("Data", "HCCIS", "hosplist.xlsx"),
+  sheet = "Unique Facility Aliases"
+))
+aliases <- rbindlist(lapply(X = colnames(aliases),
+                            FUN = function(col){
+                       unique_names <- unlist(na.omit(unique(aliases[,..col])))
+                       return(data.table(name = rep(col, length(unique_names)), aliases = unique_names))
+                     }), 
+                     fill = TRUE)
 
 hospital_systems <- data.table(readxl::read_excel(
     path  = file.path("Data", "HCCIS", "hosplist.xlsx"),
@@ -35,7 +44,6 @@ hospital_systems <- data.table(readxl::read_excel(
                                         `System Affiliation` = NULL)
                                   ][!is.na(hospital_system) & hospital_system != 'No Affiliation'
                                     ][,name := gsub(pattern = '\\*','',name)]
-
 
 distance.matrix <-
   readRDS(file = file.path(
@@ -115,18 +123,21 @@ ed_transfers <-
   ][,`:=`(facility_contacted = tolower(facility_contacted),
           receiving_facility = tolower(receiving_facility))
     # Merging with hospital alias and hospital system dataframes
-    ][aliases,facility_contacted := name, on = c(facility_contacted = 'aliases')
-      ][aliases, receiving_facility := name, on = c(receiving_facility = 'aliases')
-        ][hospital_systems,actual_contact := hospital_system,on = c(facility_contacted = 'name')
+    # ][aliases,facility_contacted := name, on = c(facility_contacted = 'aliases')
+    #   ][aliases, receiving_facility := name, on = c(receiving_facility = 'aliases')
+  ][,corrected_name := lapply(.SD,str_fuzzy_match), .SDcols = 'facility_contacted'
+    ][is.na(corrected_name),corrected_name := lapply(.SD,str_fuzzy_match), .SDcols = 'receiving_facility'
+        ][hospital_systems,actual_contact := hospital_system,on = c(corrected_name = 'name')
+        ][is.na(actual_contact) & !is.na(corrected_name), actual_contact := corrected_name
+        ][grepl("decline|no|unable|on divert|acuity", add_info, ignore.case = T) & call_outcome != "Patient declined by facility", call_outcome := "Patient declined by facility"]           # Properly assigning additional rejection call outcomes to the 
 
-          # Properly assigning additional rejection call outcomes to the
-          ][grepl("decline|no|unable|on divert|acuity", add_info, ignore.case = T) & call_outcome != "Patient declined by facility", call_outcome := "Patient declined by facility"
-               ][, rejections := .SD[call_outcome == "Patient declined by facility",max(0,.N,na.rm = T)], by = patient_number
+ed_transfers <- ed_transfers[, rejections := .SD[call_outcome == "Patient declined by facility",max(0,.N,na.rm = T)], by = patient_number
                   ][is.na(actual_contact), actual_contact := facility_contacted
                     ][call_outcome == 'Patient accepted by facility', ip_treatment_facility := receiving_facility,
-                    ][,ED_name := {Vectorize(ED_classify)}(ED)
+                    ][,`:=`(ED_name = {Vectorize(ED_classify)}(ED),
+                            corrected_name = NULL)
                      ][,`:=`(Travel.Distance = {Vectorize(find_drive_distance)}(ED_name, ip_treatment_facility),
-                             age_group = {Vectorize(age_classify)}(age),
+                             age_group = age_classify(age),
                              ed_LoS = ed_LoS/60)
                       ][,`:=`(Travel.Distance = max(Travel.Distance,na.rm = T),
                               first_event_ts = min(event_ts),
@@ -198,9 +209,8 @@ ed_bh_admits <-
       Vectorize(age_classify)
     }(age),
     hospital_discharge_ts = NULL,
-    ip_unit = {
-      Vectorize(unit_classify)
-    }(ip_unit),
+    ip_unit = unit_classify(ip_unit,age),
+    ip_unit_full = unit_classify(ip_unit,age,sim_unit_name = T),
     ed_day = lubridate::wday(ed_arrival, label = T, abbr = T),
     year = lubridate::year(ip_admission_ts)
   )][, `:=`(post_coordination_time = as.numeric(max(abs(
@@ -226,10 +236,10 @@ ed_bh_admits <-
   )))), by = patient_number
   ][, ed_LoS := ed_LoS/60]
 
-admit_beds <- admit_beds[, destination_department := {Vectorize(unit_classify)}(destination_department)
-                         ][, bed_transfer_instance := as.numeric(rownames(.SD)), by = patient_number
-                           ][,bed_assign_timespan := as.numeric(abs(difftime(requested_time,last_assigned_time,units = 'hours')))]
-# Finds all patients in both ED BH admits and all beds
+admit_beds <- admit_beds[, bed_transfer_instance := as.numeric(rownames(.SD)), by = patient_number
+                           ][,`:=`(bed_assign_timespan = as.numeric(abs(difftime(requested_time,last_assigned_time,units = 'hours'))),
+                                   destination_department = unit_classify(destination_department))]
+# Finds and remove all patients in both ED BH admits and all beds
 all_beds <- all_beds[!(patient_number %in% na.omit(copy(all_beds
                                                         )[, ed := "Emergency" %in% patient_process_type, by = patient_number
                                                           ][ed == TRUE,
@@ -243,7 +253,8 @@ all_beds <- all_beds[!(patient_number %in% na.omit(copy(all_beds
 
 # Non-ED IP Admissions Transfers and Discharges ----------------------------
 all_ip_changes <- copy(all_beds)[, `:=`(bed = {Vectorize(extract_bed)}(location_description),
-                                        location_description = {Vectorize(unit_classify)}(location_description),
+                                        location_description = unit_classify(location_description,age),
+                                        location_description_full = unit_classify(location_description,age,sim_unit_name = T),
                                         admit_date = NULL,
                                         discharge_date = NULL,
                                         site = NULL,
@@ -261,40 +272,24 @@ all_ip_changes <- copy(all_beds)[, `:=`(bed = {Vectorize(extract_bed)}(location_
                                     location_description = "destination_department",
                                     event_type = "event_type",
                                     bed = "destination_bed"
-                                  )
-                                ]
+                                  )]
 
-# Every Bed BH Admits Occupied (including non Generose) -------------------
-all_ip_admits <- rbindlist(list(
-  copy(all_ip_changes)[
-    event_type != "Discharge",
-    list(patient_number, event_type, location_description,
-      "ip_admission_ts" = event_date, "ip_discharge_ts" = event_end_date, age, bed,
-      "source" = admit_source, bed_request_ts
-    )
-  ][, dataset := "all_beds"] %>% data.table(),
-  copy(ed_bh_admits)[, list(patient_number, ip_unit, ip_admission_ts, ip_discharge_ts, age, bed, bed_request_ts)
-                     ][, `:=`(event_type = "Admission", source = "ED", dataset = "ed_bh_admits")] %>%
-    relocate("event_type", .after = "patient_number") %>%
-    rename(
-      location_description = ip_unit,
-      ip_admission_ts = ip_admission_ts,
-      ip_discharge_ts = ip_discharge_ts
-    )
-), fill = T)[, `:=`(
-  patient_number = as.numeric(as.factor(paste(patient_number, dataset))),
-  dataset = NULL, source_general = {Vectorize(source_classify)}(source)
-)][order(ip_admission_ts), ][location_description %in% c("Adult Psych", "Geriatric/Med Psych", "Child/Adolescent Psych", "Mood Disorders Unit")][, .SD[1], by = patient_number]
+# Number of treatment beds @ each Mayo Clinic Unit -----------------------------
+# Current split (All MDU and hald of the Geriatric/Med Psych beds are for 18-64 patients)
+max_unit_beds = c('Child/Adolescent Psych' = 18, 'Adult Psych' = 48, 'Geriatric/Med Psych' = 7)
+
+# Old split assuming Geriatric beds are for 65+ ONLY
+# max_unit_beds = c('Child/Adolescent Psych' = 18, 'Adult Psych' = 41, 'Geriatric/Med Psych' = 14)
+
+# Old split considering the Mood Disorders Unit as a completely separate unit
+# max_unit_beds = c('Child/Adolescent Psych' = 18, 'Adult Psych' = 25, 'Geriatric/Med Psych' = 14, 'Mood Disorders Unit' =  16)
 
 # All Behavioral Admits Data set ------------------------------------------
 transferred_admits <-
    transferred_admits[ip_admit == "Y",
-                         ][,`:=`(unit = {Vectorize(unit_classify)}(ip_unit),
-                                 age = NULL)
-                           ][all_ip_changes[!is.na(transferred_admits_patient_num)],
-                             `:=`(age = age),
-                             on = c(patient_number = 'transferred_admits_patient_num')
-                             ][,age_group := {Vectorize(age_classify)}(age)]
+                         ][,`:=`(unit =  unit_classify(ip_unit,age),
+                                 age_group = age_classify(age),
+                                 age = NULL)]
 
 transferred_admits$ip_start <-
    merge(x = transferred_admits,
@@ -314,10 +309,6 @@ date_range <- rbind(
   data.table(df = "ed_transfers", ed_transfers[, .(min_date = min(event_ts), max_date = max(event_ts))]),
   data.table(df = "transferred_admits", transferred_admits[, .(min_date = min(event_ts), max_date = max(event_ts))]),
   data.table(df = "ed_bh_admits", ed_bh_admits[, .(min_date = min(ed_arrival), max_date = max(ip_discharge_ts, na.rm = T))]),
-  data.table(df = "all_ip_admits", all_ip_admits[, .(
-    min_date = as.POSIXct(sapply(.SD, function(x) min(x)), origin = "1970-01-01 00:00:00"),
-    max_date = as.POSIXct(sapply(.SD, function(x) max(x)), origin = "1970-01-01 00:00:00")
-  ), .SDcols = c("ip_admission_ts")]),
   data.table(df = "all_ip_changes", all_ip_changes[, .(min_date = min(event_date), max_date = max(event_date))])
 )[, .(
   min_date = max(min_date),
@@ -375,56 +366,54 @@ disp_to_dep_data <-
   fill = T)[, `:=`(
     year = lubridate::year(ed_arrival),
     day = lubridate::wday(ed_arrival, label = T, abbr = F)
-  )][, dates := as.Date(ed_arrival)][date_list, prog_day_I := prog_day, on = .(dates)][, `:=`(dates = NULL,
-                                                                                              keep = NULL)][!is.na(ed_arrival),]
-
-# Individual Unit Arrival Rates -----------------------------
-max_unit_beds = c('Child/Adolescent Psych' = 18, 'Adult Psych' = 41, 'Geriatric/Med Psych' = 14)
-# max_unit_beds = c('Child/Adolescent Psych' = 18, 'Adult Psych' = 25, 'Geriatric/Med Psych' = 14, 'Mood Disorders Unit' =  16)
+  )][, dates := as.Date(ed_arrival)][date_list, prog_day_I := prog_day, on = .(dates)][, `:=`(dates = NULL)][!is.na(ed_arrival),]
 
 unit_dynamics <-
   distinct(rbind(all_ip_changes[location_description != 'ED' &
-                                event_end_date < Sys.Date()
-                              ][, `:=`(
-                                instance = as.numeric(rownames(.SD)),
-                                unit_change = rleid(location_description)),
-                                by = patient_number][, .(
-                                  start = min(event_date),
-                                  exit = max(event_end_date),
-                                  age = unique(age),
-                                  transferred_admits_patient_num = transferred_admits_patient_num
-                                ), by = list(patient_number,
-                                  event_type,
-                                  unit_change,
-                                  location_description)
-                                ][event_type != 'Discharge'
-                                  ][, `:=`(
-                                    type = 'Non-ED Admission',
-                                    unit_change = NULL)],
-               ed_bh_admits[, list(patient_number,
-                                   ed_disp_init,
-                                   ip_unit,
-                                   ip_admission_ts,
-                                   ip_discharge_ts,
-                                   age)][, `:=`(transferred_admits_patient_num = NA,
-                                                type = 'ED Admission')],
-               use.names = F)[, idx := as.numeric(as.factor(paste(patient_number, type, sep = '_')))
-                              ][, `:=`(patient_number = NULL)
-                                ][order(start, decreasing = F)
-                                  ][, `:=`(ed_patient = type == 'ED Admission')
-                                    ][, dates := as.Date(start)
-                                      ][date_list, prog_day_I := prog_day, on = .(dates)
-                                        ][, dates := NULL
-                                          ][, `:=`(transfer = !is.na(transferred_admits_patient_num))
-                                            ][transfer == TRUE, type := 'ED Admission'
-                                              ][type == 'ED Admission', ed_patient := T
-                                                ][location_description == 'Mood Disorders Unit',
-                                                  location_description := 'Adult Psych'
-                                                  ][,`:=`(start = min(start),
-                                                          exit = max(exit),
-                                                          location_description = unique(location_description)[1]),
-                                                    by = idx],
-           location_description,start,exit,idx,.keep_all = T)
+                                  event_end_date < Sys.Date() &
+                                  patient_process_type == 'IP Behavioral Health'
+  ][, `:=`(
+    instance = as.numeric(rownames(.SD)),
+    unit_change = rleid(location_description)),
+    by = patient_number][, .(
+      start = min(event_date),
+      exit = max(event_end_date),
+      age = unique(age),
+      transferred_admits_patient_num = transferred_admits_patient_num,
+      location_description_full = location_description_full 
+    ), by = list(patient_number,
+                 event_type,
+                 unit_change,
+                 location_description)
+    ][event_type != 'Discharge'
+    ][, `:=`(
+      type = ifelse(is.na(transferred_admits_patient_num),'Non-ED Admission','ED Admission'),
+      unit_change = NULL,
+      dataset = 'all_ip_changes')],
+  ed_bh_admits[, list(patient_number,
+                      location_description = ip_unit,
+                      location_description_full = ip_unit_full,
+                      start = ip_admission_ts,
+                      exit = ip_discharge_ts,
+                      age)][,`:=`(
+                        dataset = 'ed_bh_admits')
+                      ][, `:=`(transferred_admits_patient_num = NA,type = 'ED Admission')],
+  use.names = T, 
+  fill = TRUE)[, idx := as.numeric(as.factor(paste(patient_number, dataset, sep = '_')))
+               # ][, `:=`(patient_number = NULL)
+  ][order(start, decreasing = F)
+  ][, `:=`(ed_patient = type == 'ED Admission',
+           transfer = !is.na(transferred_admits_patient_num))
+  ][, dates := as.Date(start)
+  ][date_list, prog_day_I := prog_day, on = .(dates)
+  ][, dates := NULL
+  ][transfer == TRUE, type := 'ED Admission'
+  ][location_description == 'Mood Disorders Unit',`:=`(location_description = 'Adult Psych', location_description_full = 'Mayo Rochester Adult ')
+  ][,`:=`(start = min(start),
+          exit = max(exit)),by = idx,
+  ][length(list(unique(location_description))) == 2 & any(grepl('Geriatric', location_description)),
+    `:=`(location_description = 'Geriatric/Med Psych',location_description_full = 'Mayo Rochester Geriatric')],
+  location_description,start,exit,idx,.keep_all = T)
 
 
 transferred_admits <- transferred_admits[event_ts >= date_range[, min_date] & event_ts <= date_range[, max_date],
@@ -437,12 +426,6 @@ ed_bh_admits <- ed_bh_admits[ed_arrival >= date_range[, min_date] & ip_discharge
                              ][date_list, prog_day_I := prog_day, on = .(dates)
                              ][,dates := NULL]
 
-all_ip_admits <- all_ip_admits[, keep := (ip_admission_ts >= date_range[, min_date] & ip_discharge_ts < date_range[, max_date])
-                               ][keep == TRUE,
-                                 ][,dates := as.Date(ip_admission_ts)
-                                   ][date_list, prog_day_I := prog_day, on = .(dates)
-                                   ][,`:=`(dates = NULL,
-                                           keep = NULL)]
 
 all_ip_changes <- all_ip_changes[event_date >= date_range[, min_date] & event_date < date_range[, max_date],
                                  ][,dates := as.Date(event_date)

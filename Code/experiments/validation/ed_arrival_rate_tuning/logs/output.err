@@ -1,0 +1,225 @@
+
+CommandNotFoundError: Your shell has not been properly configured to use 'conda activate'.
+To initialize your shell, run
+
+    $ conda init <SHELL_NAME>
+
+Currently supported shells are:
+  - bash
+  - fish
+  - tcsh
+  - xonsh
+  - zsh
+  - powershell
+
+See 'conda init --help' for more information and options.
+
+IMPORTANT: You may need to close and restart your shell after running 'conda init'.
+
+
+2024-04-25 12:07:00,835	INFO worker.py:1715 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-04-25 12:07:04,469	INFO packaging.py:530 -- Creating a file package for local directory '/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access'.
+2024-04-25 12:07:05,851	WARNING packaging.py:405 -- File /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out is very large (16.93MiB). Consider adding this file to the 'excludes' list to skip uploading it: `ray.init(..., runtime_env={'excludes': ['/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out']})`
+2024-04-25 12:07:05,912	INFO packaging.py:358 -- Pushing file package 'gcs://_ray_pkg_00459fc55d6e171a.zip' (23.13MiB) to Ray cluster...
+2024-04-25 12:07:05,968	INFO packaging.py:371 -- Successfully pushed file package 'gcs://_ray_pkg_00459fc55d6e171a.zip'.
+2024-04-25 12:07:26,742	INFO tune.py:592 -- [output] This will use the new output engine with verbosity 1. To disable the new output and use the legacy output engine, set the environment variable RAY_AIR_NEW_OUTPUT=0. For more information, please see https://github.com/ray-project/ray/issues/36949
+2024-04-25 12:07:27,061	WARNING tune.py:916 -- AIR_VERBOSITY is set, ignoring passed-in ProgressReporter for now.
+2024-04-25 12:07:27,063	WARNING tune_controller.py:2174 -- The maximum number of pending trials has been automatically set to the number of available cluster CPUs, which is high (140 CPUs/pending trials). If you're running an experiment with a large number of trials, this could lead to scheduling overhead. In this case, consider setting the `TUNE_MAX_PENDING_TRIALS_PG` environment variable to the desired maximum number of concurrent trials.
+[36m(sim_trainable pid=30144)[0m 
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘tictoc’
+[36m(sim_trainable pid=30144)[0m 
+[36m(sim_trainable pid=30144)[0m The following object is masked from ‘package:data.table’:
+[36m(sim_trainable pid=30144)[0m 
+[36m(sim_trainable pid=30144)[0m     shift
+[36m(sim_trainable pid=30144)[0m 
+[36m(sim_trainable pid=30144)[0m Loading required package: stats
+[36m(sim_trainable pid=30144)[0m Loading required package: utils
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘lubridate’
+[36m(sim_trainable pid=30144)[0m The following objects are masked from ‘package:data.table’:
+[36m(sim_trainable pid=30144)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(sim_trainable pid=30144)[0m     yday, year
+[36m(sim_trainable pid=30144)[0m The following objects are masked from ‘package:base’:
+[36m(sim_trainable pid=30144)[0m     date, intersect, setdiff, union
+[36m(sim_trainable pid=30144)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(sim_trainable pid=30144)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(sim_trainable pid=30144)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(sim_trainable pid=30144)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(sim_trainable pid=30144)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(sim_trainable pid=30147)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(sim_trainable pid=30147)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::date()        masks base::date()
+[36m(sim_trainable pid=30147)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(sim_trainable pid=30147)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(sim_trainable pid=30147)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(sim_trainable pid=30147)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(sim_trainable pid=30147)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(sim_trainable pid=30147)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::union()       masks base::union()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(sim_trainable pid=30147)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘stringdist’
+[36m(sim_trainable pid=30144)[0m The following object is masked from ‘package:tidyr’:
+[36m(sim_trainable pid=30144)[0m     extract
+[36m(sim_trainable pid=30144)[0m Loading required package: MASS
+[36m(sim_trainable pid=30144)[0m Loading required package: grDevices
+[36m(sim_trainable pid=30144)[0m Loading required package: graphics
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘MASS’
+[36m(sim_trainable pid=30144)[0m The following object is masked from ‘package:dplyr’:
+[36m(sim_trainable pid=30144)[0m     select
+[36m(sim_trainable pid=30144)[0m Loading required package: survival
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘boot’
+[36m(sim_trainable pid=30144)[0m The following object is masked from ‘package:survival’:
+[36m(sim_trainable pid=30144)[0m     aml
+[36m(sim_trainable pid=30144)[0m The following objects are masked from ‘package:gtools’:
+[36m(sim_trainable pid=30144)[0m     inv.logit, logit
+[36m(sim_trainable pid=30144)[0m Simple Bootstrap Routines (1.1-7)
+[36m(sim_trainable pid=30147)[0m Attaching package: ‘EnvStats’
+[36m(sim_trainable pid=30147)[0m The following object is masked from ‘package:MASS’:
+[36m(sim_trainable pid=30147)[0m     boxcox
+[36m(sim_trainable pid=30147)[0m The following objects are masked from ‘package:stats’:
+[36m(sim_trainable pid=30147)[0m     predict, predict.lm
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘simmer’
+[36m(sim_trainable pid=30144)[0m     separate
+[36m(sim_trainable pid=30144)[0m The following objects are masked from ‘package:lubridate’:
+[36m(sim_trainable pid=30144)[0m     now, rollback
+[36m(sim_trainable pid=30144)[0m [32m [repeated 360x across cluster] (Ray deduplicates logs by default. Set RAY_DEDUP_LOGS=0 to disable log deduplication, or see https://docs.ray.io/en/master/ray-observability/ray-logging.html#log-deduplication for more options.)[0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘tictoc’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following object is masked from ‘package:data.table’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     shift[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: stats[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: utils[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m Loading required package: foreach
+[36m(sim_trainable pid=30144)[0m Attaching package: ‘foreach’
+[36m(sim_trainable pid=30144)[0m The following objects are masked from ‘package:purrr’:
+[36m(sim_trainable pid=30144)[0m     accumulate, when
+[36m(sim_trainable pid=30144)[0m Loading required package: iterators
+[36m(sim_trainable pid=30144)[0m Loading required package: parallel
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘lubridate’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following objects are masked from ‘package:data.table’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     yday, year[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following objects are masked from ‘package:base’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     date, intersect, setdiff, union[32m [repeated 11x across cluster][0m
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2626, in get
+    raise value
+ray.exceptions.OutOfMemoryError: Task was killed due to the node running low on memory.
+
+Refer to the documentation on how to address the out of memory issue: https://docs.ray.io/en/latest/ray-core/scheduling/ray-oom-prevention.html. Consider provisioning more memory on this node or reducing task parallelism by requesting more CPUs per task. Set max_restarts and max_task_retries to enable retry when the task crashes due to OOM. To adjust the kill threshold, set the environment variable `RAY_memory_usage_threshold` when starting Ray. To disable worker killing, set the environment variable `RAY_memory_monitor_refresh_ms` to zero.
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/ed_arrival_rate_tuning/main.py", line 298, in <module>
+    results = execute_tuning(
+              ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/ed_arrival_rate_tuning/main.py", line 222, in execute_tuning
+    results = tuner.fit()
+              ^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/tuner.py", line 381, in fit
+    return self._local_tuner.fit()
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/impl/tuner_internal.py", line 509, in fit
+    analysis = self._fit_internal(trainable, param_space)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/impl/tuner_internal.py", line 628, in _fit_internal
+    analysis = run(
+               ^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/tune.py", line 1002, in run
+    runner.step()
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/execution/tune_controller.py", line 728, in step
+    if not self._actor_manager.next(timeout=0.1):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/actor_manager.py", line 224, in next
+    self._actor_task_events.resolve_future(future)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 113, in resolve_future
+    on_error(e)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/actor_manager.py", line 770, in on_error
+    self._actor_task_failed(
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/actor_manager.py", line 291, in _actor_task_failed
+    raise RuntimeError(
+RuntimeError: Caught unexpected exception: Task was killed due to the node running low on memory.
+
+Refer to the documentation on how to address the out of memory issue: https://docs.ray.io/en/latest/ray-core/scheduling/ray-oom-prevention.html. Consider provisioning more memory on this node or reducing task parallelism by requesting more CPUs per task. Set max_restarts and max_task_retries to enable retry when the task crashes due to OOM. To adjust the kill threshold, set the environment variable `RAY_memory_usage_threshold` when starting Ray. To disable worker killing, set the environment variable `RAY_memory_monitor_refresh_ms` to zero.
+[36m(sim_trainable pid=30143)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::as.difftime() masks base::as.difftime()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ dplyr::between()         masks data.table::between()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::date()        masks base::date()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ dplyr::filter()          masks stats::filter()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ dplyr::first()           masks data.table::first()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ purrr::flatten()         masks jsonlite::flatten()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::hour()        masks data.table::hour()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::intersect()   masks base::intersect()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ dplyr::lag()             masks stats::lag()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ dplyr::last()            masks data.table::last()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::mday()        masks data.table::mday()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::minute()      masks data.table::minute()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::month()       masks data.table::month()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::quarter()     masks data.table::quarter()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::second()      masks data.table::second()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::setdiff()     masks base::setdiff()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ purrr::transpose()       masks data.table::transpose()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::union()       masks base::union()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::wday()        masks data.table::wday()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::week()        masks data.table::week()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::yday()        masks data.table::yday()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30144)[0m ✖ lubridate::year()        masks data.table::year()[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘stringdist’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following object is masked from ‘package:tidyr’:[32m [repeated 23x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     extract[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: MASS[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: grDevices[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: graphics[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘MASS’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following object is masked from ‘package:dplyr’:[32m [repeated 23x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     select[32m [repeated 35x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: survival[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘boot’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following object is masked from ‘package:survival’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     aml[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following objects are masked from ‘package:gtools’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     inv.logit, logit[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Simple Bootstrap Routines (1.1-7)[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30140)[0m Attaching package: ‘EnvStats’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following object is masked from ‘package:MASS’:[32m [repeated 23x across cluster][0m
+[36m(sim_trainable pid=30140)[0m     boxcox[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30140)[0m The following objects are masked from ‘package:stats’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30140)[0m     predict, predict.lm[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘simmer’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     separate[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following objects are masked from ‘package:lubridate’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     now, rollback[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m [32m [repeated 164x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: foreach[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Attaching package: ‘foreach’[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m The following objects are masked from ‘package:purrr’:[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m     accumulate, when[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: iterators[32m [repeated 11x across cluster][0m
+[36m(sim_trainable pid=30143)[0m Loading required package: parallel[32m [repeated 11x across cluster][0m

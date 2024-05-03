@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=120
 #SBATCH --time=23:00:00
 #SBATCH --ntasks=1
-#SBATCH --output=sbatch_out_files/sensitivity_analysis/slurm-%A_%a.out 
-#SBATCH --error=sbatch_out_files/sensitivity_analysis/slurm-%A_%a.err
+#SBATCH --output=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/sensitivity_analysis/slurm-%A_%a.out 
+#SBATCH --error=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/sensitivity_analysis/slurm-%A_%a.err
 
 # Testing SLURM Paramaters
 #SBATCH --array=0-1

@@ -5,8 +5,8 @@
 #SBATCH --mem=128GB
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=120
-#SBATCH --output=sbatch_out_files/baseline_and_interventions/slurm-%A_%a.out 
-#SBATCH --error=sbatch_out_files/baseline_and_interventions/slurm-%A_%a.err
+#SBATCH --output=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/baseline_and_interventions/slurm-%A_%a.out 
+#SBATCH --error=/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/baseline_and_interventions/slurm-%A_%a.err
 
 # Parameter lists to be passed to each node in the sbatch array
 intervention_options=("run_baseline" "run_int_1" "run_int_2" "run_int_3")

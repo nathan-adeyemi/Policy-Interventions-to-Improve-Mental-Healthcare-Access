@@ -33,7 +33,7 @@ siteInfo <-
 siteInfo <-
   full_join(x = siteInfo,
             y = hccis,
-            by = c('Facility_name' = 'hccis_id'))[!is.na(Site),]
+            by = c('Facility_name' = 'hccis_id'))[!is.na(total_beds),]
 
 # Multiply avg patients per day by percentage of each age (Adults or geriatric in overall adult) to find adjusted arrival rates for each age range.
 # Only applicable if a site accomodates both age ranges i.e. this happens for Abbott pediatric because it takes both children and adolescents but not for Abbot
@@ -54,7 +54,8 @@ siteInfo <- siteInfo[,is.Adult := Age %in% c('Adult','Geriatric')
                                                                 ][unique(empirical_dist[,list(age,age_mean_rate)]),
                                                                   mayo_los := age_mean_rate,on = c('Age' = 'age')
                                                                   ][,`:=`(mayo_scale_param = mayo_los/LOS_rate,mayo_los = NULL)
-                                                                    ][grepl('Mayo Clinic Hospital - Rochester',Facility_name),mayo_scale_param := 1]
+                                                                    ][grepl('Mayo Clinic Hospital - Rochester',Facility_name),mayo_scale_param := 1
+                                                                      ][order(Facility_name),Site := seq(.N)]
 
 
 # mayo_hccis <- as.numeric(unique(siteInfo,by = 'Bed_Group')[grepl('Rochester',Facility_name)][,.(Total = sum(arr_lambda * 24))])

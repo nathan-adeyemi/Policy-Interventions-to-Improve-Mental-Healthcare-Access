@@ -7,11 +7,14 @@ MH.Network.sim <-
            warm = 10,
            sim_days = 15,
            n.parallel = 1,
-           sort_by_prob = FALSE,
-           alg_input = NULL,
            resources = T,
-           probs_df = NULL) {
+           seed = NULL,
+           sort_by_prob = F,
+           ...){
 
+    set.seed(seed)
+    add_args = list(...)
+    
     # Custom Functions Used in the Simulation ---------------------------------------------
     move_environ_name <- function(.env,target_envir){
       assign(x = 'environ_name',value = .env,envir = target_envir)
@@ -84,45 +87,36 @@ MH.Network.sim <-
     arr_rate_func <- function(arrival_type = NA, hospital) {
       curr_time <-
         simtimer::as.datetime(
-          get('environ_name',pos = -1) %>% simmer::now() * 3600,
+          get('environ_name', pos = -1) %>% simmer::now() * 3600,
           origin_date = as.POSIXct("2019-1-01 00:00:00", tz = "UTC") - (3600 * 24 * warm)
         )
-      curr_weekday <- lubridate::wday(curr_time, label = T, abbr = F)
+      curr_weekday <-
+        lubridate::wday(curr_time, label = T, abbr = F)
       curr_month <- lubridate::month(curr_time, label = T, abbr = F)
-
-      if(arrival_type == 'IP'){
-        adjusted_rate <-
-          mayo_interarrival_rates[unit == arrival_type  &
-                                    location_description == siteInfo[Age == siteInfo[hospital,Age],
-                                    ][grepl(pattern = 'Mayo Clinic Hospital - Rochester',
-                                            x = Facility_name,
-                                            ignore.case = T), Bed_Group] & type == 'Daily', AvgAdmits]
-
+      
+      if (arrival_type == 'IP') {
+        rate_df <-
+          ip_arrival_rates[unit == siteInfo[Age == siteInfo[hospital, Age], ][grepl(pattern = 'Mayo Clinic Hospital - Rochester',
+                                                                                    x = Facility_name,
+                                                                                    ignore.case = T), Bed_Group], ]
+        
+        scale_param <- siteInfo[hospital, site_IP_factor]
+        adjusted_rate <- prod(rate_df[type == 'Daily', AvgAdmits],
+                              # rate_df[grepl(paste(curr_weekday,as.character(timeOfDay(curr_time)),sep = '|'),type), factor],
+                              scale_param)
+        
       } else {
-        adjusted_rate <-
-          prod(mayo_interarrival_rates[unit == arrival_type
-          ][type == as.character(curr_weekday) |
-              type == as.character(curr_month) |
-              type == as.character(timeOfDay(curr_time)), factor],
-          mayo_interarrival_rates[unit == arrival_type &
-                                    type == 'Daily', AvgAdmits])
+        adjusted_rate <-  prod(ed_arrival_rates[type == 'Daily', AvgAdmits],
+                               # ed_arrival_rates[grepl(paste(curr_weekday, as.character(timeOfDay(curr_time)), sep = '|'), type), factor],
+                               hccis[hospital, ed_scale_param])
+        
       }
-
-      x <-
-        rexp(1, prod(
-          adjusted_rate,
-          ifelse(
-            test = arrival_type == 'ED',
-            yes = (hccis[hospital, ED_to_IP_Admissions] /
-                     hccis[hccis_id == 'Mayo Clinic Hospital - Rochester', ED_to_IP_Admissions]),
-            no = (siteInfo[hospital, site_IP_factor])
-          )
-        ))
+      x <- rexp(1, adjusted_rate)
       return(x)
     }
 
     emtala_routing <- function() {
-
+      if(simmer::now(get('environ_name',pos = -1)))
       # Patient Characteristics (age,p(acceptance))
 
       patient_age <- as.numeric(get_attribute(get('environ_name',pos = -1),"Age"))
@@ -132,15 +126,13 @@ MH.Network.sim <-
       currED.name <- gsub('[*]', '', hccis[currED, hccis_id])
 
       #Establish preferred order (by distance)
-
-
       dest <- which.min(sapply(colnames(time.matrix), stringdist, a = currED.name))
       siteInfo.NewOrder <-
         copy(siteInfo)[,`:=`(Drive_Time_hours = time.matrix[dest, Facility_name],
                             Drive_Time_miles = distance.matrix[dest,Facility_name])]
-
+      
       if(any(siteInfo$Facility_name == currED.name)){
-        siteInfo <- siteInfo[Facility_name == currED.name, `:=`(Acceptance_Prob = 1)]
+        siteInfo.NewOrder <- siteInfo.NewOrder[Facility_name == currED.name, `:=`(Acceptance_Prob = 1)]
       }
 
       if (sort_by_prob) {
@@ -178,7 +170,7 @@ MH.Network.sim <-
                                              round_id := as.numeric(unlist(sapply(X = seq_along(splits),
                                                                                   FUN = function(i) rep(names(splits)[i],
                                                                                                         length(splits[[i]])))))]
-
+      
       if (siteInfo.NewOrder[, .(max(test_x_accept, na.rm = T))] > 0) {
 
         # List Accepted Transfer Location Information
@@ -238,7 +230,7 @@ MH.Network.sim <-
               ][, .(total_coord_time = sum(max_time))]),
               drive_distance = 0,
               num_rejects = sum(siteInfo.NewOrder[!is.na(referral_response), .N],
-                                get_attribute(get('environ_name',pos = -1),'Times.Rejected'))#,
+                                get_attribute(get('environ_name',pos = -1),'Rejections'))#,
             )
         }
       } else {
@@ -249,7 +241,7 @@ MH.Network.sim <-
             drive_time = 0,
             coordination_time = 0,
             drive_distance = 0,
-            num_rejects = get_attribute(get('environ_name',pos = -1),'Times.Rejected')
+            num_rejects = get_attribute(get('environ_name',pos = -1),'Rejections')
           )
       }
       return(res)
@@ -271,17 +263,17 @@ MH.Network.sim <-
       }
     }
 
-    wait.function <- function(curr.time, rate, site) {
+    los_duration_fn <- function(curr.time, rate, site) {
 
       assigned_unit <-
         sample(x = empirical_dist[age ==  get('environ_name',pos = -1) %>%
-                                    get_attribute('Age'), location_description],
+                                    get_attribute('Age'), location_description_full],
                size = 1,
                replace = T)
 
       sampled_LoS <- #randomly sample a patient length of stay from Mayo real Length of stays
 
-        empirical_dist[location_description == assigned_unit,][sample(.N, 1, replace = T), ip_LoS]
+        empirical_dist[location_description_full == assigned_unit,][sample(.N, 1, replace = T), ip_LoS]
 
       curr.time <- as.datetime(
         sim_datetime = curr.time * 3600,
@@ -337,23 +329,40 @@ MH.Network.sim <-
       return(res)
     }
 
-    attribute.func <- function() {
-      age <-
-        sample(
-          x = seq(4),
-          size =  1,
-          replace = TRUE,
-          prob = age_frequency[order(names(age_frequency))]
-        )
+    attribute_fn <- function() {
 
-      if(simmer::get_attribute(get('environ_name',pos = -1),'Site.Entered') %in% c(16,17)){
-        age <- sample(
-          x = c(1,3),
-          size = 1,
-          replace = TRUE,
-          prob = age_frequency[c('Adolescent','Child')]/sum(age_frequency[c('Adolescent','Child')])
-        )
-      }
+      # Setting the age based on Mayo rates of occurence
+      # if (simmer::get_attribute(get('environ_name',pos = -1),'Site.Entered') %in% seq(30,33)) {
+
+        age <-
+          sample(
+            x = seq(length(age_dist)),
+            size =  1,
+            replace = TRUE,
+            prob = age_dist[order(names(age_dist))]
+          )
+
+        # Correct the assigned age if using the national MH ED age distribution
+
+        if (age == 3){
+          age <- 4
+        } else if (age == 1 || simmer::get_attribute(get('environ_name',pos = -1),'Site.Entered') %in% c(16,17)){
+          age <- sample(x = c(1,3), 
+                        size = 1,   
+                        replace = TRUE, 
+                        prob = c(0.9,0.1)
+                        # prob = age_dist[c('Adolescent','Child')]/sum(age_dist[c('Adolescent','Child')])
+                        )
+        }
+      # Only assign a child/adolescent age to ED arrivals from Children's Minnesota
+      # if(simmer::get_attribute(get('environ_name',pos = -1),'Site.Entered') %in% c(16,17)){
+      #   age <- sample(
+      #     x = c(1,3),
+      #     size = 1,
+      #     replace = TRUE,
+      #     
+      #   )
+      # }
 
       request_time <- 0
       tough_barriers <- c("aggresion/violence", "hx.sexual.offense")
@@ -411,11 +420,16 @@ MH.Network.sim <-
     }
 
     post_coord_delay <- function(){
-      if (simmer::get_attribute(get('environ_name',pos = -1), 'Transfer.Site') ==
-          simmer::get_attribute(get('environ_name',pos = -1), 'Site.Entered')){
-
+      
+      # Get actual names of ED and IP facilities 
+      ip_dest <- siteInfo[simmer::get_attribute(get('environ_name',pos = -1), 'Transfer.Site'), Facility_name]
+      orig_ed <- hccis[simmer::get_attribute(get('environ_name',pos = -1), 'Site.Entered'),hccis_id]
+      
+      # Only assign a post coordination time if the patient is an internal patient
+      if (ip_dest == orig_ed){
         delay <- rexp(1,rate = post_coordination_time[['Internal']]$estimate)
       } else {
+        # delay <-  rexp(1,rate = post_coordination_time[['Transfer']]$estimate)
         delay <- 0
       }
       return(delay)
@@ -437,25 +451,6 @@ MH.Network.sim <-
 
     empirical_dist <- empirical_dist[,age := as.numeric(as.factor(age))]
     siteInfo <- siteInfo[!is.na(LOS_rate),][, Site := seq(.N)]
-
-    ### Convert a vector of real numbers to a bed allocation (alg_input should be the number of unique bed groups)
-    if (!is.null(alg_input)) {
-      # Does the supplied solution need to be decoded
-      if (all(alg_input == as.integer(alg_input))) {
-        counts <- alg_input
-      } else{
-        counts <-  decode(alg_input)
-      }
-      alg_input <-
-        data.table(
-          Facility_name = siteInfo$Facility_name[!duplicated(siteInfo$Bed_Group)],
-          Bed_Group = siteInfo$Bed_Group[!duplicated(siteInfo$Bed_Group)],
-          bed_counts = counts
-        )
-      siteInfo$total_beds <-
-        alg_input$bed_counts[match(siteInfo$Bed_Group, alg_input$Bed_Group)]
-    }
-
 
     # Simulation Initial Conditions -------------------------------------------
     # Set default function argument values
@@ -487,6 +482,7 @@ MH.Network.sim <-
       text = paste0("facility.",ip_unit_inds,
                     " <- trajectory('Site.",ip_unit_inds,"') %>%
                     simmer::seize(as.character(siteInfo$Bed_Group[",ip_unit_inds,"])) %>%
+                    simmer::set_attribute('bed_seize_timestamp', function() simmer::now(get('environ_name',pos = -1))) %>% 
                     simmer::timeout_from_attribute('Request.Time') %>%
                     simmer::set_attribute('post_coordination_time', function() post_coord_delay()) %>%
                     simmer::timeout_from_attribute('post_coordination_time') %>%
@@ -494,7 +490,7 @@ MH.Network.sim <-
                     # simmer::set_attribute(keys = 'total_wait_time', values = function() get_attribute(get('environ_name',pos = -1),'Request.Time'), mod = '+', init =  0) %>%
                     simmer::timeout_from_attribute('Travel.time') %>%
                     simmer::set_attribute('IP.Arrival.Timestamp', function()  simmer::now(get('environ_name',pos = -1))) %>%
-                    simmer::set_attribute('ip_LoS',function() wait.function(curr.time = simmer::now(get('environ_name',pos = -1)),rate = siteInfo[",ip_unit_inds,",LOS_rate],site = get_attribute(get('environ_name',pos = -1), 'Transfer.Site'))) %>%
+                    simmer::set_attribute('ip_LoS',function() los_duration_fn(curr.time = simmer::now(get('environ_name',pos = -1)),rate = siteInfo[",ip_unit_inds,",LOS_rate],site = get_attribute(get('environ_name',pos = -1), 'Transfer.Site'))) %>%
                     simmer::timeout_from_attribute('ip_LoS') %>%
                     simmer::release(as.character(siteInfo[", ip_unit_inds, ",Bed_Group])) %>%
                     simmer::send(siteInfo[", ip_unit_inds, ",free_bed_signal]) %>%
@@ -509,7 +505,7 @@ MH.Network.sim <-
                     simmer::set_attribute('Age',siteInfo[",ip_unit_inds, ",Age]) %>%
                     simmer::set_attribute('IP.Arrival.Timestamp',function() simmer::now(get('environ_name',pos = -1))) %>%
                     simmer::seize(as.character(siteInfo[",ip_unit_inds,",Bed_Group])) %>%
-                    simmer::set_attribute('ip_LoS', function() wait.function(curr.time = simmer::now(get('environ_name',pos = -1)),rate = siteInfo[",ip_unit_inds,",LOS_rate], site = ",ip_unit_inds,")) %>%
+                    simmer::set_attribute('ip_LoS', function() los_duration_fn(curr.time = simmer::now(get('environ_name',pos = -1)),rate = siteInfo[",ip_unit_inds,",LOS_rate], site = ",ip_unit_inds,")) %>%
                     simmer::timeout_from_attribute('ip_LoS') %>%
                     simmer::release(as.character(siteInfo[", ip_unit_inds,",Bed_Group])) %>%
                     simmer::send(siteInfo[", ip_unit_inds, ",free_bed_signal]) %>%
@@ -595,10 +591,8 @@ MH.Network.sim <-
                                 'Request.Time',
                                 'Acceptance.Prob.Value',
                                 'Enter.Timestamp',
-                                'Times.Rejected' #,
-                                # paste0('Prev_Check_Unit_',siteInfo[,Site])
-                                ),
-                              values = function() attribute.func()) %>%
+                                'Rejections'),
+                              values = function() attribute_fn()) %>%
         simmer::join(branch.traj)"
       )
     ))
@@ -609,14 +603,59 @@ MH.Network.sim <-
           paste0('trap_trip_', seq(4)),
         values = rep(0,4)
       )
+    
+    # Parse additional function arguments ------------------------
+    if (any(grepl('ed_arrival_factor_df', names(add_args)))) {
+      hccis <-
+        hccis[add_args$ed_arrival_factor_df, `:=`(ed_scale_param = ed_scale_param), on = .(hccis_id)]
+    } 
+    if (any(grepl('acceptance_prob_input', names(add_args)))) {
+      siteInfo <-
+        siteInfo[add_args$acceptance_prob_input, Acceptance_Prob := prob, on = .(Facility_name)]
+    }
+    
+    mayo_age_frequency <- age_frequency
+    
+    if (any(grepl('age_frequency_input', names(add_args)))) {
+      age_dist <-
+        add_args$age_frequency_input # Setting the patient age based off national rates of occurence
+    } else {
+
+      # Follow distribution of arrival ages from Mayo clinin data
+      # age_dist <- mayo_age_frequency
+      
+      # Setting the patient age based off national rates of occurence
+      age_dist <- data.table(readxl::read_excel(
+        path = file.path(
+          "Data",
+          'national_ED_MH_rates.xlsx'),
+        sheet = 2
+      ))
+      age_dist <- age_dist$percentage * 0.01
+      names(age_dist) = c('Adolescent','Adult','Geriatric')
+    }
+    
+    ### Convert a vector of real numbers to a bed allocation ( should be the number of unique bed groups)
+    if (any(grepl('alg_input',names(add_args)))) {
+      alg_input <- add_args$alg_input
+      # Does the supplied solution need to be decoded
+      if (all(alg_input == as.integer(alg_input))) {
+        counts <- alg_input
+      } else{
+        counts <-  decode(alg_input)
+      }
+      alg_input <-
+        data.table(
+          Facility_name = siteInfo$Facility_name[!duplicated(siteInfo$Bed_Group)],
+          Bed_Group = siteInfo$Bed_Group[!duplicated(siteInfo$Bed_Group)],
+          bed_counts = counts
+        )
+      siteInfo$total_beds <-
+        alg_input$bed_counts[match(siteInfo$Bed_Group, alg_input$Bed_Group)]
+    }
 
     # Create the Simulation Environment and Run the Replication --------------
     sim_func_env <- environment()
-
-    if(!is.null(probs_df)){
-      siteInfo <- siteInfo[probs_df,Acceptance_Prob := Probability, on = c('Facility_name')]
-    }
-
 
     create_sim_env <- function(.env = sim_func_env){
       env <- simmer('MH.Network', log_level = 1) %>%
@@ -631,11 +670,12 @@ MH.Network.sim <-
       return(env)
     }
 
+    print('BEGINNING SIMULATION')
 
     if ((rep == 1) | is.na(rep)) {
       #If running multiple replications, run in parallel
 
-      sim_results <- simmer::run(
+      sim_results <<- simmer::run(
         .env = create_sim_env(),
         until = sim.length,
         progress = progress::progress_bar$new(format = "[:bar] :percent ETA: :eta")$update
@@ -645,15 +685,20 @@ MH.Network.sim <-
         X = seq(rep),
         FUN = function(i) simmer::wrap(simmer::run(.env = create_sim_env(.env = sim_func_env), until = sim.length)),
         mc.cores = min(rep, availableCores()),
-        mc.set.seed = T
+        mc.set.seed = TRUE,
+        mc.preschedule = TRUE
       )
     }
-
+    
     source("simulations/post_processing.R")
+    # saveRDS(sim_results,file = file.path('Results','validation','raw_results.rds'))
+    
     siteInfo <-
       copy(siteInfo)[copy(siteInfo)[, `:=`(N = seq_len(.N)), by = .(Bed_Group)][N == 1, list(ip_unit = Bed_Group, traj_number = Site)],
                      trajectory_num := traj_number, on = c(Bed_Group = 'ip_unit')][, `:=`(trajectory_num = as.numeric(as.factor(trajectory_num)))]
-    # Retrieve Attributes and Resource DFs ------------------------------------
+                     
+
+# Retrieve Attributes and Resource DFs ------------------------------------
     timestamps <-
       post_process_arrival_output(
         df = data.table(simmer::get_mon_attributes(sim_results)),
@@ -666,7 +711,8 @@ MH.Network.sim <-
         post_process_resource_output(
           df = data.table(simmer::get_mon_resources(sim_results)),
           attribute_df = data.table(simmer::get_mon_attributes(sim_results)),
-          arrivals_df = timestamps,
+          timestamps_df = timestamps,
+          arrivals_df = get_mon_arrivals(sim_results),
           hospital_df = siteInfo
         )
 
@@ -714,7 +760,8 @@ full_sim <-
 
           return(res)
         },
-        mc.cores = availableCores()
+        mc.cores = availableCores(),
+        mc.preschedule = TRUE
       )
     } else {
       runs <-
@@ -742,9 +789,9 @@ full_sim <-
           }
 
         },
-        mc.cores = availableCores() - 1
+        mc.cores = availableCores() - 1,
+        mc.preschedule = TRUE
       )
     }
-
     return(results)
   }

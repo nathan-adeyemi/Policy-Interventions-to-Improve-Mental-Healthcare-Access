@@ -1,4 +1,4 @@
-# Read in helper datasets facility aliases and what facilities are in hwhich ealth systems) ---------------------------------------
+# Read in helper datasets facility aliases and what facilities are in which health systems) ---------------------------------------
 source(
   file = file.path('Code','read_and_format','mayo_data.R')
 )
@@ -11,8 +11,6 @@ age_rates <- disp_to_dep_data[,.(Rate = .N/nrow(disp_to_dep_data)),
 
 # Validation and Parameter Estimation Calculations ------------------------------------------
 
-# Extract true value for avergae disposition -> ED departure timespan
-
 # Median Timespan between ED disposition and departure -------------------
 ed_wait_median <-
   extract_time_validation_metric(
@@ -21,7 +19,8 @@ ed_wait_median <-
     val_group = vulnerable_patients,
     val_func = DescTools::Quantile,
     probs = 0.5,
-    na.rm = TRUE
+    na.rm = TRUE,
+    use_type = TRUE
   )
 
 # Mean timespan between ED disposition and departure ----------------------
@@ -30,7 +29,8 @@ ed_wait_mean <-
     data = copy(disp_to_dep_data),
     metric = 'boarding_hours',
     val_group = vulnerable_patients,
-    val_func = mean
+    val_func = mean,
+    use_type = TRUE
   )
 
 # Mean # of daily transfers out of Mayo -----------------------------------
@@ -45,7 +45,7 @@ transfer_out_rate <-
                                    unique = TRUE),
                                 on = .(age_group, prog_day_I)
                                 ][order(prog_day_I),
-                                  ][is.na(count),count := 0],
+                                  ][is.na(count),count := 0][!is.na(prog_day_I)],
     metric = 'count',
     val_group = vulnerable_patients,
     val_func =  mean
@@ -67,7 +67,7 @@ Transfer_to_Mayo <-
                                                           by = 1),
                                          unique = TRUE),
                                       on = .(age_group, prog_day_I)
-                                      ][is.na(count), count := 0],
+                                      ][is.na(count), count := 0][!is.na(prog_day_I)],
     metric = 'count',
     val_group = vulnerable_patients,
     val_func = mean
@@ -83,7 +83,7 @@ rejects <-
                                     age = age,
                                     rejections =  rejections,
                                     ED_name = ED_name
-                                 )])[, `:=`(age_group = {Vectorize(age_classify)}(age),
+                                 )])[, `:=`(age_group = age_classify(age),
                                             type = 'Transfer')],
       metric = 'rejections',
       val_group = vulnerable_patients,
@@ -144,7 +144,8 @@ ip_unit_metrics <-
                       ][,variable := factor(variable,levels = c('exit','start')), # so paired exit/starts show up correctly
                         ][order(value,decreasing = F)
                           ][,`:=`(Capacity = cumsum(change),
-                                  Utilization = signif(100 * (cumsum(change)/max_unit_beds[location_description]),2)),
+                                  Utilization = pmin(100,signif(100 * (cumsum(change)/max_unit_beds[location_description]),2)),
+                                  max_util = 100),
                             by = location_description
                             ][,`:=`(prog_day = as.numeric(as.factor(lubridate::date(value))))
                               ][order(value,variable)
@@ -225,7 +226,7 @@ split_arrival_rates <- melt(
                         ][, val_group := location_description
                           ][Target != 0, ][variable == 'Arrival Rate']
 
-rm(list = lsf.str())
+# rm(list = lsf.str())
 
 saveRDS(list(ed_wait_mean = ed_wait_mean,
              ed_wait_median = ed_wait_median,

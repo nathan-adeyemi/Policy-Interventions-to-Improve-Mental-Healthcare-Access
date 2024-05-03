@@ -1,4 +1,4 @@
-generate_random_id <- function(length) {
+generate_random_id <- function(length){
   # Define the character set
   characters <- c(0:9, letters, LETTERS)  # Including digits and lowercase/uppercase letters
   

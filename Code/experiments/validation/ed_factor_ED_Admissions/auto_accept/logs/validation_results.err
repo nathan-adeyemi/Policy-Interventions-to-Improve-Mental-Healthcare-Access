@@ -1,0 +1,5 @@
+Warning messages:
+1: In min(values) : no non-missing arguments to min; returning Inf
+2: In max(values) : no non-missing arguments to max; returning -Inf
+3: In min(values) : no non-missing arguments to min; returning Inf
+4: In max(values) : no non-missing arguments to max; returning -Inf
