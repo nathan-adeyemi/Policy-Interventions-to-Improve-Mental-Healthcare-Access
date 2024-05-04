@@ -16,14 +16,11 @@ from ray.tune.search.bayesopt import BayesOptSearch
 from ray.tune.schedulers.hb_bohb import HyperBandForBOHB
 from ray.tune.experiment.trial import Trial
 
-os.environ["RAY_AIR_NEW_OUTPUT"] = "1"
-
-
 class CustomReporter(tune.CLIReporter):
     def __init__(
         self,
         sort_by_metric=True,
-        parameter_columns= None,
+        parameter_columns=None,
         metric_columns=["MSE"],
         max_report_frequency=300,
         metric="MSE",
@@ -82,14 +79,15 @@ def sim_trainable(params: dict):
             .to_json(orient="records")
         )
     else:
-        ed_arrival_factor = hccis.loc[:,['hccis_id','ed_scale_param']]
+        ed_arrival_factor = hccis.loc[:, ["hccis_id", "ed_scale_param"]]
         ed_arrival_factor["ed_scale_param"] = (
             ed_arrival_factor["ed_scale_param"] * params["ed_arrival_factor"]
         )
         ed_arrival_factor = ed_arrival_factor.reset_index().to_json(orient="records")
-        
-    ed_arrival_factor = ed_arrival_factor.replace('"','\"') 
+
+    ed_arrival_factor = ed_arrival_factor.replace('"', '"')
     sh_path = "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/ed_arrival_rate_tuning/sim_setup.sh"
+    # sh_path = "/Users/nadeyemi/Library/CloudStorage/OneDrive-NortheasternUniversity/Graduate/Research/Minn_MH_Sim_Projects/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/ed_arrival_rate_tuning/sim_setup.sh"
     port = find_available_port()
 
     # Create a socket
@@ -105,7 +103,6 @@ def sim_trainable(params: dict):
     # Push all the sim meta-information to the R program via the bash
     subprocess_env = os.environ.copy()
     subprocess_env["port"] = str(port)
-    # subprocess_env["ed_arrival_factor_df"] = ed_arrival_factor
     subprocess_env["num_replications"] = str(sim_run_info["num_replications"])
     subprocess_env["warm_period"] = str(sim_run_info["warmup"])
     subprocess_env["sim_period"] = str(sim_run_info["sim_length"])
@@ -122,16 +119,22 @@ def sim_trainable(params: dict):
     client.sendall(ed_arrival_factor.encode())
 
     # Receieve the simulation trial's loss information
-    for i in range(0,math.ceil(sim_run_info["num_replications"]/(sim_run_info["nproc"] / concurrent_trials))):
+    for i in range(
+        0,
+        math.ceil(
+            sim_run_info["num_replications"]
+            / (sim_run_info["nproc"] / concurrent_trials)
+        ),
+    ):
         info = client.recv(4096).decode("utf-8")
-        print(info)
         info = pd.read_json(StringIO(info))
 
         res_dict = {
             "MSE": metrics.mean_squared_error(
                 y_true=info.loc[:, "hccis_admissions"],
                 y_pred=info.loc[:, "admissions"],
-            )
+            ),
+            "training_iteration": i + 1
         }
 
         train.report(res_dict)
@@ -160,7 +163,7 @@ def execute_tuning(
         for unit_name, scale_param in zip(
             hospital_df.hccis_id.unique()[:3], hospital_df.ed_scale_param.unique()[:3]
         ):
-            params.update({unit_name: tune.uniform(0.1, 1.5)})
+            params.update({unit_name: tune.uniform(0.5, 1.5)})
             current_rates.update({unit_name: scale_param})
 
         current_rates = [current_rates]
@@ -182,12 +185,16 @@ def execute_tuning(
             trial_dirname_creator=trial_str_creator,
             trial_name_creator=trial_str_creator,
         )
-        reporter = CustomReporter(parameter_columns = list(params.keys())[:3],max_report_frequency=1000), 
-        path += 'ed_arrival_tuning_sep_EDs/'
+        reporter = (
+            CustomReporter(
+                parameter_columns=list(params.keys())[:3], max_report_frequency=1000
+            ),
+        )
+        path += "ed_arrival_tuning_sep_EDs/"
     else:
         params = {"ed_arrival_factor": tune.qloguniform(5e-1, 1.5, 5e-2)}
         tuner_config = tune.TuneConfig(
-            num_samples=sim_run_info['num_samples'],
+            num_samples=sim_run_info["num_samples"],
             trial_dirname_creator=trial_str_creator,
             trial_name_creator=trial_str_creator,
         )
@@ -201,8 +208,7 @@ def execute_tuning(
         trainable=trainer,
         resources=tune.PlacementGroupFactory(bundles=bundle_list, strategy="PACK"),
     )
-    
-    
+
     if not os.path.exists(path):
         os.makedirs(path)
 
@@ -264,15 +270,21 @@ if __name__ == "__main__":
     #     log_dir="Code/experiments/validation/ed_arrival_rate_tuning/logs"
     # )
     hccis = pd.read_csv("Data/HCCIS/hccis_ed_ips_2020.csv")
-    
-    parser = argparse.ArgumentParser(description='Execute the ED arrival scaling paramter tuning')
-    parser.add_argument('--separate-rates',action ='store_true',help = 'Set separate rates to True')
+
+    parser = argparse.ArgumentParser(
+        description="Execute the ED arrival scaling paramter tuning"
+    )
     parser.add_argument(
-        "--test-sim-params", action="store_true", help="Uses the test simulation parameters"
+        "--separate-rates", action="store_true", help="Set separate rates to True"
+    )
+    parser.add_argument(
+        "--test-sim-params",
+        action="store_true",
+        help="Uses the test simulation parameters",
     )
     args = parser.parse_args()
     separate_rates = args.separate_rates
-    
+
     if args.test_sim_params:
         # Testing run paramters
         cpu_count = 10
@@ -281,21 +293,21 @@ if __name__ == "__main__":
             "warmup": 0,
             "sim_length": 3,
             "nproc": cpu_count,
-            "num_samples": 5
+            "num_samples": 5,
         }
         concurrent_trials = 3
     else:
         # Actual trial run parameters
-        cpu_count =  multiprocessing.cpu_count()
+        cpu_count = multiprocessing.cpu_count()
         sim_run_info = {
             "num_replications": 30,
             "warmup": 50,
             "sim_length": 365,
             "nproc": cpu_count,
-            "num_samples": 200
+            "num_samples": 200,
         }
         concurrent_trials = 12
-    
+
     ray.init(
         runtime_env={
             "working_dir": "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access",

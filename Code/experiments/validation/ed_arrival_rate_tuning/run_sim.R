@@ -56,7 +56,6 @@ gen_hyperparam_res <- function(resource_df,receiver,warmup){
                                                                                                 true_val = hccis_admissions,
                                                                                                 differences = T)][, .SD[!duplicated(.SD, by = 'admissions')], by = 'grouping'][order(facility, grouping)]
 
-  print('Results processing complete')
   res_df <- toJSON(res_df, dataframe = 'columns')
   write.socket(receiver, res_df)
 }
@@ -103,18 +102,12 @@ for(train_int in seq(ceiling(numIters/num_proc))){
         ed_arrival_factor = ed_arrival_factor,
         resources = TRUE
       )
-      print('Simulation complete')
-      latest_res <- results[['resources']]
       if(train_int == 1){
-        res_df <- latest_res
-        res_df_list <- list(latest_res)
-        
+        res_df <- results[['resources']]
       } else {
-        res_df_list <- c(res_df,latest_res[,replication := replication + last_rep])
-        res_df <- rbindlist(res_df_list,use.names = TRUE, fill = TRUE)
+        res_df <- rbind(res_df,results[['resources']][,replication := replication + last_rep],fill = TRUE, use.names = TRUE)
       }
-      last_rep <- max(latest_res$replication)
-      print('Preprocessing complete')
+      last_rep <- max(res_df$replication)
       gen_hyperparam_res(resource_df = res_df,receiver = client_socket, warmup = warm_period)
 
       # print(paste('Replications',min(latest_res$replication), ' - ',max(latest_res$replication),' have completed'))
@@ -124,5 +117,4 @@ for(train_int in seq(ceiling(numIters/num_proc))){
       print(e)
     }
   )
-  print(paste('training iteration ',train_int,' complete',sep = ''))
 }

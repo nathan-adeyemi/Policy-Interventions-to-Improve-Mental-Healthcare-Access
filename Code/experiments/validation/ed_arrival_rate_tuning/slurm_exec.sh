@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH --partition=short
-#SBATCH --time=24:00:00
+#SBATCH --partition=long
+#SBATCH --time=2-00:00:00
 #SBATCH --nodes=1
 #SBATCH --mem=64GB
 #SBATCH --ntasks=1

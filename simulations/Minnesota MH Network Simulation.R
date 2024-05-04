@@ -669,9 +669,7 @@ MH.Network.sim <-
                       mon = 0)
       return(env)
     }
-
-    print('BEGINNING SIMULATION')
-
+    
     if ((rep == 1) | is.na(rep)) {
       #If running multiple replications, run in parallel
 
