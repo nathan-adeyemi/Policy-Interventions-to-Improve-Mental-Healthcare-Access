@@ -1,0 +1,13 @@
+test:
+  num_replications: 10
+  warmup: 10
+  sim_length: 10
+  num_samples: 2
+  nproc: 10
+  concurrent_trials : 2
+
+full:
+  num_replications: 30
+  warmup: 50
+  sim_length: 365
+  concurrent_trials : 12

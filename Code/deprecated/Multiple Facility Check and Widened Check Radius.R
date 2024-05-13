@@ -18,7 +18,7 @@ full_sim()
 
 # Tests allowing social workers to send multiple transfer requests concurrently
 tic()
-nParallelResults <- lapply(seq(8), function(i) full_sim( n.parallel = i))
+nParallelResults <- lapply(seq(8), function(i) full_sim( concurrent_requests = i))
 toc()
 
 for (i in seq_along(nParallelResults)){

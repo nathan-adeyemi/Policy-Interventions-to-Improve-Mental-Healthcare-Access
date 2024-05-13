@@ -197,14 +197,14 @@ barrier_rates <-
 
 # Assign all the relevant data.frames/inputs/etc. to a input list that is read by the simulation --------------------
 hccis =
-  data.table(readRDS(file = file.path("simulations", "function_requirements", "hccis.rds")))
+  data.table(readRDS(file = file.path("src/simulations", "function_requirements", "hccis.rds")))
 
 distance.matrix =
-  readRDS(file = file.path("simulations",
+  readRDS(file = file.path("src/simulations",
                            "function_requirements",
                            "Drive Distance Matrix.rds"))
 time.matrix =
-  readRDS(file = file.path("simulations",
+  readRDS(file = file.path("src/simulations",
                            "function_requirements",
                            "Drive Time Matrix.rds"))
 
@@ -225,7 +225,7 @@ sim_inputs =
 saveRDS(
   object = sim_inputs,
   file = file.path(
-    "simulations",
+    "src/simulations",
     "function_requirements",
     "MH_Network_sim_input_list.rds"
   )
@@ -233,14 +233,14 @@ saveRDS(
 saveRDS(
   object = siteInfo,
   file = file.path(
-    "simulations",
+    "src/simulations",
     "function_requirements",
     "ip_facilities_info.rds"
 ))
 
 write.csv(x = copy(siteInfo)[,Review_Params := NULL],
           file = file.path(
-            "simulations",
+            "src/simulations",
             "function_requirements",
             "ip_facilities_info.csv"))
 

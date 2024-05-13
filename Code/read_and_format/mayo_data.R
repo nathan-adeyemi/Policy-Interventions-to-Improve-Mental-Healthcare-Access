@@ -47,7 +47,7 @@ hospital_systems <- data.table(readxl::read_excel(
 
 distance.matrix <-
   readRDS(file = file.path(
-    "simulations",
+    "src/simulations",
     "function_requirements",
     "Drive Distance Matrix.rds"
   ))

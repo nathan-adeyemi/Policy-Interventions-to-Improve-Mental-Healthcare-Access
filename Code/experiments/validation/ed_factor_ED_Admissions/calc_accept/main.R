@@ -1,6 +1,6 @@
 # Set up logging and results directories/files/etc.
 valid_list_path <- file.path('Results','validation','ed_factor_ED_Admissions','calc_accept')
-log_path <- file.path('Code','experiments', gsub(pattern = 'Results/',replacement = '', x = valid_list_path),'logs')
+log_path <- file.path('Code','experiments','logs','ed_factor_ED_Admissions','calc_accept')
 file_name <- 'validation_results'
 
 if (!dir.exists(valid_list_path)){
@@ -26,7 +26,7 @@ tryCatch(expr = {
 results <- MH.Network.sim(rep = numIters,
                           warm = warm_period,
                           sim_days = sim_period,
-                          n.parallel = 1,
+                          concurrent_requests = 1,
                           resources = TRUE)
 saveRDS(results,file = file.path(valid_list_path, paste(file_name,'rds',sep = ".")))
 

@@ -1,0 +1,59 @@
+"","Site","total_beds","Bed_Group","Facility_name","Age","site_IP_factor","LOS_rate","mayo_scale_param","hospital_system","Review_Info","Acceptance_Prob"
+"1",1,24,"Abbott Pediatric/Adolescent","Abbott Northwestern Hospital","Adolescent",0.548543689320388,236.176991150442,0.527566617639623,"Allina Health System",4.66559829059829,0.944444444444444
+"2",2,62,"Abbott Adult","Abbott Northwestern Hospital","Adult",0.65766800689259,236.709170305677,1.11145317186383,"Allina Health System",4.66559829059829,0.944444444444444
+"3",3,24,"Abbott Pediatric/Adolescent","Abbott Northwestern Hospital","Child",0.548543689320388,236.176991150442,0.489356236529764,"Allina Health System",4.66559829059829,0.944444444444444
+"4",4,10,"Avera Adult","Avera Marshall Regional Medical Center","Adult",0.178058587018955,132.077419354839,1.99194653734626,"Avera Health",2.25220588235294,0.6
+"5",5,14,"Cambridge Adult","Cambridge Medical Center","Adult",0.226306720275704,188.58883248731,1.39505162991666,"Allina Health System",4.66559829059829,0.462538226299694
+"6",6,12,"Rice Adult","Carris Health - Rice Memorial Hospital","Adult",0.212521539345204,186.681081081081,1.40930809175694,"CentraCare Health System",4.05769230769231,0.635593220338983
+"7",7,10,"CentraCare Geriatric","CentraCare Health - Monticello","Geriatric",0.0815623205054566,300.676056338028,1.13778678928342,"CentraCare Health System",4.05769230769231,0.9
+"8",8,16,"Children Hospital Pediatric/Adolescent","Children's Minnesota","Child",0.423543689320388,115.736389684814,0.998602806421124,"Children's Hospitals and Clinics",2.85420835785756,0.462538226299694
+"9",9,17,"Children Hospital Pediatric/Adolescent","Children's Minnesota","Adolescent",0.423543689320388,115.736389684814,1.07657666465028,"Children's Hospitals and Clinics",2.85420835785756,0.462538226299694
+"10",10,18,"Essentia Duluth Pediatric/Adolescent","Essentia Health - Duluth","Adolescent",0.637135922330097,165.805714285714,0.751476491159012,"Essentia Health",4.36837606837607,0.776470588235294
+"11",11,38,"Essentia Duluth Adult/Geriatric","Essentia Health - Duluth","Adult",0.588742102240092,245.830243902439,1.07021477084777,"Essentia Health",4.36837606837607,0.776470588235294
+"12",12,18,"Essentia Duluth Pediatric/Adolescent","Essentia Health - Duluth","Child",0.637135922330097,165.805714285714,0.697048856501694,"Essentia Health",4.36837606837607,0.776470588235294
+"13",13,38,"Essentia Duluth Adult/Geriatric","Essentia Health - Duluth","Geriatric",0.588742102240092,245.830243902439,1.39163204382213,"Essentia Health",4.36837606837607,0.776470588235294
+"14",14,35,"Fairview Range Adult","Fairview Range","Adult",0.372774267662263,263.88906009245,0.9969763735311,"M Health Fairview",3.47971887550201,0.807692307692308
+"15",15,108,"Hennepin Adult","Hennepin Healthcare","Adult",0.836300976450316,320.71978021978,0.820314724477587,"Hennepin Healthcare",2.85420835785756,0.777777777777778
+"16",16,12,"Hutchinson Health Adult/Geriatric/Adolescent","Hutchinson Health","Adolescent",0.162319968859478,165.294964028777,0.753798502680639,"HealthPartners, Inc.",4.02157894736842,0.672727272727273
+"17",17,12,"Hutchinson Health Adult/Geriatric/Adolescent","Hutchinson Health","Adult",0.162319968859478,165.294964028777,1.59164654344641,"HealthPartners, Inc.",4.02157894736842,0.672727272727273
+"18",18,12,"Hutchinson Health Adult/Geriatric/Adolescent","Hutchinson Health","Geriatric",0.162319968859478,165.294964028777,2.0696652603142,"HealthPartners, Inc.",4.02157894736842,0.672727272727273
+"19",19,14,"Lake Region Adolescent/Adult/Geriatric","Lake Region Healthcare","Adolescent",0.105877773452705,162.882352941176,0.764963755346413,"Lake Region Healthcare",2.16041666666667,0.55
+"20",20,14,"Lake Region Adolescent/Adult/Geriatric","Lake Region Healthcare","Adult",0.105877773452705,162.882352941176,1.61522198933677,"Lake Region Healthcare",2.16041666666667,0.55
+"21",21,14,"Lake Region Adolescent/Adult/Geriatric","Lake Region Healthcare","Geriatric",0.105877773452705,162.882352941176,2.10032111261797,"Lake Region Healthcare",2.16041666666667,0.55
+"22",22,10,"Lakewood Reflections Geriatric","Lakewood Health System","Geriatric",0.0126364158529581,284.727272727273,1.20151905884665,"Lakewood Health System",2.85420835785756,0.666666666666667
+"23",23,18,"Fairview Southdale Adult","M Health Fairview Southdale Hospital","Adult",0.252153934520391,197.849658314351,1.3297529062572,"M Health Fairview",3.47971887550201,0.545454545454545
+"24",24,32,"UM Fairview Pediatric/Adolescent","M Health Fairview University of Minnesota Medical Center","Adolescent",0.945388349514563,254.634146341463,0.48932595323824,"M Health Fairview",3.47971887550201,0.75
+"25",25,129,"UM Fairview Adult/Geriatric","M Health Fairview University of Minnesota Medical Center","Adult",1.24641010913268,241.139170506912,1.09103451584594,"M Health Fairview",3.47971887550201,0.75
+"26",26,32,"UM Fairview Pediatric/Adolescent","M Health Fairview University of Minnesota Medical Center","Child",0.945388349514563,254.634146341463,0.453885251467093,"M Health Fairview",3.47971887550201,0.75
+"27",27,129,"UM Fairview Adult/Geriatric","M Health Fairview University of Minnesota Medical Center","Geriatric",1.24641010913268,241.139170506912,1.4187045764323,"M Health Fairview",3.47971887550201,0.75
+"28",28,14,"Mayo Albert Lea and Austin Adult","Mayo Clinic Health System - Albert Lea and Austin","Adult",0.257323377369328,149.625,1.7583368965447,"Mayo Clinic",2.55783333333333,0.67965367965368
+"29",29,14,"Mayo Mankato Adult","Mayo Clinic Health System in Mankato","Adult",0.166570936243538,260.027586206897,1.01178171894488,"Mayo Clinic",2.55783333333333,0.9
+"30",30,18,"Mayo Rochester Pediatric/Adolescent","Mayo Clinic Hospital - Rochester","Adolescent",1,124.834951456311,1,"Mayo Clinic",2.55783333333333,0.823529411764706
+"31",31,41,"Mayo Rochester Adult","Mayo Clinic Hospital - Rochester","Adult",1,261.201608271109,1,"Mayo Clinic",2.55783333333333,0.823529411764706
+"32",32,18,"Mayo Rochester Pediatric/Adolescent","Mayo Clinic Hospital - Rochester","Child",1,124.834951456311,1,"Mayo Clinic",2.55783333333333,0.823529411764706
+"33",33,14,"Mayo Rochester Geriatric","Mayo Clinic Hospital - Rochester","Geriatric",1,261.201608271109,1,"Mayo Clinic",2.55783333333333,0.823529411764706
+"34",34,10,"Meeker Geriatric","Meeker Memorial Hospital","Geriatric",0.0264215967834578,565.565217391304,0.604890884791715,"Meeker Memorial Hospital",2.85420835785756,0.818181818181818
+"35",35,40,"Mercy Adult","Mercy Hospital, Unity Campus","Adult",0.778288340034463,203.814022140221,1.29083934158611,"Allina Health System",4.66559829059829,0.789473684210526
+"36",36,15,"Mercy Geriatric","Mercy Hospital, Unity Campus","Geriatric",0.778288340034463,203.814022140221,1.67851672403521,"Allina Health System",4.66559829059829,0.789473684210526
+"37",37,10,"Mille Lacs Adult","Mille Lacs Health System","Geriatric",0.0907524411257898,418.481012658228,0.817492871617191,"Mille Lacs Health System",2.85420835785756,0.462538226299694
+"38",38,10,"New Ulm Adult","New Ulm Medical Center","Adult",0.171165996553705,201.503355704698,1.30564157219823,"Allina Health System",4.66559829059829,0.848484848484849
+"39",39,26,"North Memorial Adult","North Memorial Health Hospital","Adult",0.210798391728891,333.122615803815,0.789772731312974,"North Memorial Health Care",2.85420835785756,0.894736842105263
+"40",40,10,"Owatonna Adult","Owatonna Hospital","Adult",0.172889144170017,217.674418604651,1.20864527780519,"Allina Health System",4.66559829059829,0.462538226299694
+"41",41,71,"PrairieCare Pediatric/Adolescent","PrairieCare","Adolescent",3.42961165048544,184.585987261146,0.675019259231543,"PrairieCare",2.61938775510204,0.883495145631068
+"42",42,71,"PrairieCare Pediatric/Adolescent","PrairieCare","Child",3.42961165048544,184.585987261146,0.626129237972936,"PrairieCare",2.61938775510204,0.883495145631068
+"43",43,14,"Regina Geriatric","Regina Hospital","Geriatric",0.0206777713957496,572,0.598086092229449,"Allina Health System",4.66559829059829,0.462538226299694
+"44",44,100,"Regions Adult","Regions Hospital","Adult",1.13612866168868,267.360970677452,0.984029783699798,"HealthPartners, Inc.",4.02157894736842,0.80952380952381
+"45",45,12,"Ridgeview Geriatric","Ridgeview Medical Center","Geriatric",0.00746697300402068,164.307692307692,2.08210120871638,"Ridgeview Medical Center",2.85420835785756,0.462538226299694
+"46",46,37,"St Jospephs Adult/Geriatric","Saint Joseph's Hospital","Adult",0.737507179781735,262.654205607477,1.00166360381329,"M Health Fairview",3.47971887550201,0.75
+"47",47,37,"St Jospephs Adult/Geriatric","Saint Joseph's Hospital","Geriatric",0.737507179781735,262.654205607477,1.30249292587572,"M Health Fairview",3.47971887550201,0.75
+"48",48,16,"Sanford Behavioral Adolescent/Adult/Geriatric","Sanford Behavioral Health Center","Adolescent",0.0883612300506034,145.057268722467,0.858964859071856,"Sanford Health",3.98854166666667,0.7125
+"49",49,16,"Sanford Behavioral Adolescent/Adult/Geriatric","Sanford Behavioral Health Center","Adult",0.0883612300506034,145.057268722467,1.8137054451843,"Sanford Health",3.98854166666667,0.7125
+"50",50,16,"Sanford Behavioral Adolescent/Adult/Geriatric","Sanford Behavioral Health Center","Geriatric",0.0883612300506034,145.057268722467,2.35841504371479,"Sanford Health",3.98854166666667,0.7125
+"51",51,28,"St. Cloud Adolescent/Adult","St. Cloud Hospital","Adolescent",0.338653172440638,180,0.692217202141901,"CentraCare Health System",4.05769230769231,0.961538461538462
+"52",52,28,"St. Cloud Adolescent/Adult","St. Cloud Hospital","Adult",0.338653172440638,180,1.46161754525278,"CentraCare Health System",4.05769230769231,0.961538461538462
+"53",53,22,"Essentia St. Josephs Adult","St. Joseph's Medical Center","Adult",0.205628948879954,124.625698324022,2.11105062345547,"Essentia Health",4.36837606837607,0.693877551020408
+"54",54,22,"St Lukes Adult","St. Luke's Hospital","Adult",0.295232624928202,268.062256809339,0.981455432320063,"St. Luke's Hospital, Duluth",4.43666666666667,0.609375
+"55",55,16,"United Adolescent","United Hospital","Adolescent",0.299757281553398,258.655870445344,0.481717643489058,"Allina Health System",4.66559829059829,0.5
+"56",56,42,"United Adult/Geriatric","United Hospital","Adult",0.373923032739805,240.073732718894,1.09587648413647,"Allina Health System",4.66559829059829,0.5
+"57",57,42,"United Adult/Geriatric","United Hospital","Geriatric",0.373923032739805,240.073732718894,1.42500073157033,"Allina Health System",4.66559829059829,0.5
+"58",58,10,"Winnona Adult","Winona Health Services","Adult",0.0103388856978748,169.333333333333,1.55368794180414,"Winona Health Services",4.38214285714286,0.608695652173913

@@ -1,0 +1,2221 @@
+2024-05-12 01:22:22,562	INFO worker.py:1715 -- Started a local Ray instance. View the dashboard at [1m[32mhttp://127.0.0.1:8265 [39m[22m
+2024-05-12 01:22:26,077	INFO packaging.py:530 -- Creating a file package for local directory '/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access'.
+2024-05-12 01:22:27,211	WARNING packaging.py:405 -- File /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out is very large (16.93MiB). Consider adding this file to the 'excludes' list to skip uploading it: `ray.init(..., runtime_env={'excludes': ['/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/sbatch_out_files/acceptance_tuning.out']})`
+2024-05-12 01:22:27,273	INFO packaging.py:358 -- Pushing file package 'gcs://_ray_pkg_8c38cdb8d9c2fcda.zip' (26.32MiB) to Ray cluster...
+2024-05-12 01:22:27,333	INFO packaging.py:371 -- Successfully pushed file package 'gcs://_ray_pkg_8c38cdb8d9c2fcda.zip'.
+2024-05-12 01:23:04,477	INFO tune.py:592 -- [output] This will use the new output engine with verbosity 1. To disable the new output and use the legacy output engine, set the environment variable RAY_AIR_NEW_OUTPUT=0. For more information, please see https://github.com/ray-project/ray/issues/36949
+2024-05-12 01:23:04,855	WARNING tune.py:916 -- AIR_VERBOSITY is set, ignoring passed-in ProgressReporter for now.
+[36m(func pid=27868)[0m 
+[36m(func pid=27868)[0m Attaching package: ‘tictoc’
+[36m(func pid=27868)[0m 
+[36m(func pid=27871)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=27871)[0m     shift
+[36m(func pid=27870)[0m Loading required package: stats
+[36m(func pid=27870)[0m Loading required package: utils
+[36m(func pid=27870)[0m Attaching package: ‘lubridate’
+[36m(func pid=27870)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=27870)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=27870)[0m     yday, year
+[36m(func pid=27870)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=27870)[0m     date, intersect, setdiff, union
+[36m(func pid=27870)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=27870)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=27870)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=27870)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=27870)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=27870)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=27870)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=27870)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=27870)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=27870)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=27870)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=27870)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=27870)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=27870)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=27870)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=27870)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=27870)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=27870)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=27870)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=27870)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=27870)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=27870)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=27870)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=27870)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=27870)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=27870)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=27870)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=27870)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=27870)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=27870)[0m Attaching package: ‘stringdist’
+[36m(func pid=27870)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=27870)[0m     extract
+[36m(func pid=27870)[0m Loading required package: MASS
+[36m(func pid=27870)[0m Loading required package: grDevices
+[36m(func pid=27870)[0m Loading required package: graphics
+[36m(func pid=27870)[0m Attaching package: ‘MASS’
+[36m(func pid=27870)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=27870)[0m     select
+[36m(func pid=27870)[0m Loading required package: survival
+[36m(func pid=27870)[0m Attaching package: ‘boot’
+[36m(func pid=27870)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=27870)[0m     aml
+[36m(func pid=27870)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=27870)[0m     inv.logit, logit
+[36m(func pid=27870)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=27870)[0m Attaching package: ‘EnvStats’
+[36m(func pid=27870)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=27870)[0m     boxcox
+[36m(func pid=27870)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=27870)[0m     predict, predict.lm
+[36m(func pid=27870)[0m Attaching package: ‘simmer’
+[36m(func pid=27870)[0m     separate
+[36m(func pid=27870)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=27870)[0m     now, rollback
+[36m(func pid=27870)[0m Loading required package: foreach
+[36m(func pid=27870)[0m Attaching package: ‘foreach’
+[36m(func pid=27870)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=27870)[0m     accumulate, when
+[36m(func pid=27870)[0m Loading required package: iterators
+[36m(func pid=27870)[0m Loading required package: parallel
+2024-05-12 03:19:10,239	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00008
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27870, ip=10.99.101.134, actor_id=5da4f4ad9b91c8dbe4b1239a01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=70462)[0m [32m [repeated 530x across cluster][0m
+[36m(func pid=70462)[0m Attaching package: ‘tictoc’[32m [repeated 12x across cluster][0m
+[36m(func pid=70462)[0m The following object is masked from ‘package:data.table’:[32m [repeated 12x across cluster][0m
+[36m(func pid=70462)[0m     shift[32m [repeated 12x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: stats[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: utils[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Attaching package: ‘lubridate’[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m The following objects are masked from ‘package:data.table’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     yday, year[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m The following objects are masked from ‘package:base’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     date, intersect, setdiff, union[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::as.difftime() masks base::as.difftime()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ dplyr::between()         masks data.table::between()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::date()        masks base::date()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ dplyr::filter()          masks stats::filter()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ dplyr::first()           masks data.table::first()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ purrr::flatten()         masks jsonlite::flatten()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::hour()        masks data.table::hour()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::intersect()   masks base::intersect()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ dplyr::lag()             masks stats::lag()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ dplyr::last()            masks data.table::last()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::mday()        masks data.table::mday()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::minute()      masks data.table::minute()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::month()       masks data.table::month()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::quarter()     masks data.table::quarter()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::second()      masks data.table::second()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::setdiff()     masks base::setdiff()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ purrr::transpose()       masks data.table::transpose()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::union()       masks base::union()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::wday()        masks data.table::wday()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::week()        masks data.table::week()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::yday()        masks data.table::yday()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m ✖ lubridate::year()        masks data.table::year()[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Attaching package: ‘stringdist’[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m The following object is masked from ‘package:tidyr’:[32m [repeated 23x across cluster][0m
+[36m(func pid=27863)[0m     extract[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: MASS[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: grDevices[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: graphics[32m [repeated 11x across cluster][0m
+[36m(func pid=27872)[0m Attaching package: ‘MASS’[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m The following object is masked from ‘package:dplyr’:[32m [repeated 23x across cluster][0m
+[36m(func pid=27868)[0m     select[32m [repeated 35x across cluster][0m
+[36m(func pid=27872)[0m Loading required package: survival[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Attaching package: ‘boot’[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m The following object is masked from ‘package:survival’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     aml[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m The following objects are masked from ‘package:gtools’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     inv.logit, logit[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Simple Bootstrap Routines (1.1-7)[32m [repeated 11x across cluster][0m
+[36m(func pid=27866)[0m Attaching package: ‘EnvStats’[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m The following object is masked from ‘package:MASS’:[32m [repeated 23x across cluster][0m
+[36m(func pid=27866)[0m     boxcox[32m [repeated 11x across cluster][0m
+[36m(func pid=27866)[0m The following objects are masked from ‘package:stats’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27866)[0m     predict, predict.lm[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m Attaching package: ‘simmer’[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m     separate[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m The following objects are masked from ‘package:lubridate’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27868)[0m     now, rollback[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: foreach[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Attaching package: ‘foreach’[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m The following objects are masked from ‘package:purrr’:[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m     accumulate, when[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: iterators[32m [repeated 11x across cluster][0m
+[36m(func pid=27863)[0m Loading required package: parallel[32m [repeated 11x across cluster][0m
+[36m(func pid=70462)[0m [32m [repeated 10x across cluster][0m
+[36m(func pid=70462)[0m Loading required package: stats
+[36m(func pid=70462)[0m Loading required package: utils
+[36m(func pid=70462)[0m Attaching package: ‘lubridate’
+[36m(func pid=70462)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=70462)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=70462)[0m     yday, year
+[36m(func pid=70462)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=70462)[0m     date, intersect, setdiff, union
+[36m(func pid=70462)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=70462)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=70462)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=70462)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=70462)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=70462)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=70462)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=70462)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=70462)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=70462)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=70462)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=70462)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=70462)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=70462)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=70462)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=70462)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=70462)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=70462)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=70462)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=70462)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=70462)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=70462)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=70462)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=70462)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=70462)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=70462)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=70462)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=70462)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=70462)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=70462)[0m Attaching package: ‘stringdist’
+[36m(func pid=70462)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=70462)[0m     extract
+[36m(func pid=70462)[0m Loading required package: MASS
+[36m(func pid=70462)[0m Loading required package: grDevices
+[36m(func pid=70462)[0m Loading required package: graphics
+[36m(func pid=70462)[0m Attaching package: ‘MASS’
+[36m(func pid=70462)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=70462)[0m     select
+[36m(func pid=70462)[0m Loading required package: survival
+[36m(func pid=70462)[0m Attaching package: ‘boot’
+[36m(func pid=70462)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=70462)[0m     aml
+[36m(func pid=70462)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=70462)[0m     inv.logit, logit
+[36m(func pid=70462)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=70462)[0m Attaching package: ‘EnvStats’
+[36m(func pid=70462)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=70462)[0m     boxcox
+[36m(func pid=70462)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=70462)[0m     predict, predict.lm
+[36m(func pid=70462)[0m Attaching package: ‘simmer’
+[36m(func pid=70462)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=70462)[0m     select
+[36m(func pid=70462)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=70462)[0m     select
+[36m(func pid=70462)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=70462)[0m     separate
+[36m(func pid=70462)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=70462)[0m     now, rollback
+[36m(func pid=70462)[0m Loading required package: foreach
+[36m(func pid=70462)[0m Attaching package: ‘foreach’
+[36m(func pid=70462)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=70462)[0m     accumulate, when
+[36m(func pid=70462)[0m Loading required package: iterators
+[36m(func pid=70462)[0m Loading required package: parallel
+2024-05-12 03:47:37,637	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00010
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27872, ip=10.99.101.134, actor_id=f81adda15996ee7cc805582c01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 03:48:28,904	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00001
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27863, ip=10.99.101.134, actor_id=98fbc18a73af8ab572baf1fd01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=83522)[0m Attaching package: ‘tictoc’
+[36m(func pid=83522)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=83522)[0m     shift
+[36m(func pid=83522)[0m [32m [repeated 34x across cluster][0m
+[36m(func pid=83522)[0m Loading required package: stats
+[36m(func pid=83522)[0m Loading required package: utils
+[36m(func pid=83522)[0m Attaching package: ‘lubridate’
+[36m(func pid=83522)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=83522)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=83522)[0m     yday, year
+[36m(func pid=83522)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=83522)[0m     date, intersect, setdiff, union
+[36m(func pid=83522)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=83522)[0m [32m [repeated 6x across cluster][0m
+[36m(func pid=83522)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=83522)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=83522)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=83522)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=83522)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=83522)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=83522)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=83522)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=83522)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=83522)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=83522)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=83522)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=83522)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=83522)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=83522)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=83522)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=83522)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=83522)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=83522)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=83522)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=83522)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=83522)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=83522)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=83522)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=83522)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=83522)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=83522)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=83522)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=83522)[0m Attaching package: ‘stringdist’
+[36m(func pid=83522)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=83522)[0m     extract
+[36m(func pid=83522)[0m Loading required package: MASS
+[36m(func pid=83522)[0m Loading required package: grDevices
+[36m(func pid=83522)[0m Loading required package: graphics
+[36m(func pid=83522)[0m Attaching package: ‘MASS’
+[36m(func pid=83522)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=83522)[0m     select
+[36m(func pid=83522)[0m Loading required package: survival
+[36m(func pid=83522)[0m Attaching package: ‘boot’
+[36m(func pid=83522)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=83522)[0m     aml
+[36m(func pid=83522)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=83522)[0m     inv.logit, logit
+[36m(func pid=83522)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=83522)[0m Attaching package: ‘EnvStats’
+[36m(func pid=83522)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=83522)[0m     boxcox
+[36m(func pid=83522)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=83522)[0m     predict, predict.lm
+[36m(func pid=83522)[0m [32m [repeated 20x across cluster][0m
+[36m(func pid=83522)[0m Attaching package: ‘simmer’
+[36m(func pid=83522)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=83522)[0m     select
+[36m(func pid=83522)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=83522)[0m     select
+[36m(func pid=83522)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=83522)[0m     separate
+[36m(func pid=83522)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=83522)[0m     now, rollback
+[36m(func pid=83522)[0m Loading required package: foreach
+[36m(func pid=83522)[0m Attaching package: ‘foreach’
+[36m(func pid=83522)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=83522)[0m     accumulate, when
+[36m(func pid=83522)[0m Loading required package: iterators
+[36m(func pid=83522)[0m Loading required package: parallel
+[36m(func pid=84541)[0m Attaching package: ‘tictoc’
+[36m(func pid=84541)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=84541)[0m     shift
+[36m(func pid=84541)[0m Loading required package: stats
+[36m(func pid=84541)[0m Loading required package: utils
+[36m(func pid=84541)[0m [32m [repeated 18x across cluster][0m
+[36m(func pid=84541)[0m Attaching package: ‘lubridate’
+[36m(func pid=84541)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=84541)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=84541)[0m     yday, year
+[36m(func pid=84541)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=84541)[0m     date, intersect, setdiff, union
+[36m(func pid=84541)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=84541)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=84541)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=84541)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=84541)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=84541)[0m [32m [repeated 6x across cluster][0m
+[36m(func pid=84541)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=84541)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=84541)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=84541)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=84541)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=84541)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=84541)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=84541)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=84541)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=84541)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=84541)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=84541)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=84541)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=84541)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=84541)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=84541)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=84541)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=84541)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=84541)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=84541)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=84541)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=84541)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=84541)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=84541)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=84541)[0m Attaching package: ‘stringdist’
+[36m(func pid=84541)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=84541)[0m     extract
+[36m(func pid=84541)[0m Loading required package: MASS
+[36m(func pid=84541)[0m Loading required package: grDevices
+[36m(func pid=84541)[0m Loading required package: graphics
+[36m(func pid=84541)[0m Attaching package: ‘MASS’
+[36m(func pid=84541)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=84541)[0m     select
+[36m(func pid=84541)[0m Loading required package: survival
+[36m(func pid=84541)[0m Attaching package: ‘boot’
+[36m(func pid=84541)[0m [32m [repeated 10x across cluster][0m
+[36m(func pid=84541)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=84541)[0m     aml
+[36m(func pid=84541)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=84541)[0m     inv.logit, logit
+[36m(func pid=84541)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=84541)[0m Attaching package: ‘EnvStats’
+[36m(func pid=84541)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=84541)[0m     boxcox
+[36m(func pid=84541)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=84541)[0m     predict, predict.lm
+[36m(func pid=84541)[0m Attaching package: ‘simmer’
+[36m(func pid=84541)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=84541)[0m     select
+[36m(func pid=84541)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=84541)[0m     select
+[36m(func pid=84541)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=84541)[0m     separate
+[36m(func pid=84541)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=84541)[0m     now, rollback
+[36m(func pid=84541)[0m Loading required package: foreach
+[36m(func pid=84541)[0m Attaching package: ‘foreach’
+[36m(func pid=84541)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=84541)[0m     accumulate, when
+[36m(func pid=84541)[0m Loading required package: iterators
+[36m(func pid=84541)[0m Loading required package: parallel
+2024-05-12 04:15:27,381	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00003
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27865, ip=10.99.101.134, actor_id=c9465da62581f0db405e83cf01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=108345)[0m Attaching package: ‘tictoc’
+[36m(func pid=108345)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=108345)[0m     shift
+[36m(func pid=108345)[0m Loading required package: stats
+[36m(func pid=108345)[0m Loading required package: utils
+[36m(func pid=108345)[0m [32m [repeated 28x across cluster][0m
+[36m(func pid=108345)[0m Attaching package: ‘lubridate’
+[36m(func pid=108345)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=108345)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=108345)[0m     yday, year
+[36m(func pid=108345)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=108345)[0m     date, intersect, setdiff, union
+[36m(func pid=108345)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=108345)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=108345)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=108345)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=108345)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=108345)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=108345)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=108345)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=108345)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=108345)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=108345)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=108345)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=108345)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=108345)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=108345)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=108345)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=108345)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=108345)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=108345)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=108345)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=108345)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=108345)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=108345)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=108345)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=108345)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=108345)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=108345)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=108345)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=108345)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=108345)[0m Attaching package: ‘stringdist’
+[36m(func pid=108345)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=108345)[0m     extract
+[36m(func pid=108345)[0m Loading required package: MASS
+[36m(func pid=108345)[0m Loading required package: grDevices
+[36m(func pid=108345)[0m Loading required package: graphics
+[36m(func pid=108345)[0m Attaching package: ‘MASS’
+[36m(func pid=108345)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=108345)[0m     select
+[36m(func pid=108345)[0m Loading required package: survival
+[36m(func pid=108345)[0m Attaching package: ‘boot’
+[36m(func pid=108345)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=108345)[0m     aml
+[36m(func pid=108345)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=108345)[0m     inv.logit, logit
+[36m(func pid=108345)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=108345)[0m Attaching package: ‘EnvStats’
+[36m(func pid=108345)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=108345)[0m     boxcox
+[36m(func pid=108345)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=108345)[0m     predict, predict.lm
+[36m(func pid=108345)[0m Attaching package: ‘simmer’
+[36m(func pid=108345)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=108345)[0m     select
+[36m(func pid=108345)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=108345)[0m     select
+[36m(func pid=108345)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=108345)[0m     separate
+[36m(func pid=108345)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=108345)[0m     now, rollback
+[36m(func pid=108345)[0m Loading required package: foreach
+[36m(func pid=108345)[0m Attaching package: ‘foreach’
+[36m(func pid=108345)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=108345)[0m     accumulate, when
+[36m(func pid=108345)[0m Loading required package: iterators
+[36m(func pid=108345)[0m Loading required package: parallel
+2024-05-12 04:18:57,761	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00006
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27868, ip=10.99.101.134, actor_id=37bf0ab1e8f0b1d5ffaf0d8e01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=112396)[0m Attaching package: ‘tictoc’
+[36m(func pid=112396)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=112396)[0m     shift
+[36m(func pid=112396)[0m Loading required package: stats
+[36m(func pid=112396)[0m Loading required package: utils
+[36m(func pid=112396)[0m [32m [repeated 44x across cluster][0m
+[36m(func pid=112396)[0m Attaching package: ‘lubridate’
+[36m(func pid=112396)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=112396)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=112396)[0m     yday, year
+[36m(func pid=112396)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=112396)[0m     date, intersect, setdiff, union
+[36m(func pid=112396)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=112396)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=112396)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=112396)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=112396)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=112396)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=112396)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=112396)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=112396)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=112396)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=112396)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=112396)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=112396)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=112396)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=112396)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=112396)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=112396)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=112396)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=112396)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=112396)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=112396)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=112396)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=112396)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=112396)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=112396)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=112396)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=112396)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=112396)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=112396)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=112396)[0m Attaching package: ‘stringdist’
+[36m(func pid=112396)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=112396)[0m     extract
+[36m(func pid=112396)[0m Loading required package: MASS
+[36m(func pid=112396)[0m Loading required package: grDevices
+[36m(func pid=112396)[0m Loading required package: graphics
+[36m(func pid=112396)[0m Attaching package: ‘MASS’
+[36m(func pid=112396)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=112396)[0m     select
+[36m(func pid=112396)[0m Loading required package: survival
+[36m(func pid=112396)[0m [32m [repeated 14x across cluster][0m
+[36m(func pid=112396)[0m Attaching package: ‘boot’
+[36m(func pid=112396)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=112396)[0m     aml
+[36m(func pid=112396)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=112396)[0m     inv.logit, logit
+[36m(func pid=112396)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=112396)[0m Attaching package: ‘EnvStats’
+[36m(func pid=112396)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=112396)[0m     boxcox
+[36m(func pid=112396)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=112396)[0m     predict, predict.lm
+[36m(func pid=112396)[0m Attaching package: ‘simmer’
+[36m(func pid=112396)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=112396)[0m     select
+[36m(func pid=112396)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=112396)[0m     select
+[36m(func pid=112396)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=112396)[0m     separate
+[36m(func pid=112396)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=112396)[0m     now, rollback
+[36m(func pid=112396)[0m Loading required package: foreach
+[36m(func pid=112396)[0m Attaching package: ‘foreach’
+[36m(func pid=112396)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=112396)[0m     accumulate, when
+[36m(func pid=112396)[0m Loading required package: iterators
+[36m(func pid=112396)[0m Loading required package: parallel
+2024-05-12 04:22:43,330	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00007
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27869, ip=10.99.101.134, actor_id=66c916915aeea6b0632eb8ab01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 04:23:11,309	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00004
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27866, ip=10.99.101.134, actor_id=0da9aec70f1c62b06dc0f59f01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=117218)[0m Attaching package: ‘tictoc’
+[36m(func pid=117218)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=117218)[0m     shift
+[36m(func pid=117218)[0m [32m [repeated 30x across cluster][0m
+[36m(func pid=117218)[0m Loading required package: stats
+[36m(func pid=117218)[0m Loading required package: utils
+[36m(func pid=117218)[0m Attaching package: ‘lubridate’
+[36m(func pid=117218)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=117218)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=117218)[0m     yday, year
+[36m(func pid=117218)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=117218)[0m     date, intersect, setdiff, union
+[36m(func pid=117218)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=117218)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=117218)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=117218)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=117218)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=117218)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=117218)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=117218)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=117218)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=117218)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=117218)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=117218)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=117218)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=117218)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=117218)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=117218)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=117218)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=117218)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=117218)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=117218)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=117218)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=117218)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=117218)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=117218)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=117218)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=117218)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=117218)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=117218)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=117218)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=117218)[0m Attaching package: ‘stringdist’
+[36m(func pid=117218)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=117218)[0m     extract
+[36m(func pid=117218)[0m Loading required package: MASS
+[36m(func pid=117218)[0m Loading required package: grDevices
+[36m(func pid=117218)[0m Loading required package: graphics
+[36m(func pid=117218)[0m [32m [repeated 10x across cluster][0m
+[36m(func pid=117218)[0m Attaching package: ‘MASS’
+[36m(func pid=117218)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=117218)[0m     select
+[36m(func pid=117218)[0m Loading required package: survival
+[36m(func pid=117218)[0m Attaching package: ‘boot’
+[36m(func pid=117218)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=117218)[0m     aml
+[36m(func pid=117218)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=117218)[0m     inv.logit, logit
+[36m(func pid=117218)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=117218)[0m Attaching package: ‘EnvStats’
+[36m(func pid=117218)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=117218)[0m     boxcox
+[36m(func pid=117218)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=117218)[0m     predict, predict.lm
+[36m(func pid=117218)[0m Attaching package: ‘simmer’
+[36m(func pid=117218)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=117218)[0m     select
+[36m(func pid=117218)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=117218)[0m     select
+[36m(func pid=117218)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=117218)[0m     separate
+[36m(func pid=117218)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=117218)[0m     now, rollback
+[36m(func pid=117218)[0m Loading required package: foreach
+[36m(func pid=117657)[0m Attaching package: ‘tictoc’
+[36m(func pid=117657)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=117657)[0m     shift
+[36m(func pid=117657)[0m Loading required package: stats
+[36m(func pid=117657)[0m Loading required package: utils
+[36m(func pid=117218)[0m Attaching package: ‘foreach’
+[36m(func pid=117218)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=117218)[0m     accumulate, when
+[36m(func pid=117218)[0m Loading required package: iterators
+[36m(func pid=117218)[0m Loading required package: parallel
+[36m(func pid=117657)[0m Attaching package: ‘lubridate’
+[36m(func pid=117657)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=117657)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=117657)[0m     yday, year
+[36m(func pid=117657)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=117657)[0m     date, intersect, setdiff, union
+[36m(func pid=117657)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=117657)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=117657)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=117657)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=117657)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=117657)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=117657)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=117657)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=117657)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=117657)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=117657)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=117657)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=117657)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=117657)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=117657)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=117657)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=117657)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=117657)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=117657)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=117657)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=117657)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=117657)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=117657)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=117657)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=117657)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=117657)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=117657)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=117657)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=117657)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=117657)[0m [32m [repeated 40x across cluster][0m
+[36m(func pid=117657)[0m Attaching package: ‘stringdist’
+[36m(func pid=117657)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=117657)[0m     extract
+[36m(func pid=117657)[0m Loading required package: MASS
+[36m(func pid=117657)[0m Loading required package: grDevices
+[36m(func pid=117657)[0m Loading required package: graphics
+[36m(func pid=117657)[0m Attaching package: ‘MASS’
+[36m(func pid=117657)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=117657)[0m     select
+[36m(func pid=117657)[0m Loading required package: survival
+[36m(func pid=117657)[0m Attaching package: ‘boot’
+[36m(func pid=117657)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=117657)[0m     aml
+[36m(func pid=117657)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=117657)[0m     inv.logit, logit
+[36m(func pid=117657)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=117657)[0m Attaching package: ‘EnvStats’
+[36m(func pid=117657)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=117657)[0m     boxcox
+[36m(func pid=117657)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=117657)[0m     predict, predict.lm
+[36m(func pid=117657)[0m Attaching package: ‘simmer’
+[36m(func pid=117657)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=117657)[0m     select
+[36m(func pid=117657)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=117657)[0m     select
+[36m(func pid=117657)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=117657)[0m     separate
+[36m(func pid=117657)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=117657)[0m     now, rollback
+[36m(func pid=117657)[0m Loading required package: foreach
+[36m(func pid=117657)[0m Attaching package: ‘foreach’
+[36m(func pid=117657)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=117657)[0m     accumulate, when
+[36m(func pid=117657)[0m Loading required package: iterators
+[36m(func pid=117657)[0m Loading required package: parallel
+2024-05-12 04:24:18,765	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00002
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27864, ip=10.99.101.134, actor_id=f1d6a49ad638c04d9f07e6b101000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=121408)[0m Attaching package: ‘tictoc’
+[36m(func pid=121408)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=121408)[0m     shift
+[36m(func pid=121408)[0m [32m [repeated 38x across cluster][0m
+[36m(func pid=121408)[0m Loading required package: stats
+[36m(func pid=121408)[0m Loading required package: utils
+[36m(func pid=121408)[0m Attaching package: ‘lubridate’
+[36m(func pid=121408)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=121408)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=121408)[0m     yday, year
+[36m(func pid=121408)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=121408)[0m     date, intersect, setdiff, union
+[36m(func pid=121408)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=121408)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=121408)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=121408)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=121408)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=121408)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=121408)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=121408)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=121408)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=121408)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=121408)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=121408)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=121408)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=121408)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=121408)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=121408)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=121408)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=121408)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=121408)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=121408)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=121408)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=121408)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=121408)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=121408)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=121408)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=121408)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=121408)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=121408)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=121408)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=121408)[0m Attaching package: ‘stringdist’
+[36m(func pid=121408)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=121408)[0m     extract
+[36m(func pid=121408)[0m Loading required package: MASS
+[36m(func pid=121408)[0m Loading required package: grDevices
+[36m(func pid=121408)[0m Loading required package: graphics
+[36m(func pid=121408)[0m Attaching package: ‘MASS’
+[36m(func pid=121408)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=121408)[0m     select
+[36m(func pid=121408)[0m Loading required package: survival
+[36m(func pid=121408)[0m Attaching package: ‘boot’
+[36m(func pid=121408)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=121408)[0m     aml
+[36m(func pid=121408)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=121408)[0m     inv.logit, logit
+[36m(func pid=121408)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=121408)[0m Attaching package: ‘EnvStats’
+[36m(func pid=121408)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=121408)[0m     boxcox
+[36m(func pid=121408)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=121408)[0m     predict, predict.lm
+[36m(func pid=121408)[0m [32m [repeated 26x across cluster][0m
+[36m(func pid=121408)[0m Attaching package: ‘simmer’
+[36m(func pid=121408)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=121408)[0m     select
+[36m(func pid=121408)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=121408)[0m     select
+[36m(func pid=121408)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=121408)[0m     separate
+[36m(func pid=121408)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=121408)[0m     now, rollback
+[36m(func pid=121408)[0m Loading required package: foreach
+[36m(func pid=121408)[0m Attaching package: ‘foreach’
+[36m(func pid=121408)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=121408)[0m     accumulate, when
+[36m(func pid=121408)[0m Loading required package: iterators
+[36m(func pid=121408)[0m Loading required package: parallel
+2024-05-12 04:28:37,120	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00011
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27873, ip=10.99.101.134, actor_id=2fcf941f1fcf0428a435963b01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=125571)[0m Attaching package: ‘tictoc’
+[36m(func pid=125571)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=125571)[0m     shift
+[36m(func pid=125571)[0m Loading required package: stats
+[36m(func pid=125571)[0m Loading required package: utils
+[36m(func pid=125571)[0m [32m [repeated 18x across cluster][0m
+[36m(func pid=125571)[0m Attaching package: ‘lubridate’
+[36m(func pid=125571)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=125571)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=125571)[0m     yday, year
+[36m(func pid=125571)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=125571)[0m     date, intersect, setdiff, union
+[36m(func pid=125571)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=125571)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=125571)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=125571)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=125571)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=125571)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=125571)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=125571)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=125571)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=125571)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=125571)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=125571)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=125571)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=125571)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=125571)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=125571)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=125571)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=125571)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=125571)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=125571)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=125571)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=125571)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=125571)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=125571)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=125571)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=125571)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=125571)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=125571)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=125571)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=125571)[0m Attaching package: ‘stringdist’
+[36m(func pid=125571)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=125571)[0m     extract
+[36m(func pid=125571)[0m [32m [repeated 10x across cluster][0m
+[36m(func pid=125571)[0m Loading required package: MASS
+[36m(func pid=125571)[0m Loading required package: grDevices
+[36m(func pid=125571)[0m Loading required package: graphics
+[36m(func pid=125571)[0m Attaching package: ‘MASS’
+[36m(func pid=125571)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=125571)[0m     select
+[36m(func pid=125571)[0m Loading required package: survival
+[36m(func pid=125571)[0m Attaching package: ‘boot’
+[36m(func pid=125571)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=125571)[0m     aml
+[36m(func pid=125571)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=125571)[0m     inv.logit, logit
+[36m(func pid=125571)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=125571)[0m Attaching package: ‘EnvStats’
+[36m(func pid=125571)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=125571)[0m     boxcox
+[36m(func pid=125571)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=125571)[0m     predict, predict.lm
+[36m(func pid=125571)[0m Attaching package: ‘simmer’
+[36m(func pid=125571)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=125571)[0m     select
+[36m(func pid=125571)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=125571)[0m     select
+[36m(func pid=125571)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=125571)[0m     separate
+[36m(func pid=125571)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=125571)[0m     now, rollback
+[36m(func pid=125571)[0m Loading required package: foreach
+[36m(func pid=125571)[0m Attaching package: ‘foreach’
+[36m(func pid=125571)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=125571)[0m     accumulate, when
+[36m(func pid=125571)[0m Loading required package: iterators
+[36m(func pid=125571)[0m Loading required package: parallel
+2024-05-12 04:42:59,379	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00005
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27867, ip=10.99.101.134, actor_id=4947275f91cfe4b5c753e3f001000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=129373)[0m Attaching package: ‘tictoc’
+[36m(func pid=129373)[0m [32m [repeated 32x across cluster][0m
+[36m(func pid=129373)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=129373)[0m     shift
+[36m(func pid=129373)[0m Loading required package: stats
+[36m(func pid=129373)[0m Loading required package: utils
+[36m(func pid=129373)[0m Attaching package: ‘lubridate’
+[36m(func pid=129373)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=129373)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=129373)[0m     yday, year
+[36m(func pid=129373)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=129373)[0m     date, intersect, setdiff, union
+[36m(func pid=129373)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=129373)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=129373)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=129373)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=129373)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=129373)[0m [32m [repeated 8x across cluster][0m
+[36m(func pid=129373)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=129373)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=129373)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=129373)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=129373)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=129373)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=129373)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=129373)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=129373)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=129373)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=129373)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=129373)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=129373)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=129373)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=129373)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=129373)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=129373)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=129373)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=129373)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=129373)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=129373)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=129373)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=129373)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=129373)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=129373)[0m Attaching package: ‘stringdist’
+[36m(func pid=129373)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=129373)[0m     extract
+[36m(func pid=129373)[0m Loading required package: MASS
+[36m(func pid=129373)[0m Loading required package: grDevices
+[36m(func pid=129373)[0m Loading required package: graphics
+[36m(func pid=129373)[0m Attaching package: ‘MASS’
+[36m(func pid=129373)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=129373)[0m     select
+[36m(func pid=129373)[0m Loading required package: survival
+[36m(func pid=129373)[0m Attaching package: ‘boot’
+[36m(func pid=129373)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=129373)[0m     aml
+[36m(func pid=129373)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=129373)[0m     inv.logit, logit
+[36m(func pid=129373)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=129373)[0m Attaching package: ‘EnvStats’
+[36m(func pid=129373)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=129373)[0m     boxcox
+[36m(func pid=129373)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=129373)[0m     predict, predict.lm
+[36m(func pid=129373)[0m [32m [repeated 20x across cluster][0m
+[36m(func pid=129373)[0m Attaching package: ‘simmer’
+[36m(func pid=129373)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=129373)[0m     select
+[36m(func pid=129373)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=129373)[0m     select
+[36m(func pid=129373)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=129373)[0m     separate
+[36m(func pid=129373)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=129373)[0m     now, rollback
+[36m(func pid=129373)[0m Loading required package: foreach
+[36m(func pid=129373)[0m Attaching package: ‘foreach’
+[36m(func pid=129373)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=129373)[0m     accumulate, when
+[36m(func pid=129373)[0m Loading required package: iterators
+[36m(func pid=129373)[0m Loading required package: parallel
+2024-05-12 05:05:08,955	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00000
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27862, ip=10.99.101.134, actor_id=d03dcc934c0cd3b747aaf74a01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=5341)[0m Attaching package: ‘tictoc’
+[36m(func pid=5341)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=5341)[0m     shift
+[36m(func pid=5341)[0m [32m [repeated 18x across cluster][0m
+[36m(func pid=5341)[0m Loading required package: stats
+[36m(func pid=5341)[0m Loading required package: utils
+[36m(func pid=5341)[0m Attaching package: ‘lubridate’
+[36m(func pid=5341)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=5341)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=5341)[0m     yday, year
+[36m(func pid=5341)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=5341)[0m     date, intersect, setdiff, union
+[36m(func pid=5341)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=5341)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=5341)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=5341)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=5341)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=5341)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=5341)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=5341)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=5341)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=5341)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=5341)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=5341)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=5341)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=5341)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=5341)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=5341)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=5341)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=5341)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=5341)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=5341)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=5341)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=5341)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=5341)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=5341)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=5341)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=5341)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=5341)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=5341)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=5341)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=5341)[0m Attaching package: ‘stringdist’
+[36m(func pid=5341)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=5341)[0m     extract
+[36m(func pid=5341)[0m Loading required package: MASS
+[36m(func pid=5341)[0m Loading required package: grDevices
+[36m(func pid=5341)[0m Loading required package: graphics
+[36m(func pid=5341)[0m Attaching package: ‘MASS’
+[36m(func pid=5341)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=5341)[0m     select
+[36m(func pid=5341)[0m Loading required package: survival
+[36m(func pid=5341)[0m Attaching package: ‘boot’
+[36m(func pid=5341)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=5341)[0m     aml
+[36m(func pid=5341)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=5341)[0m     inv.logit, logit
+[36m(func pid=5341)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=5341)[0m Attaching package: ‘EnvStats’
+[36m(func pid=5341)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=5341)[0m     boxcox
+[36m(func pid=5341)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=5341)[0m     predict, predict.lm
+[36m(func pid=5341)[0m Attaching package: ‘simmer’
+[36m(func pid=5341)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=5341)[0m     select
+[36m(func pid=5341)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=5341)[0m     select
+[36m(func pid=5341)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=5341)[0m     separate
+[36m(func pid=5341)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=5341)[0m     now, rollback
+[36m(func pid=5341)[0m Loading required package: foreach
+[36m(func pid=5341)[0m Attaching package: ‘foreach’
+[36m(func pid=5341)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=5341)[0m     accumulate, when
+[36m(func pid=5341)[0m Loading required package: iterators
+[36m(func pid=5341)[0m Loading required package: parallel
+[36m(func pid=5341)[0m [32m [repeated 40x across cluster][0m
+2024-05-12 05:49:57,767	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00012
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=70462, ip=10.99.101.134, actor_id=e97181ea3fd61ccb891343e601000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=22164)[0m Attaching package: ‘tictoc’
+[36m(func pid=22164)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=22164)[0m     shift
+[36m(func pid=22164)[0m [32m [repeated 4x across cluster][0m
+[36m(func pid=22164)[0m Loading required package: stats
+[36m(func pid=22164)[0m Loading required package: utils
+[36m(func pid=22164)[0m Attaching package: ‘lubridate’
+[36m(func pid=22164)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=22164)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=22164)[0m     yday, year
+[36m(func pid=22164)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=22164)[0m     date, intersect, setdiff, union
+[36m(func pid=22164)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=22164)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=22164)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=22164)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=22164)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=22164)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=22164)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=22164)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=22164)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=22164)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=22164)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=22164)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=22164)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=22164)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=22164)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=22164)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=22164)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=22164)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=22164)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=22164)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=22164)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=22164)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=22164)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=22164)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=22164)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=22164)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=22164)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=22164)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=22164)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=22164)[0m Attaching package: ‘stringdist’
+[36m(func pid=22164)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=22164)[0m     extract
+[36m(func pid=22164)[0m Loading required package: MASS
+[36m(func pid=22164)[0m Loading required package: grDevices
+[36m(func pid=22164)[0m Loading required package: graphics
+[36m(func pid=22164)[0m [32m [repeated 10x across cluster][0m
+[36m(func pid=22164)[0m Attaching package: ‘MASS’
+[36m(func pid=22164)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=22164)[0m     select
+[36m(func pid=22164)[0m Loading required package: survival
+[36m(func pid=22164)[0m Attaching package: ‘boot’
+[36m(func pid=22164)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=22164)[0m     aml
+[36m(func pid=22164)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=22164)[0m     inv.logit, logit
+[36m(func pid=22164)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=22164)[0m Attaching package: ‘EnvStats’
+[36m(func pid=22164)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=22164)[0m     boxcox
+[36m(func pid=22164)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=22164)[0m     predict, predict.lm
+[36m(func pid=22164)[0m Attaching package: ‘simmer’
+[36m(func pid=22164)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=22164)[0m     select
+[36m(func pid=22164)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=22164)[0m     select
+[36m(func pid=22164)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=22164)[0m     separate
+[36m(func pid=22164)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=22164)[0m     now, rollback
+[36m(func pid=22164)[0m Loading required package: foreach
+[36m(func pid=22164)[0m Attaching package: ‘foreach’
+[36m(func pid=22164)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=22164)[0m     accumulate, when
+[36m(func pid=22164)[0m Loading required package: iterators
+[36m(func pid=22164)[0m Loading required package: parallel
+2024-05-12 06:00:10,458	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00009
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27871, ip=10.99.101.134, actor_id=a885dd0f7414c9b2f50ca46501000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+[36m(func pid=27648)[0m Attaching package: ‘tictoc’
+[36m(func pid=27648)[0m The following object is masked from ‘package:data.table’:
+[36m(func pid=27648)[0m     shift
+[36m(func pid=27648)[0m Loading required package: stats
+[36m(func pid=27648)[0m Loading required package: utils
+[36m(func pid=27648)[0m [32m [repeated 34x across cluster][0m
+[36m(func pid=27648)[0m Attaching package: ‘lubridate’
+[36m(func pid=27648)[0m The following objects are masked from ‘package:data.table’:
+[36m(func pid=27648)[0m     hour, isoweek, mday, minute, month, quarter, second, wday, week,
+[36m(func pid=27648)[0m     yday, year
+[36m(func pid=27648)[0m The following objects are masked from ‘package:base’:
+[36m(func pid=27648)[0m     date, intersect, setdiff, union
+[36m(func pid=27648)[0m ── Attaching packages ─────────────────────────────────────── tidyverse 1.3.1 ──
+[36m(func pid=27648)[0m ✔ ggplot2 3.3.6     ✔ purrr   0.3.4
+[36m(func pid=27648)[0m ✔ tibble  3.1.7     ✔ dplyr   1.0.9
+[36m(func pid=27648)[0m ✔ tidyr   1.2.0     ✔ stringr 1.4.0
+[36m(func pid=27648)[0m ✔ readr   2.1.2     ✔ forcats 0.5.1
+[36m(func pid=27648)[0m ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+[36m(func pid=27648)[0m ✖ lubridate::as.difftime() masks base::as.difftime()
+[36m(func pid=27648)[0m ✖ dplyr::between()         masks data.table::between()
+[36m(func pid=27648)[0m ✖ lubridate::date()        masks base::date()
+[36m(func pid=27648)[0m ✖ dplyr::filter()          masks stats::filter()
+[36m(func pid=27648)[0m ✖ dplyr::first()           masks data.table::first()
+[36m(func pid=27648)[0m ✖ purrr::flatten()         masks jsonlite::flatten()
+[36m(func pid=27648)[0m ✖ lubridate::hour()        masks data.table::hour()
+[36m(func pid=27648)[0m ✖ lubridate::intersect()   masks base::intersect()
+[36m(func pid=27648)[0m ✖ lubridate::isoweek()     masks data.table::isoweek()
+[36m(func pid=27648)[0m ✖ dplyr::lag()             masks stats::lag()
+[36m(func pid=27648)[0m ✖ dplyr::last()            masks data.table::last()
+[36m(func pid=27648)[0m ✖ lubridate::mday()        masks data.table::mday()
+[36m(func pid=27648)[0m ✖ lubridate::minute()      masks data.table::minute()
+[36m(func pid=27648)[0m ✖ lubridate::month()       masks data.table::month()
+[36m(func pid=27648)[0m ✖ lubridate::quarter()     masks data.table::quarter()
+[36m(func pid=27648)[0m ✖ lubridate::second()      masks data.table::second()
+[36m(func pid=27648)[0m ✖ lubridate::setdiff()     masks base::setdiff()
+[36m(func pid=27648)[0m ✖ purrr::transpose()       masks data.table::transpose()
+[36m(func pid=27648)[0m ✖ lubridate::union()       masks base::union()
+[36m(func pid=27648)[0m ✖ lubridate::wday()        masks data.table::wday()
+[36m(func pid=27648)[0m ✖ lubridate::week()        masks data.table::week()
+[36m(func pid=27648)[0m ✖ lubridate::yday()        masks data.table::yday()
+[36m(func pid=27648)[0m ✖ lubridate::year()        masks data.table::year()
+[36m(func pid=27648)[0m Attaching package: ‘stringdist’
+[36m(func pid=27648)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=27648)[0m     extract
+[36m(func pid=27648)[0m Loading required package: MASS
+[36m(func pid=27648)[0m Loading required package: grDevices
+[36m(func pid=27648)[0m Loading required package: graphics
+[36m(func pid=27648)[0m Attaching package: ‘MASS’
+[36m(func pid=27648)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=27648)[0m     select
+[36m(func pid=27648)[0m Loading required package: survival
+[36m(func pid=27648)[0m Attaching package: ‘boot’
+[36m(func pid=27648)[0m The following object is masked from ‘package:survival’:
+[36m(func pid=27648)[0m     aml
+[36m(func pid=27648)[0m The following objects are masked from ‘package:gtools’:
+[36m(func pid=27648)[0m     inv.logit, logit
+[36m(func pid=27648)[0m Simple Bootstrap Routines (1.1-7)
+[36m(func pid=27648)[0m Attaching package: ‘EnvStats’
+[36m(func pid=27648)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=27648)[0m     boxcox
+[36m(func pid=27648)[0m The following objects are masked from ‘package:stats’:
+[36m(func pid=27648)[0m     predict, predict.lm
+[36m(func pid=27648)[0m Attaching package: ‘simmer’
+[36m(func pid=27648)[0m The following object is masked from ‘package:MASS’:
+[36m(func pid=27648)[0m     select
+[36m(func pid=27648)[0m The following object is masked from ‘package:dplyr’:
+[36m(func pid=27648)[0m     select
+[36m(func pid=27648)[0m The following object is masked from ‘package:tidyr’:
+[36m(func pid=27648)[0m     separate
+[36m(func pid=27648)[0m The following objects are masked from ‘package:lubridate’:
+[36m(func pid=27648)[0m     now, rollback
+[36m(func pid=27648)[0m Loading required package: foreach
+[36m(func pid=27648)[0m Attaching package: ‘foreach’
+[36m(func pid=27648)[0m The following objects are masked from ‘package:purrr’:
+[36m(func pid=27648)[0m     accumulate, when
+[36m(func pid=27648)[0m Loading required package: iterators
+[36m(func pid=27648)[0m Loading required package: parallel
+2024-05-12 06:04:03,195	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00014
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=84541, ip=10.99.101.134, actor_id=9724e874cd58862f90aabbee01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:10:29,288	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00015
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=108345, ip=10.99.101.134, actor_id=99a04e46899c195e316562cc01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:12:35,323	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00013
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=83522, ip=10.99.101.134, actor_id=e3ef76982b4f3550302706c601000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:37:25,649	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00019
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=121408, ip=10.99.101.134, actor_id=fe6ec726602fa7a63c16090001000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:38:26,939	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00018
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=117657, ip=10.99.101.134, actor_id=bd1b8184278e82e65d2c41bc01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:55:47,789	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00017
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=117218, ip=10.99.101.134, actor_id=685df3b6aa661f2de283b28101000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 06:58:28,085	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00020
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=125571, ip=10.99.101.134, actor_id=80960250545ab97fc46c638301000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:00:03,181	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00021
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=129373, ip=10.99.101.134, actor_id=2e9e1837e19d0f757239cc5701000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:06:12,305	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00016
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=112396, ip=10.99.101.134, actor_id=5d8b3e57e62afc823748b70f01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:14:14,469	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00022
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=5341, ip=10.99.101.134, actor_id=92e4bf64fdf45e17661da87301000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:14:34,253	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00024
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=27648, ip=10.99.101.134, actor_id=169a28b5d34de8aa06929fbe01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:17:25,667	ERROR tune_controller.py:1374 -- Trial task failed for trial sim_trainable_b567b_00023
+Traceback (most recent call last):
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/execution/_internal/event_manager.py", line 110, in resolve_future
+    result = ray.get(future)
+             ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/auto_init_hook.py", line 22, in auto_init_wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/client_mode_hook.py", line 103, in wrapper
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/_private/worker.py", line 2624, in get
+    raise value.as_instanceof_cause()
+ray.exceptions.RayTaskError(AttributeError): [36mray::ImplicitFunc.train()[39m (pid=22164, ip=10.99.101.134, actor_id=49a8cf5615659a26acbabcdf01000000, repr=func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/trainable.py", line 342, in train
+    raise skipped from exception_cause(skipped)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/air/_internal/util.py", line 88, in run
+    self._ret = self._target(*self._args, **self._kwargs)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 115, in <lambda>
+    training_func=lambda: self._trainable_func(self.config),
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/tune/trainable/function_trainable.py", line 332, in _trainable_func
+    output = fn()
+             ^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/src/trainables.py", line 99, in sim_trainable
+    train.report(res_dict, checkpoint=temp_checkpoint_dir)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 644, in wrapper
+    return fn(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 706, in report
+    _get_session().report(metrics, checkpoint=checkpoint)
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/session.py", line 417, in report
+    persisted_checkpoint = self.storage.persist_current_checkpoint(checkpoint)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/.conda/envs/ed_ip_simulation/lib/python3.11/site-packages/ray/train/_internal/storage.py", line 544, in persist_current_checkpoint
+    source=checkpoint.path,
+           ^^^^^^^^^^^^^^^
+AttributeError: 'str' object has no attribute 'path'
+2024-05-12 07:17:28,215	ERROR tune.py:1038 -- Trials did not complete: [sim_trainable_b567b_00000, sim_trainable_b567b_00001, sim_trainable_b567b_00002, sim_trainable_b567b_00003, sim_trainable_b567b_00004, sim_trainable_b567b_00005, sim_trainable_b567b_00006, sim_trainable_b567b_00007, sim_trainable_b567b_00008, sim_trainable_b567b_00009, sim_trainable_b567b_00010, sim_trainable_b567b_00011, sim_trainable_b567b_00012, sim_trainable_b567b_00013, sim_trainable_b567b_00014, sim_trainable_b567b_00015, sim_trainable_b567b_00016, sim_trainable_b567b_00017, sim_trainable_b567b_00018, sim_trainable_b567b_00019, sim_trainable_b567b_00020, sim_trainable_b567b_00021, sim_trainable_b567b_00022, sim_trainable_b567b_00023, sim_trainable_b567b_00024]
+Traceback (most recent call last):
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/__main__.py", line 192, in <module>
+    results = execute_tuning(
+              ^^^^^^^^^^^^^^^
+  File "/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/experiments/validation/parameter_tuning/__main__.py", line 71, in execute_tuning
+    pkl.dump(results, f)
+_pickle.PicklingError: Can't pickle <class 'types.RayTaskError(AttributeError)'>: attribute lookup RayTaskError(AttributeError) on types failed
+[36m(func pid=27648)[0m [32m [repeated 40x across cluster][0m

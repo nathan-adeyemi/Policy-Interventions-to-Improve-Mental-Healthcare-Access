@@ -52,7 +52,7 @@ hccis[, `:=`(
 
 saveRDS(
   object = hccis,
-  file = file.path("simulations", "function_requirements", "hccis.rds")
+  file = file.path("src/simulations", "function_requirements", "hccis.rds")
 )
 write.csv(x = hccis,
            file = file.path('Data', 'HCCIS', 'hccis_ed_ips_2020.csv'))

@@ -1,9 +1,10 @@
-late# Custom
+# Custom
 /Data
-/Data Analysis/Validation Metric Dataframes.rds
 /renv
-/Deprecated Results
+/Results
 .Rhistory
+/Code/deprecated
+/Code/experiments/logs/
 Api_Keys.R
 .Rproj.user
 

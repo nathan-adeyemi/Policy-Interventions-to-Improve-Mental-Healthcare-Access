@@ -1,0 +1,27 @@
+interventions:
+  param_1:
+    name: sort_by_prob
+    type: boolean
+
+  param_2:
+    name: concurrent_requests
+    type: quantized 
+    min: 1
+    max: 9
+    interval: 1
+
+los_sensitivity_analysis:
+  param_1:
+    name: los_sa_factor
+    type: quantized
+    min: 0.5
+    max: 1.6
+    interval: 0.1
+
+lambda_sensitivity_analysis:
+  param_1:
+    name: arrival_rate_sa_factor
+    type: quantized
+    min: 0.5
+    max: 1.6
+    interval: 0.1

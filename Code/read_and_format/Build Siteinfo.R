@@ -20,12 +20,12 @@ combined_unit <- Vectorize(function(i){
 hccis <- 
   data.table(
     readRDS(
-      file.path("simulations", "function_requirements", "hccis.rds")))
+      file.path("src/simulations", "function_requirements", "hccis.rds")))
 
 siteInfo <-
   data.table(
     readxl::read_excel(
-      file.path("simulations",
+      file.path("src/simulations",
                 "function_requirements",
                 "Hospitals and Inpatient Units.xlsx"
       )))
@@ -74,12 +74,12 @@ siteInfo <- siteInfo[,is.Adult := Age %in% c('Adult','Geriatric')
 # ]
 writexl::write_xlsx(
   x = siteInfo,
-  path = file.path("simulations",
+  path = file.path("src/simulations",
                    "function_requirements",
                    "ip_facilities_info.xlsx"))
 saveRDS(
   object = siteInfo,
-  file = file.path("simulations",
+  file = file.path("src/simulations",
                    "function_requirements",
                    "ip_facilities_info.rds")
 )
