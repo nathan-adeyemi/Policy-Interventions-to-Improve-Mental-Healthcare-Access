@@ -5,15 +5,12 @@ source(file.path(Sys.getenv(
  ), ".vscode-R", "init.R"))
 
 options(scipen = 999,
-        digits = 6,
-        error = function(){
-          call <- sys.calls()
-          cat("Error occurred at line:", attr(call[[length(call)]], "lineno"), "\n")
-})
+        digits = 6)
 
 # Utilities ----------------------------
 if(!interactive()){
   library(jsonlite) 
+  library(tidyverse)
 }
 library(data.table)
 library(openxlsx)
@@ -21,9 +18,9 @@ library(writexl)
 library(tictoc)
 library(gtools)
 library(lubridate)
-library(tidyverse)
 library(stringdist)
 library(tidytext)
+library(MLmetrics)
 
 # Packages for Statistics/Bootstrapping/etc. ------------------------------
 library(fitdistrplus)

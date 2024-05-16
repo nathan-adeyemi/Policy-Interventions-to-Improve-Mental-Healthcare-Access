@@ -83,9 +83,6 @@ validate_results <- function(patients_df,
   setDT(patients_df)
   setDT(resource_df)
 
-
-
-  
   origin_date <- as.POSIXct("2018-12-01 00:00:00", tz = "UTC") + (3600 * 24 * warmup)
 
   boarding_patients <- patients_df[grepl('Mayo',Site.Entered)]
@@ -318,10 +315,10 @@ validate_results <- function(patients_df,
   hccis_melt <- melt(copy(hccis)[,rpt_year := NULL], id.vars = c('hccis_id','owner_hccis_id','urban'), variable.name = "grouping",value.name = 'value')[,grouping := tolower(grouping)]
   hccis_melt <- rbind(hccis_melt,hccis_melt[,.(value = sum(value)),by = grouping][grepl('admissions',grouping) & !grepl('icu|ed_to_ip',grouping)][,hccis_id:= 'All'],fill = TRUE)
 
-  admissions_by_facility <- rbind(facility_admissions_df,total_admission_df,fill = TRUE)[,.(admissions = admissions, sim_CI = ci_as_text(admissions)), by = list(facility,grouping)]
+  admissions_by_facility <- rbind(facility_admissions_df,total_admission_df,fill = TRUE)[,.(admissions = mean(admissions), sim_CI = ci_as_text(admissions)), by = list(facility,grouping)]
   admissions_by_facility <- admissions_by_facility[hccis_melt,`:=`(hccis_admissions = value*(sim_period/365)),on = c("grouping" = "grouping", "facility" = "hccis_id")
                                                    ][,error := {Vectorize(validate_fun)}(text = sim_CI, true_val = hccis_admissions,differences = T)
-                                                   ][,.SD[!duplicated(.SD,by = 'hccis_admissions')],by = 'grouping'][order(facility,grouping)]
+                                                   ]#[,.SD[!duplicated(.SD,by = 'hccis_admissions')],by = 'grouping'][order(facility,grouping)]
 
   setcolorder(admissions_by_facility, c('facility','grouping','sim_CI','admissions','hccis_admissions','error'))
 

@@ -608,7 +608,8 @@ MH.Network.sim <-
       
       if(is.data.frame(add_args$ed_scale_param)){
         hccis <-
-          hccis[add_args$ed_scale_param, `:=`(ed_scale_param = add_args$ed_scale_param), on = .(hccis_id)]
+          hccis[add_args$ed_scale_param, `:=`(tune_scaler = ed_scale_param), on = .(hccis_id)]
+        hccis <- hccis[,`:=`(ed_scale_param = ed_scale_param * tune_scaler, tune_scaler = NULL)]
       } else{
         hccis <- hccis[,ed_scale_param := add_args$ed_scale_param*ed_scale_param]
       }
@@ -701,13 +702,13 @@ MH.Network.sim <-
     if ((rep == 1) | is.na(rep)) {
       #If running multiple replications, run in parallel
 
-      sim_results <<- simmer::run(
+      raw_results <<- simmer::run(
         .env = create_sim_env(),
         until = sim.length,
         progress = progress::progress_bar$new(format = "[:bar] :percent ETA: :eta")$update
       )
     } else {
-      sim_results <- mclapply(
+      raw_results <- mclapply(
         X = seq(rep),
         FUN = function(i) simmer::wrap(simmer::run(.env = create_sim_env(.env = sim_func_env), until = sim.length)),
         mc.cores = min(rep, availableCores()),
@@ -716,9 +717,7 @@ MH.Network.sim <-
       )
     }
     
-    source("src/simulations/post_processing.R")
-    # saveRDS(sim_results,file = file.path('Results','validation','raw_results.rds'))
-    
+    source("src/simulations/post_processing.R")    
     siteInfo <-
       copy(siteInfo)[copy(siteInfo)[, `:=`(N = seq_len(.N)), by = .(Bed_Group)][N == 1, list(ip_unit = Bed_Group, traj_number = Site)],
                      trajectory_num := traj_number, on = c(Bed_Group = 'ip_unit')][, `:=`(trajectory_num = as.numeric(as.factor(trajectory_num)))]
@@ -727,7 +726,7 @@ MH.Network.sim <-
 # Retrieve Attributes and Resource DFs ------------------------------------
     timestamps <-
       post_process_arrival_output(
-        df = data.table(simmer::get_mon_attributes(sim_results)),
+        df = data.table(simmer::get_mon_attributes(raw_results)),
         providers_df = siteInfo,
         ed_df = hccis
       )
@@ -735,10 +734,10 @@ MH.Network.sim <-
     if (resources) {
       resources <-
         post_process_resource_output(
-          df = data.table(simmer::get_mon_resources(sim_results)),
-          attribute_df = data.table(simmer::get_mon_attributes(sim_results)),
+          df = data.table(simmer::get_mon_resources(raw_results)),
+          attribute_df = data.table(simmer::get_mon_attributes(raw_results)),
           timestamps_df = timestamps,
-          arrivals_df = get_mon_arrivals(sim_results),
+          arrivals_df = get_mon_arrivals(raw_results),
           hospital_df = siteInfo
         )
 

@@ -7,6 +7,10 @@
 /Code/experiments/logs/
 Api_Keys.R
 .Rproj.user
+.bashrc
+.bash_profile
+.vscode/
+renv.lock
 
 # History files
 .Rhistory
@@ -15,6 +19,7 @@ Api_Keys.R
 # Session Data files
 .RData
 .RDataTmp
+.rda
 
 # User-specific files
 .Ruserdata
