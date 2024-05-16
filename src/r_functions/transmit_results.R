@@ -89,6 +89,7 @@ transmit_results <-
                            RMSE = sqrt(MSE(as.numeric(res_df$admissions),res_df$hccis_admissions)),
                            MAE = MAE(as.numeric(res_df$admissions),res_df$hccis_admissions),
                            RAE = RAE(as.numeric(res_df$admissions),res_df$hccis_admissions))
+      print(results_dict)
     } else if (grepl(
       'treatment_delay',
       output_metric
@@ -118,6 +119,7 @@ transmit_results <-
         `Treatment Delay` = mean(`Treatment Delay`, na.rm = T)
       ),
       by = list(type, `Vulnerable Patient`)][type == 'Transfer' & `Vulnerable Patient` == T][,list(`Coordination Time`,`Treatment Delay`)])
+      print(results_dict)
 
     } else if(grepl('coordination_time',output_metric)){
       res_df <-
@@ -134,6 +136,7 @@ transmit_results <-
                           RMSE = sqrt(MSE(as.numeric(res_df$`Coordination Time`),res_df$true_val)),
                           MAE = MAE(as.numeric(res_df$`Coordination Time`),res_df$true_val),
                           RAE = RAE(as.numeric(res_df$`Coordination Time`),res_df$true_val))
+      print(results_dict)
   }
     write.socket(receiver, jsonlite::toJSON(results_dict, auto_unbox = TRUE))
   }

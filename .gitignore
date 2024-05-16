@@ -6,23 +6,29 @@
 /Code/deprecated
 /Code/experiments/logs/
 Api_Keys.R
-.Rproj.user
+*.Rproj.user
+*.Rproj
 .bashrc
 .bash_profile
 .vscode/
 renv.lock
 
+slurm_exe.sh
+slurm_exe_short.sh
+test_exe.sh
+Code/submit_tune_jobs.sh
+
 # History files
-.Rhistory
-.Rapp.history
+*.Rhistory
+*.Rapp.history
 
 # Session Data files
-.RData
-.RDataTmp
-.rda
+*.RData
+*.RDataTmp
+*.rda
 
 # User-specific files
-.Ruserdata
+*.Ruserdata
 
 # Example code in package build process
 *-Ex.R

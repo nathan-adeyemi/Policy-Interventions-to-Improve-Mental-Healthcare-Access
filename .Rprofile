@@ -9,41 +9,41 @@ options(scipen = 999,
 
 # Utilities ----------------------------
 if(!interactive()){
-  library(jsonlite) 
-  library(tidyverse)
+  suppressMessages(library(jsonlite))
+  suppressMessages(library(tidyverse))
 }
-library(data.table)
-library(openxlsx)
-library(writexl)
-library(tictoc)
-library(gtools)
-library(lubridate)
-library(stringdist)
-library(tidytext)
-library(MLmetrics)
+suppressMessages(library(data.table))
+suppressMessages(library(openxlsx))
+suppressMessages(library(writexl))
+suppressMessages(library(tictoc))
+suppressMessages(library(gtools))
+suppressMessages(library(lubridate))
+suppressMessages(library(stringdist))
+suppressMessages(library(tidytext))
+suppressMessages(library(MLmetrics))
 
 # Packages for Statistics/Bootstrapping/etc. ------------------------------
-library(fitdistrplus)
-library(boot)
-library(simpleboot)
-library(EnvStats)
+suppressMessages(library(fitdistrplus))
+suppressMessages(library(boot))
+suppressMessages(library(simpleboot))
+suppressMessages(library(EnvStats))
 
 # Packages for Discrete Event Simulation ----------------------------------
-library(simmer)
-library(simtimer)
+suppressMessages(library(simmer))
+suppressMessages(library(simtimer))
 
 # Packages for Parallel Processing ----------------------------------------
-library(doParallel)
-library(parallelly)
+suppressMessages(library(doParallel))
+suppressMessages(library(parallelly))
 
 
 invisible(lapply(X = file.path('src','r_functions',list.files(path = file.path('src','r_functions'))), FUN = source))
-source(file.path('src/simulations','Minnesota MH Network Simulation.R'))
-source(file.path('src/simulations','post_processing.R'))
-list2env(readRDS(file.path(
+invisible(source(file.path('src/simulations','Minnesota MH Network Simulation.R')))
+invisible(source(file.path('src/simulations','post_processing.R')))
+invisible(list2env(readRDS(file.path(
   ".",
   "src/simulations",
   "function_requirements",
   "MH_Network_sim_input_list.rds"
-)), .GlobalEnv)
+)), .GlobalEnv))
 
