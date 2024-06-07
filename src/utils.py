@@ -2,7 +2,7 @@ import yaml
 import os
 import numpy as np
 import pandas as pd
-import string
+import subprocess
 
 from pathlib import Path
 from ray import tune
@@ -45,8 +45,9 @@ def parse_tune_param_spaces(cfg: dict,
 
     # Parse the param_{int} args from the experiment config file
     for key in param_list:
-        if cfg[key]["init_params"] and params_0 is None:
-            params_0 = [{}]
+        if "init_params" in list(cfg[key].keys()) and params_0 is None:
+            if cfg[key]['init_params']:
+                params_0 = [{}]
         if 'id_col' in list(cfg[key]):
             params_names_list = df[cfg[key]['id_col']].unique()
         else:
@@ -72,14 +73,14 @@ def parse_tune_param_spaces(cfg: dict,
 
     return params, params_0
 
-def parse_tune_class(cfg, initial_parameters: list = None):
+def parse_tune_class(class_type: str, cfg: dict, initial_parameters: list = None):
     
     tune_class = cfg['class']
     tune_module, tune_class = tune_class.rsplit('.',maxsplit=1)
     searcher = getattr(import_module(tune_module),tune_class)
     
     del cfg['class']
-    if initial_parameters is not None:
+    if class_type == 'searcher' and initial_parameters is not None:
         cfg["points_to_evaluate"] = initial_parameters
 
     searcher = searcher(**cfg)
@@ -153,3 +154,32 @@ class ErrLog:
 
 def trial_str_creator(trial):
     return "{}_{}".format(trial.trainable_name, trial.trial_id)
+
+def open_validation_metrics(experiment_path: str,
+                            metric: str = 'MSE',
+                            mode: str = 'min',
+                            print_path: bool = True,
+                            exe_command: bool = True):
+    trainable_path = tune.ExperimentAnalysis(experiment_checkpoint_path=experiment_path).dataframe().sort_values(metric, ascending = (mode == 'min')).iloc[1,:].loc['logdir']
+    trainable_path = f"{os.path.dirname(experiment_path)}/trainable_{trainable_path}/validation_frames.xslx"
+    if print_path:
+        print(trainable_path)
+    elif exe_command:
+        command = f"code {trainable_path}"
+        print(command)
+        subprocess.run(command, shell=True, capture_output=False, text=False)
+    else:
+        return trainable_path
+    
+def move_results(res_dir: str, tmp_dir: str, names: list):
+
+    try:
+        subprocess.Popen(
+            ["bash", Path('src/move_results.sh').resolve()],
+            env={'res_dir':res_dir, 
+                    'tmp_dir': tmp_dir,
+                    'names': ','.join(names)}
+        )
+    except Exception as e:
+        print(f"Error starting the shell script: {e}")
+    

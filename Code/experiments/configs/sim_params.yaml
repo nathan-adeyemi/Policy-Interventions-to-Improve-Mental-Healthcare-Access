@@ -2,8 +2,8 @@ test:
   num_replications: 10
   warmup: 10
   sim_length: 25
-  concurrent_trials : 2
-  nproc: 10
+  concurrent_trials : 1
+  nproc: 2
 
 full:
   num_replications: 30

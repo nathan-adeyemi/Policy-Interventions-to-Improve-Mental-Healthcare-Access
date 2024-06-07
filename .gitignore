@@ -12,6 +12,7 @@ Api_Keys.R
 .bash_profile
 .vscode/
 renv.lock
+*.pyc
 
 slurm_exe.sh
 slurm_exe_short.sh
