@@ -1,6 +1,9 @@
-# Define the name of the conda environment
+cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
+export PATH="$PATH:/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access/Code/slurm_exe/kill-dask-workers"
+module load vscode-server/4.16.1
 module load singularity/3.5.3
 module load anaconda3/2022.05
-conda activate ed_ip_simulation
-alias python='~/.conda/envs/ed_ip_simulation/bin/python'
-alias R='singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif R'
+eval "$(conda shell.bash hook)"
+conda init bash
+conda activate SMAC
+alias python='~/.conda/envs/SMAC/bin/python3.11'

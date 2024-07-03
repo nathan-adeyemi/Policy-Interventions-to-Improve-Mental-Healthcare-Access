@@ -6,91 +6,21 @@ transmit_results <-
            ed_df,
            warmup = 50,
            sim_length = 365,
+           validation_frame = NA_character_,
            arg_list) {
+    
+    RMSE_norm <- function(y_pred,y_true){
+      
+      y_pred <- (y_pred - min(y_pred))/(max(y_pred) - min(y_pred))
+      y_true <- (y_true - min(y_true))/(max(y_true) - min(y_true))
+      
+      return(sqrt(MSE(as.numeric(y_pred),y_true)))
+    }
+    
     # Function that return the simulation results to return to the search algorithm
     origin_date <- as.POSIXct("2018-12-01 00:00:00", tz = "UTC") + (3600 * 24 * warmup)
     val_env <- readRDS(file.path("Data","Validation Metric Dataframes.rds"))
-    if (grepl('admissions',output_metric)){
-      resource_df <-
-        results_list[[2]][is.na(`External Transfer`), `External Transfer` := FALSE][is.na(`ED Patient`), `ED Patient` := FALSE][order(replication, time, system)][, `:=`(date_time = as.datetime(time * 3600, origin_date),
-                                                                                                                                                                         day_num = as.numeric(as.factor(lubridate::date(
-                                                                                                                                                                           as.datetime(time * 3600, origin_date)
-                                                                                                                                                                         )))),
-                                                                                                                                                                  by = replication][day_num >= warmup][, `:=`(occupancy = 100 * (server /
-                                                                                                                                                                                                                                   capacity),
-                                                                                                                                                                                                              Delta = abs(as.numeric(
-                                                                                                                                                                                                                difftime(date_time, data.table::shift(date_time, 1),
-                                                                                                                                                                                                                         units = 'hours')
-                                                                                                                                                                                                              ))),
-                                                                                                                                                                                                       by = list(resource, replication)]
-      facility_admissions_df <-
-        copy(resource_df)[cap_change > 0 &
-                            is.na(patient) &
-                            day_num > warmup, patient := generate_random_id(13)][cap_change > 0 &
-                                                                                   day_num > warmup, ][siteInfo, facility := Facility_name, on = c('resource' = 'Bed_Group')][, is_Adult := Age %in% c('Adult', 'Geriatric')][, .(admissions = length(unique(patient))), by = list(replication, facility, is_Adult)][is.na(admissions), admissions := 0][, `:=`(grouping = as.character(
-                                                                                     ifelse(is_Adult, "adult_admissions", "pediatric_admissions")
-                                                                                   ), is_Adult = NULL)]
-      
-      total_admission_df <-
-        copy(resource_df)[cap_change > 0 &
-                            is.na(patient) &
-                            day_num > warmup, patient := generate_random_id(13)][cap_change > 0 &
-                                                                                   day_num > warmup, ][siteInfo, facility := Facility_name, on = c('resource' = 'Bed_Group')][, is_Adult := Age %in% c('Adult', 'Geriatric')][, .(admissions = length(unique(patient))), by = list(replication, facility, is_Adult)][is.na(admissions), admissions := 0][, .(facility = 'All', admissions = sum(admissions)), by = list(is_Adult, replication)][, `:=`(grouping = as.character(
-                                                                                     ifelse(is_Adult, "adult_admissions", "pediatric_admissions")
-                                                                                   ), is_Adult = NULL)]
-      
-      facility_admissions_df <-
-        rbind(
-          facility_admissions_df,
-          melt(
-            facility_admissions_df[, .(total_admissions = sum(admissions)), by = list(replication, facility)],
-            id.vars = c('replication', 'facility'),
-            variable.name = 'grouping',
-            value.name = 'admissions'
-          )
-        )
-      total_admission_df <-
-        rbind(
-          total_admission_df,
-          melt(
-            total_admission_df[, .(total_admissions = sum(admissions)), by = list(replication, facility)],
-            id.vars = c('replication', 'facility'),
-            variable.name = 'grouping',
-            value.name = 'admissions'
-          )
-        )
-      hccis_melt <-
-        melt(
-          copy(ed_df)[, rpt_year := NULL],
-          id.vars = c('hccis_id', 'owner_hccis_id', 'urban'),
-          variable.name = "grouping",
-          value.name = 'value'
-        )[, grouping := tolower(grouping)]
-      hccis_melt <-
-        rbind(hccis_melt, hccis_melt[, .(value = sum(value)), by = grouping][grepl('admissions', grouping) &
-                                                                               !grepl('icu|ed_to_ip', grouping)][, hccis_id := 'All'], fill = TRUE)
-      admissions_by_facility <-
-        rbind(facility_admissions_df, total_admission_df, fill = TRUE)[hccis_melt, hccis_admissions := (value/365) * sim_length, on = c(facility = 'hccis_id',grouping = 'grouping')]
-      
-      
-      if (!grepl('admssions_by_facility',output_metric)) {
-        # Return the number of admissions df w/o the 'ALL' category
-        res_df <-
-          admissions_by_facility[facility != 'All' &
-                                   !grepl('total', grouping),][, facility := gsub("'", "\'", facility)]
-      } else {
-        res_df <-
-          admissions_by_facility[facility == 'All' &
-                                   !grepl('total', grouping),][, facility := gsub("'", "\'", facility)]
-      }
-      true_col = 'hccis_admissions'
-      pred_col = 'admissions'
-      results_dict <- list(MSE = MSE(as.numeric(res_df$admissions),res_df$hccis_admissions),
-                           RMSE = sqrt(MSE(as.numeric(res_df$admissions),res_df$hccis_admissions)),
-                           MAE = MAE(as.numeric(res_df$admissions),res_df$hccis_admissions),
-                           RAE = RAE(as.numeric(res_df$admissions),res_df$hccis_admissions))
-      
-    } else if (grepl(
+    if (grepl(
       'treatment_delay',
       output_metric
     )) {
@@ -113,13 +43,7 @@ transmit_results <-
       for (arg in names(arg_list)) {
         res_df[, (arg) := arg_list[arg]]
       }
-      saveRDS(res_df, file = file.path(trial_path, 'time_results_by_replication.rds'))
-      results_dict <- as.list(res_df[, .(
-        `Coordination Time` = mean(`Coordination Time`, na.rm = T),
-        `Treatment Delay` = mean(`Treatment Delay`, na.rm = T)
-      ),
-      by = list(type, `Vulnerable Patient`)][type == 'Transfer' & `Vulnerable Patient` == T][,list(`Coordination Time`,`Treatment Delay`)])
-      
+      results_dict <- as.list(res_df)
 
     } else if(grepl('coordination_time',output_metric)){
       res_df <-
@@ -132,11 +56,35 @@ transmit_results <-
           )$t0),
         by = list(replication, type, `Vulnerable Patient` = Age != 'Adult')
         ][val_env$ed_wait_median, true_val := Target, on = c(`Vulnerable Patient` = 'val_group', type = 'type')]
-      results_dict <- list(MSE = MSE(as.numeric(res_df$`Coordination Time`),res_df$true_val),
-                          RMSE = sqrt(MSE(as.numeric(res_df$`Coordination Time`),res_df$true_val)),
-                          MAE = MAE(as.numeric(res_df$`Coordination Time`),res_df$true_val),
-                          RAE = RAE(as.numeric(res_df$`Coordination Time`),res_df$true_val))
       
+      true_col = "true_val"
+      pred_col = "Coordination Time"
+      
+      results_dict <- list(MSE = MSE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                          RMSE = sqrt(MSE(as.numeric(res_df[[pred_col]]),res_df[[true_col]])),
+                          MAE = MAE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                          RAE = RAE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                          RMSE_norm = RMSE_norm(res_df[[pred_col]],res_df[[true_col]]))
+      
+  } else {
+      res_df <- validate_results(patients_df = results_list[[1]],
+                                resource_df = results_list[[2]],
+                                conf = 0.95,
+                                warmup=warmup,
+                                sim_days = sim_length,
+                                results_by_rep = T)
+
+      if(output_metric != 'All'){
+        res_df <- res_df[validation_frame == output_metric]
+      }
+      true_col = 'target'
+      pred_col = 'sim_val'
+      results_dict <- list(MSE = MSE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                           RMSE = sqrt(MSE(as.numeric(res_df[[pred_col]]),res_df[[true_col]])),
+                           MAE = MAE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                           RAE = RAE(as.numeric(res_df[[pred_col]]),res_df[[true_col]]),
+                           RMSE_norm = RMSE_norm(res_df[[pred_col]],res_df[[true_col]]),
+                           Replications = max(as.numeric(res_df$replication)))
   }
     write.socket(receiver, jsonlite::toJSON(results_dict, auto_unbox = TRUE))
   }

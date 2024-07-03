@@ -59,11 +59,11 @@ if __name__ == "__main__":
     )
     
     parser.add_argument(
-        "--num-cpus",
+        "--num-workers",
         "-nc",
         type=int,
         default=1,
-        help="Number of CPUs to use in each node. (Default: 1)",
+        help="Number of SLURM workers to call for the job. (Default: 1)",
     )
     
     parser.add_argument(
@@ -105,8 +105,11 @@ if __name__ == "__main__":
     )
     
     parser.add_argument(
-        "--single-node",
-        action='store_true'
+        "--backend",
+        "-b",
+        choices=['single','ray','dask'],
+        default='single',
+        action='store'
     )
     args = parser.parse_args()
 
@@ -121,10 +124,13 @@ if __name__ == "__main__":
     partition_option = (
         "#SBATCH --partition={}".format(args.partition) if args.partition else ""
     )
-    if  args.single_node:
+    args.command += f" --backend={args.backend}" if '--backend' not in args.command else ""
+    if not args.backend == 'ray':
         template_file = 'Code/slurm_exe/slurm-template-single-node.sh'
-        args.command += " --single-node "
-        args.command += f"--num-cpus={args.num_cpus} "
+        args.command += f" --num-workers={args.num_workers}"
+        args.command += f" --time={args.time}"
+        args.command += f" --partition={args.partition}"
+        cpu_count = 30
     else:
         template_file = "Code/slurm_exe/slurm-template.sh"
         
@@ -133,7 +139,7 @@ if __name__ == "__main__":
         text = f.read()
     text = text.replace(JOB_NAME, job_name)
     text = text.replace(NUM_NODES, str(args.num_nodes))
-    text = text.replace(NUM_CPUS_PER_NODE, str(args.num_cpus))
+    text = text.replace(NUM_CPUS_PER_NODE, str(cpu_count))
     text = text.replace(NUM_GPUS_PER_NODE, str(args.num_gpus))
     text = text.replace(PARTITION_OPTION, partition_option)
     text = text.replace(COMMAND_PLACEHOLDER, str(args.command))
@@ -160,6 +166,10 @@ if __name__ == "__main__":
             script_file, "{}.log".format(job_name)
         )
     )
-    time.sleep(1)
+    time.sleep(3)
     subprocess.Popen(['rm','-f',script_file])
     sys.exit(0)
+    
+    # Sample terminal command to execute tuning rob
+
+    # python slurm-launch.py --num-cpus=30 --partition=short --time=3:00:00 --exp-name=test-debug --command="python3.11 Code/experiments/__main__.py --tune-job=debug --test-sim-params"

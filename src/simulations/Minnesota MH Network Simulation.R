@@ -666,22 +666,22 @@ MH.Network.sim <-
     
 
     ### Convert a vector of real numbers to a bed allocation ( should be the number of unique bed groups)
-    if (any(grepl('alg_input',names(add_args)))) {
-      alg_input <- add_args$alg_input
+    if (any(grepl('input_allocation',names(add_args)))) {
+      input_allocation <- add_args$input_allocation
       # Does the supplied solution need to be decoded
-      if (all(alg_input == as.integer(alg_input))) {
-        counts <- alg_input
+      if (all(input_allocation == as.integer(input_allocation))) {
+        counts <- input_allocation
       } else{
-        counts <-  decode(alg_input)
+        counts <-  decode(input_allocation)
       }
-      alg_input <-
+      input_allocation <-
         data.table(
           Facility_name = siteInfo$Facility_name[!duplicated(siteInfo$Bed_Group)],
           Bed_Group = siteInfo$Bed_Group[!duplicated(siteInfo$Bed_Group)],
           bed_counts = counts
         )
       siteInfo$total_beds <-
-        alg_input$bed_counts[match(siteInfo$Bed_Group, alg_input$Bed_Group)]
+        input_allocation$bed_counts[match(siteInfo$Bed_Group, input_allocation$Bed_Group)]
     }
 
     # Create the Simulation Environment and Run the Replication --------------

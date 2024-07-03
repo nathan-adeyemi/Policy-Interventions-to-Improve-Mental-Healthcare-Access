@@ -1,0 +1,44 @@
+dask:
+  debug: 
+    cores: 2
+    processes: 1
+    memory: 8GB
+    queue: short
+    local_directory: /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
+    log_directory: logs/dask-worker-logs/
+    job_script_prologue: ["conda init bash \n", "module load singularity/3.5.3 \n", "module load anaconda3/2022.05 \n", "conda activate SMAC \n"]
+    worker_extra_args: ['--nthreads 2']
+    silence_logs: debug
+
+  grid-full:
+    cores: 24
+    processes: 1
+    memory: 16GB
+    queue: short
+    local_directory: /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
+    log_directory: /scratch/adeyemi.n/logs/dask-worker-logs/
+    job_script_prologue: ["conda init bash \n", "module load singularity/3.5.3 \n", "module load anaconda3/2022.05 \n", "conda activate SMAC \n"]
+    worker_extra_args: ['--nthreads 4']
+    silence_logs: error
+  
+  optim-full:
+    cores: 12
+    processes: 1
+    memory: 48GB
+    queue: short
+    local_directory: /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
+    log_directory: /scratch/adeyemi.n/logs/dask-worker-logs/
+    job_script_prologue: ["conda init bash \n", "module load singularity/3.5.3 \n", "module load anaconda3/2022.05 \n", "conda activate SMAC \n"]
+    worker_extra_args: ['--nthreads 4']
+    silence_logs: info
+
+ray:
+  include_dashboard: False
+  _temp_dir: "~/MH_Simulation/tmp_dir"
+  single-node: 
+    runtime_env: 
+      working_dir: "src"
+      excludes: ["/Results/deprecated/", "/{res_dir}/"]
+      pip: ["pandas","numpy"]
+
+                  

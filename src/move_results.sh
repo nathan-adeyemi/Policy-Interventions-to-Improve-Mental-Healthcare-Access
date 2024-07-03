@@ -3,7 +3,10 @@
 move_results() {
     res_dir="$1"
     tmp_dir="$2"
-    names=("${@:3}")
+    input=("${@:3}")
+
+    IFS=","
+    read -ra names <<< "$input"
 
     # Create 'best_versions' directory if it doesn't exist
     if [ ! -d "$res_dir/best_versions" ]; then
@@ -12,7 +15,7 @@ move_results() {
     
     # Move files from tmp_dir to res_dir
     for file in "$tmp_dir"/*; do
-        mv "$file" "$res_dir/"
+        cp "$file" "$res_dir/"
     done
 
     # Copy directories from tmp_dir to best_versions

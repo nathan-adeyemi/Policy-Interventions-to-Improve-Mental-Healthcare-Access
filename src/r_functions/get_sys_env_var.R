@@ -11,6 +11,8 @@ get_sys_env_var <- function(var_name, var_class = 'numeric') {
   } else if (grepl('datatable|dataframe', var_class)) {
     print(res)
     return(data.table(fromJSON(res)))
+  } else if (grepl("bool|logic",var_class)){
+    return(as.logical(res))
   } else {
     return(as.character(res))
   }

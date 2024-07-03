@@ -11,7 +11,8 @@ sim_val_subfunction <-
            use_type = TRUE,
            resource_val = F,
            include_outliers = T,
-           confidence_level = 0.95) {
+           confidence_level = 0.95,
+           results_by_rep = FALSE) {
     boot_fn <- function(dataframe, split_list) {
       if((length(split_list) == 1 & use_type == F & metric == 'count')){
         dataframe <- dataframe[,lapply(.SD,base::sum), by = c(split_list,'day_num')]
@@ -77,6 +78,11 @@ sim_val_subfunction <-
     } else {
       df[, `Vulnerable Patient` := Age]
     }
+    if (all(length(unique(na.omit(val_env_df$val_group))) == 2, 
+            any(grepl('TRUE', unique(val_env_df$val_group))),
+            any(grepl('FALSE', unique(val_env_df$val_group))))){
+      val_env_df <- val_env_df[,val_group := as.logical(val_group)]
+    }
     if (use_type) {
       ret <-
         rbindlist(lapply(
@@ -100,32 +106,34 @@ sim_val_subfunction <-
       fill = TRUE)[val_env_df, target := Target, on = c(`Vulnerable Patient` = 'val_group')]
     }
 
-    if (length(confidence_level) == 1) {
-      ret <- ci_and_val_fn(ret, split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
-    } else{
-      ret <- data.table(do.call(
-        cbind,
-        lapply(X = confidence_level,
-               FUN = ci_and_val_fn,
-               df = ret,
-               split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
-      ))
-      unique_cols = unique(names(ret))
-      unique_cols <-
-        c(setdiff(unique_cols, sort(unlist(
-          lapply((confidence_level * 100),
-                 grep,
-                 x = unique_cols,
-                 value = T
-          )
-        ))), sort(unlist(
-          lapply((confidence_level * 100),
-                 grep,
-                 x = unique_cols,
-                 value = T
-          )
-        )))
-      ret <- unique(ret[, ..unique_cols])
+    if(!results_by_rep){
+      if (length(confidence_level) == 1) {
+        ret <- ci_and_val_fn(ret, split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
+      } else{
+        ret <- data.table(do.call(
+          cbind,
+          lapply(X = confidence_level,
+                 FUN = ci_and_val_fn,
+                 df = ret,
+                 split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
+        ))
+        unique_cols = unique(names(ret))
+        unique_cols <-
+          c(setdiff(unique_cols, sort(unlist(
+            lapply((confidence_level * 100),
+                   grep,
+                   x = unique_cols,
+                   value = T
+            )
+          ))), sort(unlist(
+            lapply((confidence_level * 100),
+                   grep,
+                   x = unique_cols,
+                   value = T
+            )
+          )))
+        ret <- unique(ret[, ..unique_cols])
+      }
     }
     return(ret)
   }

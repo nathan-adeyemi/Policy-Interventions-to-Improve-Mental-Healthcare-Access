@@ -129,7 +129,7 @@ find_drive_distance <- Vectorize(function(x, y) {
 })
 
 extract_bed <- function(i) {
-  return(tail(unlist(str_split(i, ' ')), 1))
+  return(tail(unlist(strsplit(i, ' ')), 1))
 }
 
 # Simulation Input Calculation Functions --------------------------------------------------------

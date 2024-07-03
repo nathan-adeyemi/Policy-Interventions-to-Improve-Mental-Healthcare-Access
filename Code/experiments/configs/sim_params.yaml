@@ -1,12 +1,22 @@
-test:
-  num_replications: 10
+debug:
+  num-replications: 4
   warmup: 10
-  sim_length: 25
-  concurrent_trials : 1
-  nproc: 2
+  sim-length: 30
+  acceptance-probs: tuned-probs
+  
+test:
+  num-replications: 10
+  warmup: 5
+  sim-length: 20
+  acceptance-probs: tuned-probs
+
+tune:
+  num-replications: 12
+  warmup: 50
+  sim-length: 200
 
 full:
-  num_replications: 30
+  num-replications: 24
   warmup: 50
-  sim_length: 365
-  concurrent_trials : 24
+  sim-length: 365
+  acceptance-probs: tuned-probs

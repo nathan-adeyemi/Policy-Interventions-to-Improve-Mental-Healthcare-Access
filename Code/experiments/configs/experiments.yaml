@@ -1,53 +1,144 @@
-# Experiment configs for testing interventions
-interventions:
-  num_samples: 1
-  param_1:
-    name: sort_by_prob
-    type: grid
-    init_params: False
-    options: [True, False]
+# Experiment configs for the acceptance proability tuning job (using BOHB)
+acceptance-probs-BOHB:
+  job-type: tune
+  num-samples: 500
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  output-statistic: admissions_by_facility
+  obj-fn: RMSE
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.3
+    max: 1 
+    init_params: True
+  searcher: 
+    class: ray.tune.search.bohb.bohb_search.TuneBOHB
+    metric: RMSE
+    mode: min
+    points_to_evaluate: params_0
+  scheduler:
+    class: ray.tune.schedulers.hb_bohb.HyperBandForBOHB
+    time_attr: training_iteration
+    metric: RMSE
+    mode: min
 
-  param_2:
-    name: concurrent_requests
-    type: quantized_grid 
-    min: 1
-    max: 8
-    init_params: False
-    interval: 1
-    sample: False
+# Experiment configs for the acceptance proability tuning job (using HyperOpt)
+acceptance-probs-HyperOpt:
+  job-type: tune
+  num-samples: 500
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  obj-fn: RMSE
+  output-statistic: admissions_by_facility
+  param-1:
+    id-col: Facility_name
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.3
+    max: 1 
+    init_params: True
+  searcher: 
+    class: ray.tune.search.hyperopt.hyperopt_search.HyperOptSearch
+    metric: RMSE
+    mode: min
+    points_to_evaluate: params_0
 
-# Experiment configs of the length of stay sensitivity analysis
-los_sensitivity_analysis:
-  num_samples: 1
-  output_metric: treatment_delay
-  param_1:
-    name: los_sa_factor
+# Experiment configs for the acceptance proability tuning job (using HyperOpt)
+acceptance-probs-Coord:
+  job-type: tune
+  num-samples: 500
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  obj-fn: RMSE
+  output-statistic: median_coordination_time
+  param-1:
+    id-col: Facility_name
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.3
+    max: 1 
+    init_params: True
+  searcher: 
+    class: ray.tune.search.hyperopt.hyperopt_search.HyperOptSearch
+    metric: RMSE
+    mode: min
+    points_to_evaluate: params_0
+
+# Experiment configs for the acceptance proability tuning job
+acceptance-probs:
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  num-samples: 750
+  obj-fn: RMSE
+  output-statistic: admissions_by_facility
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.1
+    max: 1 
+    init_params: True
+
+acceptance-probs-norm:
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  num-samples: 750
+  obj-fn: RMSE_norm
+  output-statistic: admissions_by_facility
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.1
+    max: 1 
+    init_params: True
+
+acceptance-probs-all-metrics:
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  num-samples: 750
+  obj-fn: RMSE_norm
+  output-statistic: All
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.1
+    max: 1 
+    init_params: True
+
+acceptance-probs-grid-search:
+  job_name: acceptance-probs
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  num-samples: 1
+  output-statistic: admissions_by_facility
+  obj-fn: RMSE
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
     type: quantized_grid
     min: 0.5
-    max: 1.5
-    interval: 0.1
-    init_params: False
-    sample: False
-
-# Experiment configs of the lambda sensitivity analysis
-lambda_sensitivity_analysis:
-  num_samples: 1
-  output_metric: treatment_delay
-  param_1:
-    name: arrival_rate_sa_factor
-    type: quantized_grid
-    min: 0.5
-    max: 1.5
-    interval: 0.1
+    max: 1 
+    interval: 0.5
     init_params: False
     sample: False
 
 # Experiment configs for the overall ed scaling paramter tuning job
 ed-arr:
   job_name: ed_arrival_tuning
-  num_samples: 1
-  output_metric: all_admissions
-  param_1:
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  num-samples: 1
+  output-statistic: total_admissions
+  obj-fn: RMSE
+  param-1:
     name: ed_scale_param
     type: quantized_grid
     min: 1
@@ -56,82 +147,32 @@ ed-arr:
     init_params: False
     sample: False
 
-# Experiment configs for the acceptance proability tuning job
-acceptance-probs-grid-search:
-  job_name: acceptance-probs
-  num_samples: 1
-  output_metric: admissions_by_facility
-  param_1:
-    id_col: Facility_name
-    param_col: Acceptance_Prob
-    type: quantized_grid
-    min: 0.5
-    max: 1 
-    interval: 0.5
-    init_params: False
-    sample: False
-
-# Experiment configs for the acceptance proability tuning job (using HyperOpt)
-acceptance-probs-HyperOpt:
-  num_samples: 500
-  output_metric: admissions_by_facility
-  param_1:
-    id_col: Facility_name
-    param_col: Acceptance_Prob
-    type: uniform
-    min: 0.3
-    max: 1 
-    init_params: True
-  searcher: 
-    class: ray.tune.search.hyperopt.hyperopt_search.HyperOptSearch
-    metric: MSE
-    mode: min
-    points_to_evaluate: params_0
-    
-acceptance-probs-BOHB:
-  num_samples: 500
-  output_metric: admissions_by_facility
-  param_1:
-    id_col: Facility_name
-    param_col: Acceptance_Prob
-    type: uniform
-    min: 0.3
-    max: 1 
-    init_params: True
-  searcher: 
-    class: ray.tune.search.bohb.bohb_search.TuneBOHB
-    metric: MSE
-    mode: min
-    points_to_evaluate: params_0
-  scheduler:
-    class: ray.tune.schedulers.hb_bohb.HyperBandForBOHB
-    time_attr: training_iteration
-    metric: MSE
-    mode: min
-
-acceptance-probs-Coord:
-  num_samples: 500
-  output_metric: coordination_time
-  param_1:
-    id_col: Facility_name
-    param_col: Acceptance_Prob
-    type: uniform
-    min: 0.3
-    max: 1 
-    init_params: True
-  searcher: 
-    class: ray.tune.search.hyperopt.hyperopt_search.HyperOptSearch
-    metric: MSE
-    mode: min
-    points_to_evaluate: params_0
-    
 # Experiment configs for tuning the scaling paramter of individual EDs
+ed-arr-sep:
+  num-samples: 500
+  job-type: tune
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  output-statistic: admissions_by_facility
+  obj-fn: RMSE
+  param-1:
+    df: "Data/HCCIS/hccis_ed_ips_2020.csv"
+    id-col: hccis_id
+    param-col: ed_scale_param
+    type: uniform
+    min: 0.5
+    max: 1.5 
+    init_params: True
+
 ed-arr-sep-grid-search:
-  num_samples: 1
-  output_metric: admissions_by_facility
-  param_1:
-    id_col: hccis_id
-    param_col: ed_scale_param
+  num-samples: 1  
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  output-statistic: admissions_by_facility
+  obj-fn: RMSE
+  job-type: tune
+  param-1:
+    df: "Data/HCCIS/hccis_ed_ips_2020.csv"
+    id-col: hccis_id
+    param-col: ed_scale_param
     type: quantized_grid
     min: 0.5
     max: 1.5 
@@ -140,17 +181,90 @@ ed-arr-sep-grid-search:
     sample: False
     
 ed-arr-sep-HyperOpt:
-  num_samples: 500
-  output_metric: admissions_by_facility
-  param_1:
-    id_col: hccis_id
-    param_col: ed_scale_param
+  num-samples: 500
+  output-statistic: admissions_by_facility
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  obj-fn: RMSE
+  job-type: tune
+  param-1:
+    df: "Data/HCCIS/hccis_ed_ips_2020.csv"
+    id-col: hccis_id
+    param-col: ed_scale_param
     type: uniform
     min: 0.5
     max: 1.5 
     init_params: True
   searcher: 
     class: ray.tune.search.hyperopt.hyperopt_search.HyperOptSearch
-    metric: MSE
+    metric: RMSE
     mode: min
     points_to_evaluate: params_0
+
+# Experiment configs for testing interventions
+interventions:
+  num-samples: 1
+  obj-fn: None
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  output-statistic: treatment_delay
+  job-type: evaluation
+  param-1:
+    name: sort_by_prob
+    type: grid
+    init_params: False
+    options: [True, False]
+  param-2:
+    name: concurrent_requests
+    type: quantized_grid 
+    min: 1
+    max: 8
+    init_params: False
+    interval: 1
+    sample: False
+
+# Experiment configs of the lambda sensitivity analysis
+lambda-sensitivity-analysis:
+  num-samples: 1
+  output-statistic: treatment_delay
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  obj-fn: None
+  job-type: evaluation
+  param-1:
+    name: arrival_rate_sa_factor
+    type: quantized_grid
+    min: 0.5
+    max: 2.5
+    interval: 0.1
+    init_params: False
+    sample: False
+
+# Experiment configs of the length of stay sensitivity analysis
+los-sensitivity-analysis:
+  num-samples: 1
+  obj-fn: None
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  output-statistic: treatment_delay
+  job-type: evaluation
+  param-1:
+    name: los_sa_factor
+    type: quantized_grid
+    min: 0.5
+    max: 2.5
+    interval: 0.05
+    init_params: False
+    sample: False
+  
+debug:
+  num-samples: 20
+  output-statistic: admissions_by_facility
+  fn-cfg-path: Code/experiments/configs/sim_params.yaml
+  obj-fn: RMSE
+  job-type: tune
+  param-1:
+    df: "src/simulations/function_requirements/ip_facilities_info.csv"
+    id-col: Facility_name
+    param-col: Acceptance_Prob
+    type: uniform
+    min: 0.3
+    max: 1 
+    init_params: True
+

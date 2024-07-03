@@ -39,5 +39,6 @@ else
     cd /home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access
     module load singularity/3.5.3
     conda activate ed_ip_simulation
+    # echo "Beginning the R simulation"
     singularity exec --bind "/scratch/:/scratch/,/work/:/work/" /shared/container_repository/rstudio/rocker-geospatial-4.2.1.sif Rscript "src/sim_setup.R"
 fi

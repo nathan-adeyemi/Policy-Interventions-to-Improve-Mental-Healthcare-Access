@@ -18,7 +18,7 @@ validate_fun <- function(text,
   } else{
     if (is.character(text)) {
       values <-
-        str_split(text, ",|\\(|\\)| ")[[1]] %>%
+        strsplit(text, ",|\\(|\\)| ")[[1]] %>%
         as.numeric() %>%
         na.omit()
     } else if (is.list(text) | is.numeric(text)) {
