@@ -9,9 +9,9 @@ options(scipen = 999,
 
 # Utilities ----------------------------
 if(!interactive()){
-  suppressMessages(library(jsonlite))
   suppressMessages(library(tidyverse))
 }
+suppressMessages(library(jsonlite))
 suppressMessages(library(data.table))
 suppressMessages(library(openxlsx))
 suppressMessages(library(writexl))
@@ -19,7 +19,7 @@ suppressMessages(library(tictoc))
 suppressMessages(library(gtools))
 suppressMessages(library(lubridate))
 suppressMessages(library(stringdist))
-suppressMessages(library(tidytext))
+# suppressMessages(library(tidytext))
 suppressMessages(library(MLmetrics))
 
 # Packages for Statistics/Bootstrapping/etc. ------------------------------
@@ -35,11 +35,11 @@ suppressMessages(library(simtimer))
 # Packages for Parallel Processing ----------------------------------------
 suppressMessages(library(doParallel))
 suppressMessages(library(parallelly))
+library(jsonlite)
 
 
 invisible(lapply(X = file.path('src','r_functions',list.files(path = file.path('src','r_functions'))), FUN = source))
 invisible(source(file.path('src/simulations','Minnesota MH Network Simulation.R')))
-invisible(source(file.path('src/simulations','post_processing.R')))
 invisible(list2env(readRDS(file.path(
   ".",
   "src/simulations",

@@ -215,11 +215,11 @@ def parse_cli_args(args, scratch_path: str, seed: int = 42):
     if args.checkpoint_path is None:
         job_cfg.update(
             {
-                "cpus_per_trial": args.num_cpus / job_cfg.get("num-workers"),
                 "num_samples": cfg.get("num-samples"),
             }
         )
         if args.backend == "ray":
+            job_cfg.update({"cpus_per_trial": args.num_cpus / job_cfg.get("num-workers"),})
             job_cfg["params"], job_cfg["params_0"] = parse_param_spaces(
                 cfg=cfg, ray_space=True, tune_job=args.tune_job
             )
@@ -248,8 +248,6 @@ def parse_cli_args(args, scratch_path: str, seed: int = 42):
         cluster_cfg = None
         if not args.backend == "single":
             cluster_cfg = parse_cluster_args(args=args)
-            cluster_cfg.update({"cores": int(job_cfg.get("cpus_per_trial"))})
-
     else:
         job_cfg.update({"checkpoint_path" : args.checkpoint_path})
         cluster_cfg = None

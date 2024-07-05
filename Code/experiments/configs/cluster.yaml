@@ -11,7 +11,7 @@ dask:
     silence_logs: debug
 
   grid-full:
-    cores: 24
+    cores: 48
     processes: 1
     memory: 16GB
     queue: short

@@ -231,9 +231,9 @@ lambda-sensitivity-analysis:
   param-1:
     name: arrival_rate_sa_factor
     type: quantized_grid
-    min: 0.5
-    max: 2.5
-    interval: 0.1
+    min: 0.75
+    max: 1.25
+    interval: 0.05
     init_params: False
     sample: False
 
@@ -254,7 +254,7 @@ los-sensitivity-analysis:
     sample: False
   
 debug:
-  num-samples: 20
+  num-samples: 2
   output-statistic: admissions_by_facility
   fn-cfg-path: Code/experiments/configs/sim_params.yaml
   obj-fn: RMSE

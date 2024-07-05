@@ -52,12 +52,14 @@ sim_fn <- function(...) {
 }
 
 if(!is.null(client_socket)){
-  arg_list = parse_sim_args(socket = client_socket, tune_job)
+  arg_list <- parse_sim_args(socket = client_socket, tune_job)
+} else { 
+  arg_list <- list()
 }
 
 if (!(grepl('acceptance-probs|accept|probs',tune_job))){
     params <- fromJSON("src/simulations/function_requirements/acceptance-prob-cfg.json")[[sim_run_info$acceptance_probs]]
-    arg_list$acceptance_prob_input = data.table(Facility_name = names(params), prob = params)
+    arg_list$acceptance_prob_input <- data.table(Facility_name = names(params), prob = params)
 }
 
 

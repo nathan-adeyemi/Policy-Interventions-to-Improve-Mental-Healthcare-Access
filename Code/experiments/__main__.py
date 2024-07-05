@@ -50,7 +50,7 @@ if __name__ == "__main__":
         "-w",
         type=int,
         action="store",
-        default=len(os.sched_getaffinity(0)),
+        default= 1
     )
     
     parser.add_argument(
@@ -109,9 +109,10 @@ if __name__ == "__main__":
                 os.makedirs(scratch_path)
             # Set up Dask distr cluster and client
             cluster = SLURMCluster(**cluster_cfg)
-            cluster.scale(cores=cli_args.num_workers)
+            print(f'Requesting {cli_args.num_workers} workers from the HPC')
+            cluster.scale(cli_args.num_workers)
             
-            dsk_client = Client(cluster, timeout="600s")
+            dsk_client = Client(cluster, timeout="300s")
             wait_for_cluster(
                 client=dsk_client,
                 expected_workers = cli_args.num_workers,

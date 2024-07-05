@@ -137,7 +137,10 @@ def wait_for_cluster(client, expected_workers, timeout=600, check_interval=10):
         # Check for timeout
         elapsed_time = time.time() - start_time
         if elapsed_time > timeout:
-            raise TimeoutError("Timeout waiting for Dask cluster to be ready.")
+            if n_workers > 0:
+                print(f"Timeout waiting for Dask cluster to be ready.\n Running experiment with {n_workers} workers")
+            else:
+                raise TimeoutError("Timeout waiting for Dask cluster to be ready. No workers available")
 
         # Wait before checking again
         time.sleep(check_interval)
