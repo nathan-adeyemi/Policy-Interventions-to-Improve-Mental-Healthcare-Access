@@ -3,6 +3,7 @@ import pandas as pd
 import os
 import trainables
 import itertools
+import re
 
 from ConfigSpace import Configuration, ConfigurationSpace
 from typing import Union
@@ -126,8 +127,10 @@ class tune_job:
 
     def train(self, config: Union[Configuration,dict], seed: int = 0) -> float:
         
+        params = dict(config) if isinstance(config, Configuration) else config
         return self.simulator(
-            params=dict(config) if isinstance(config, Configuration) else config,
+            params = params,
+            trainable_path = utils.dict_to_filename(config = params),
             seed=seed,
         )
     
@@ -153,8 +156,10 @@ class tune_job:
         else:
             results = [self.train(i) for i in self.grid_search_results]
             
-        self.grid_search_results = pd.concat([pd.DataFrame(res) for res in results], axis = 0)
+        results = [pd.DataFrame(results[i]).assign(**param) for i, param in enumerate(self.grid_search_results)]
+            
+        self.grid_search_results = pd.concat(results, axis = 0)
         self.grid_search_results.to_csv(path_or_buf=os.path.join(self.res_dir,'grid-search-results.csv'))
         
         return self.grid_search_results
-        
+    

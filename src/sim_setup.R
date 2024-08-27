@@ -22,7 +22,7 @@ if(!interactive()){
   output_metric <- 'treatment_delay'
   seed <- 42
   sim_config_path <- "Code/experiments/configs/sim_params.yaml"
-  sim_config <- "debug"
+  sim_config <- "test"
 }
 env <- environment()
 sim_run_info = yaml::read_yaml(sim_config_path)[[sim_config]]
@@ -53,13 +53,11 @@ sim_fn <- function(...) {
 
 if(!is.null(client_socket)){
   arg_list <- parse_sim_args(socket = client_socket, tune_job)
-} else { 
-  arg_list <- list()
-}
+} 
 
 if (!(grepl('acceptance-probs|accept|probs',tune_job))){
     params <- fromJSON("src/simulations/function_requirements/acceptance-prob-cfg.json")[[sim_run_info$acceptance_probs]]
-    arg_list$acceptance_prob_input <- data.table(Facility_name = names(params), prob = params)
+    arg_list$acceptance_prob_input <- data.table(Facility_name = names(params), prob = unlist(params))
 }
 
 
@@ -78,15 +76,27 @@ tryCatch(
                                 use.names = TRUE)
         }
       }
-      saveRDS(results,file.path(trial_path,'raw_results.rds'))
-      results_frames <-  validate_results(
-        conf = 0.95,
-        patients_df = results[[1]],
-        resource_df = results[[2]],
-        warmup = warmup,
-        sim_days = sim_length
-      )
-      write.xlsx(file = file.path(trial_path,'validation_frames.xlsx'), x = results_frames)
+      
+      saveRDS(results,file.path(trial_path,'raw_results.rds'))      
+      
+      if(!grepl('interventions|sensitivity_analysis',tune_job)){
+        
+        results_frames <-  validate_results(
+          conf = 0.95,
+          patients_df = results[[1]],
+          resource_df = results[[2]],
+          warmup = warmup,
+          sim_days = sim_length
+        )
+        
+        saveRDS(results_frames,file.path(trial_path,'validation_frames.rds'))
+      } else if (grepl('interventions',tune_job, ignore.case = TRUE)){
+        if(args$sort_by_prob == FALSE & args$concurrent_requests == 1){
+          saveRDS(object = baseline_analysis(results), file = file.path("Results/baseline-results.rds")) 
+      }
+  }
+      }
+      
       last_rep <- max(results[[1]]$replication)
       transmit_results(
         results_list = results,
@@ -104,6 +114,7 @@ tryCatch(
       
       print(paste("------------------------------------------------- Incumbent Validation Results -------------------------------------------------\n",results_frames),"\n")
     }
+    
   },
   error = function(e) {
     cat("Error:", conditionMessage(e), "\n")
@@ -111,4 +122,5 @@ tryCatch(
     # Print the line number where the error occurred
     # cat("Line number:", traceback()[[1]]$line, "\n")
   }
+
 )

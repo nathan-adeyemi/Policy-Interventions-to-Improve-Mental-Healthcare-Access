@@ -5,5 +5,4 @@ module load singularity/3.5.3
 module load anaconda3/2022.05
 eval "$(conda shell.bash hook)"
 conda init bash
-conda activate SMAC
-alias python='~/.conda/envs/SMAC/bin/python3.11'
+alias python="~/.conda/envs/SMAC/bin/python"

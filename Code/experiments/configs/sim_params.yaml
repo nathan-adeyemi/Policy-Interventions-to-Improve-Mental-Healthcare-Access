@@ -1,13 +1,13 @@
 debug:
-  num-replications: 4
-  warmup: 10
-  sim-length: 30
+  num-replications: 2
+  warmup: 1
+  sim-length: 20
   acceptance-probs: tuned-hccis-admissions-norm
   
 test:
-  num-replications: 10
+  num-replications: 2
   warmup: 5
-  sim-length: 20
+  sim-length: 150
   acceptance-probs: tuned-hccis-admissions-norm
 
 tune:

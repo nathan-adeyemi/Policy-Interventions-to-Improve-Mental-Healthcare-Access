@@ -24,26 +24,43 @@ transmit_results <-
       'treatment_delay',
       output_metric
     )) {
-      res_df <-
-        results_list[[1]][, treatment_delay := total_wait_time + Travel.time][, .(
-          `Coordination Time` = one.boot(
-            total_wait_time,
-            FUN = mean,
-            R = 500,
-            na.rm = TRUE
-          )$t0,
-          `Treatment Delay` = one.boot(
-            treatment_delay,
-            FUN = mean,
-            R = 500,
-            na.rm = TRUE
-          )$t0
-        ),
-        by = list(replication, type, `Vulnerable Patient` = Age != 'Adult')]
-      for (arg in names(arg_list)) {
-        res_df[, (arg) := arg_list[arg]]
-      }
-      results_dict <- as.list(res_df)
+      patients <- results[[1]]
+      patients[,treatment_delay := total_wait_time + Travel.Time]
+      results_dict <-
+        list(
+          average_treatment_delay = extract_results(
+            df = patients,
+            metric = 'treatment_delay',
+            use_type = T,
+            collapse_replications = F,
+            separate_vulnerable = T
+          ),
+          average_Coordination_Time = 
+            extract_results(
+              df = patients,
+            metric = 'total_wait_time',
+            use_type = T,
+            collapse_replications = F,
+            separate_vulnerable = T
+          ), 
+          median_treatment_delay = extract_results(
+            df = patients,
+            metric = 'treatment_delay',
+            result_function = function(data) median(x = data, na.rm  = T),
+            use_type = T,
+            collapse_replications = F,
+            separate_vulnerable = T
+          ),
+          median_Coordination_Time = 
+            extract_results(
+              df = patients,
+              result_function = function(data) median(x = data, na.rm  = T),
+              metric = 'total_wait_time',
+              use_type = T,
+              collapse_replications = F,
+              separate_vulnerable = T
+            )
+        )
 
     } else if(grepl('coordination_time',output_metric)){
       res_df <-

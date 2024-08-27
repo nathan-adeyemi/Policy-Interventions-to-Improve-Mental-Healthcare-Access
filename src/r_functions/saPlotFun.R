@@ -1,18 +1,21 @@
-saPlotFun <- function(inputData, sa_metric) {
+saPlotFun <- function(inputData, x_ax, y_ax, grouping_var, sa_metric) {
   ggplot(
     data = inputData,
     mapping = aes(
-      x = factor,
-      y = value,
-      group = `Patient Wait Metric`,
-      linetype = `Patient Wait Metric`,
-      color = `Patient Wait Metric`
+      x = !!sym(x_ax),
+      y = !!sym(y_ax),
+      grouping = !!sym(grouping_var),
+      color = !!sym(grouping_var),
     )) + 
     geom_point(alpha = 0.1) + 
-    geom_smooth() +
+    geom_smooth(se = FALSE, aes(linetype = !!sym(grouping_var))) +
     scale_x_continuous(labels = scales::percent_format()) +
     scale_y_continuous(labels = scales::percent_format()) +
+    scale_color_brewer(palette = "Dark2") +
     xlab(paste('Percentage of Baseline',sa_metric)) +
-    ylab('% of Baseline Simulation\'s\n Patient Wait Metric') +
-    labs(color = 'Patient Wait Metric',linetype = 'Patient Wait Metric')
+    ylab('% of Baseline Simulation\'s\n Patient Delay Metric') +
+    labs(color = 'Patient Delay Metric',linetype = 'Patient Delay Metric') + 
+    theme_linedraw() +
+    theme(legend.position = "bottom") 
+    # facet_wrap(~ variable, nrow = 2)
 }

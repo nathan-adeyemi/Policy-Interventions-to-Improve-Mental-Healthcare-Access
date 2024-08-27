@@ -4,6 +4,7 @@ import os
 import subprocess
 import string
 import random
+import re
 
 from pathlib import Path
 from ray import tune
@@ -124,26 +125,59 @@ def generate_random_string(n_char: int = 10):
     random_string = ''.join(random.choices(char_set, k=n_char))
     return random_string
 
-def wait_for_cluster(client, expected_workers, timeout=600, check_interval=10):
+def wait_for_cluster(client, expected_workers, 
+                     timeout=600, 
+                     check_interval=10):
     start_time = time.time()
-    while True:
-        # Get the number of currently connected workers
-        n_workers = len(client.scheduler_info()["workers"])
+    try:
+        while True:
+            # Get the number of currently connected workers
+            n_workers = len(client.scheduler_info()["workers"])
 
-        if n_workers >= expected_workers:
-            print(f"Cluster is ready with {n_workers} workers.")
-            break
+            if n_workers >= expected_workers:
+                print(f"Cluster is ready with {n_workers} workers.")
+                break
 
-        # Check for timeout
-        elapsed_time = time.time() - start_time
-        if elapsed_time > timeout:
-            if n_workers > 0:
-                print(f"Timeout waiting for Dask cluster to be ready.\n Running experiment with {n_workers} workers")
-            else:
-                raise TimeoutError("Timeout waiting for Dask cluster to be ready. No workers available")
+            # Check for timeout
+            elapsed_time = time.time() - start_time
+            if elapsed_time > timeout:
+                if n_workers > 0:
+                    print(f"Timeout waiting for Dask cluster to be ready.\n Running experiment with {n_workers} workers")
+                else:
+                    raise TimeoutError("Timeout waiting for Dask cluster to be ready. No workers available")
+            time.sleep(check_interval)
+        
+        if (time.time() % (check_interval * 5) == 0):
+            print(
+                f"Waiting for cluster to be ready... Currently {n_workers} workers connected."
+            )
+    except TimeoutError as e:
+        print(e)
+            # Wait before checking again
 
-        # Wait before checking again
-        time.sleep(check_interval)
-        print(
-            f"Waiting for cluster to be ready... Currently {n_workers} workers connected."
-        )
+def dict_to_filename(config):
+        # Create key-value pairs and replace periods with underscores
+        items = [f"{key}-{str(value).replace('.', '_')}" for key, value in config.items()]
+        # Join the items with an underscore
+        filename = '_'.join(items)
+        # Sanitize the filename (this step ensures that the filename is valid)
+        sanitized_filename = re.sub(r'[^a-zA-Z0-9_-]', '_', filename)
+        return sanitized_filename
+
+def dict_to_path(config):
+    # Extract the first two keys for the folder structure
+    folder_keys = [key for key in list(config.keys())]
+    # Create the folder path
+    folder_path = []
+    for key in folder_keys:
+        value = config[key]
+        folder_path.append(f"{key}-{str(value).replace('.', '_')}")
+    
+    # Join folder path components with OS-specific separator
+    folder_path = os.path.join(*folder_path)
+
+    # Sanitize the full path (optional, can be skipped if not needed)
+    sanitized_path = re.sub(r'[^a-zA-Z0-9_/.-]', '_', folder_path)
+    
+    return sanitized_path
+    

@@ -13,41 +13,6 @@ sim_val_subfunction <-
            include_outliers = T,
            confidence_level = 0.95,
            results_by_rep = FALSE) {
-    boot_fn <- function(dataframe, split_list) {
-      if((length(split_list) == 1 & use_type == F & metric == 'count')){
-        dataframe <- dataframe[,lapply(.SD,base::sum), by = c(split_list,'day_num')]
-      }
-      dataframe <-  dataframe[, .(sim_val =
-                                    sapply(
-                                      .SD,
-                                      FUN = function(data) {
-                                        tryCatch(
-                                          expr = {
-
-                                            if(length(data) < 10){
-                                              data <- rep(data,10)
-                                            } else if(!include_outliers){  
-                                              data <- remove_outliers(data)
-                                            }
-                                           
-                                            ret <- one.boot(data,
-                                                            FUN = val_function,
-                                                            R = 500)$t0
-                                          },
-                                          error = function(e) {
-                                           if (grepl('no data in call', e)) {
-                                              ret <- NA_real_
-                                            } 
-                                            return(ret)
-                                          }
-                                          
-                                        )
-                                        return(ret)
-                                      }
-                                    )),
-                              .SDcols = metric, by = split_list]
-      return(dataframe)
-    }
     
     ci_and_val_fn <- function(df, conf_level = 0.95,split_list) {
       conf_level_name <- paste(conf_level * 100, 'CI', sep = '_')
@@ -83,41 +48,39 @@ sim_val_subfunction <-
             any(grepl('FALSE', unique(val_env_df$val_group))))){
       val_env_df <- val_env_df[,val_group := as.logical(val_group)]
     }
-    if (use_type) {
-      ret <-
+
+    boot_by_split <-
         rbindlist(lapply(
-          X = list(
-            c('Vulnerable Patient', 'replication', 'type'),
-            c('replication', 'type'),
-            c('Vulnerable Patient', 'replication')
-          ),
+          X = Filter(Negate(is.null),list(
+                c('Vulnerable Patient', 'replication'),
+                c('replication', `if`(use_type, 'type',NULL)),
+                `if`(use_type,c('Vulnerable Patient', 'replication', 'type'),NULL)
+            )),
           FUN = boot_fn,
-          dataframe = df
+          dataframe = df,
+          stat = val_function,
+          column = metric,
+          use_type = use_type
         ),
-        fill = TRUE)[val_env_df, target := Target, on = c(`Vulnerable Patient` = 'val_group', type = 'type')]
-      
+        fill = TRUE)
+    if (use_type) {
+      boot_by_split <- boot_by_split[val_env_df, target := Target, on = c(`Vulnerable Patient` = 'val_group', type = 'type')]
     } else {
-      ret <- rbindlist(lapply(
-        X = list(c('replication'),
-                 c('Vulnerable Patient', 'replication')),
-        FUN = boot_fn,
-        dataframe = df
-      ),
-      fill = TRUE)[val_env_df, target := Target, on = c(`Vulnerable Patient` = 'val_group')]
+      boot_by_split <- boot_by_split[val_env_df, target := Target, on = c(`Vulnerable Patient` = 'val_group')]
     }
 
     if(!results_by_rep){
       if (length(confidence_level) == 1) {
-        ret <- ci_and_val_fn(ret, split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
+        boot_by_split <- ci_and_val_fn(boot_by_split, split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
       } else{
-        ret <- data.table(do.call(
+        boot_by_split <- data.table(do.call(
           cbind,
           lapply(X = confidence_level,
                  FUN = ci_and_val_fn,
-                 df = ret,
+                 df = boot_by_split,
                  split_list = `if`(use_type,c('`Vulnerable Patient`','type'),c('`Vulnerable Patient`')))
         ))
-        unique_cols = unique(names(ret))
+        unique_cols = unique(names(boot_by_split))
         unique_cols <-
           c(setdiff(unique_cols, sort(unlist(
             lapply((confidence_level * 100),
@@ -132,8 +95,8 @@ sim_val_subfunction <-
                    value = T
             )
           )))
-        ret <- unique(ret[, ..unique_cols])
+        boot_by_split <- unique(boot_by_split[, ..unique_cols])
       }
     }
-    return(ret)
+    return(boot_by_split)
   }

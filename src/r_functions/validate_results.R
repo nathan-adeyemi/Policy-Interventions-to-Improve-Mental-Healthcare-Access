@@ -40,7 +40,7 @@ validate_results <- function(patients_df,
       )
     }
     
-    ret <- lapply(
+    returned_df <- lapply(
       X = conf_level,
       FUN = function(conf) {
         eval(parse(
@@ -83,11 +83,11 @@ validate_results <- function(patients_df,
       }
     )
     if (length(conf_level) == 1) {
-      ret <- ret[[1]]
+      returned_df <- returned_df[[1]]
     } else {
-      ret <- do.call(cbind, ret)
+      returned_df <- do.call(cbind, returned_df)
     }
-    unique_cols = unique(names(ret))
+    unique_cols = unique(names(returned_df))
     unique_cols <-
       c(setdiff(unique_cols, sort(unlist(
         lapply((conf_level * 100),
@@ -100,8 +100,8 @@ validate_results <- function(patients_df,
                x = unique_cols,
                value = T)
       )))
-    ret <- unique(ret[, ..unique_cols])
-    return(ret)
+    returned_df <- unique(returned_df[, ..unique_cols])
+    return(returned_df)
   }
   
   conf_level_name = paste0(100 * conf, '_CI')

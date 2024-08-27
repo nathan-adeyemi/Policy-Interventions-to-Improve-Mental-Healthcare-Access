@@ -1,4 +1,4 @@
-rm(list = ls())
+# rm(list = ls())
 setwd('/home/adeyemi.n/MH_Simulation/Policy_Interventions_to_Improve_Mental_Healthcare_Access')
 source(file.path(Sys.getenv(
    if (.Platform$OS.type == "windows") "USERPROFILE" else "HOME"
@@ -8,34 +8,34 @@ options(scipen = 999,
         digits = 6)
 
 # Utilities ----------------------------
-if(!interactive()){
-  suppressMessages(library(tidyverse))
-}
-suppressMessages(library(jsonlite))
-suppressMessages(library(data.table))
-suppressMessages(library(openxlsx))
-suppressMessages(library(writexl))
-suppressMessages(library(tictoc))
-suppressMessages(library(gtools))
-suppressMessages(library(lubridate))
-suppressMessages(library(stringdist))
-# suppressMessages(library(tidytext))
-suppressMessages(library(MLmetrics))
+suppressPackageStartupMessages({
+  # library(tidyverse)
+  library(ggplot2)
+  library(jsonlite)
+  library(data.table)
+  # library(openxlsx)
+  library(writexl)
+  library(tictoc)
+  library(gtools)
+  library(lubridate)
+  library(stringdist)
+  # library(tidytext)
+  # library(MLmetrics)
 
-# Packages for Statistics/Bootstrapping/etc. ------------------------------
-suppressMessages(library(fitdistrplus))
-suppressMessages(library(boot))
-suppressMessages(library(simpleboot))
-suppressMessages(library(EnvStats))
+  # Packages for Statistics/Bootstrapping/etc. ------------------------------
+  library(fitdistrplus)
+  library(boot)
+  library(simpleboot)
+  library(EnvStats)
 
-# Packages for Discrete Event Simulation ----------------------------------
-suppressMessages(library(simmer))
-suppressMessages(library(simtimer))
+  # Packages for Discrete Event Simulation ----------------------------------
+  library(simmer)
+  library(simtimer)
 
-# Packages for Parallel Processing ----------------------------------------
-suppressMessages(library(doParallel))
-suppressMessages(library(parallelly))
-library(jsonlite)
+  # Packages for Parallel Processing ----------------------------------------
+  library(doParallel)
+  library(parallelly)
+})
 
 
 invisible(lapply(X = file.path('src','r_functions',list.files(path = file.path('src','r_functions'))), FUN = source))

@@ -22,7 +22,8 @@ for (file in file_list) {
   )
   
   file_path <-
-    file.path(file, 'trainable-Incumbent/validation_frames.xlsx')
+    # file.path(file, 'trainable-Incumbent/validation_frames.xlsx')
+    "Results/validation/ed_factor_ED_Admissions/auto_accept/validation_results.xlsx"
   
   # Get the sheet names
   sheet_names <- excel_sheets(file_path)
@@ -86,3 +87,20 @@ final_dt[[10]] <- piv
 names(final_dt)[10] <- 'Admissions Errors by Facility Size'
 
 writexl::write_xlsx(x = final_dt, path = "Results/validation/combined_incumbents.xlsx")
+
+
+
+
+# Code for converting the raw HCCIS admissions errors into a readble table by segmentiang facilities by their number of admissions
+# dt[,`facility size` :=
+#       cut(
+#         admissions,
+#         breaks = c(0, 100, 500, 1500, Inf),
+#         labels = c(
+#           'Small (0-100)',
+#           'Medium (100-500)',
+#           'Large (500-1500)',
+#           'X-Large (1500+)'
+#         ),
+#         right = T
+#       )][,.(Count = .N, `Avg. Error` =mean(error)), by = list(grouping,`facility size`)][grouping == 'total_admissions'][]

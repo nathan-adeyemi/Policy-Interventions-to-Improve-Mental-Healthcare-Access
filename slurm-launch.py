@@ -166,7 +166,7 @@ if __name__ == "__main__":
             script_file, "{}.log".format(job_name)
         )
     )
-    time.sleep(3)
+    time.sleep(1)
     subprocess.Popen(['rm','-f',script_file])
     sys.exit(0)
     

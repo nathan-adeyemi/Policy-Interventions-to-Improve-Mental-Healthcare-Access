@@ -112,12 +112,13 @@ def parse_quantized_grid_space(
     *args,
     **kwargs,
 ):
-    space = np.arange(
+    space = np.around(np.arange(
         float(min),
         float(max)
         + float(interval),  # Ensures the maximum value is included in the grid search
         float(interval),
-    )
+    ),
+                      decimals=2)
     if sample:
         space = tune.sample_from(lambda _: space)
     elif ray_space:
@@ -186,7 +187,7 @@ def parse_cli_args(args, scratch_path: str, seed: int = 42):
     job_cfg = {
         "job-type": cfg.get("job-type"),
         "trainables_path": scratch_path,
-        "simulator": lambda params, seed: trainable(
+        "simulator": lambda params,seed, trainable_path = None: trainable(
             params=params,
             fn_cfg_sel=args.sim_params,
             fn_cfg_path=Path(cfg.get("fn-cfg-path")).resolve(),
@@ -196,6 +197,7 @@ def parse_cli_args(args, scratch_path: str, seed: int = 42):
             scratch_path=Path(scratch_path).resolve(),
             ray=False,
             seed=seed,
+            trainable_path=trainable_path
         ),
         "cfg": configs.get(args.tune_job),
         "num-workers": 1
