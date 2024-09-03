@@ -2,6 +2,7 @@ import os
 import numpy as np
 import pandas as pd
 import re
+import multiprocessing as mp
 
 from trainables import trainable
 from ray import tune
@@ -163,8 +164,11 @@ def parse_cluster_args(args, scratch_path: str = None) -> dict:
     elif args.backend == "single":
         cluster_cfg = None
 
-    else:
-        raise
+    elif args.backend == 'multiprocessing':
+        client = mp.Pool(
+            processes = 40
+        )
+        
 
     return cluster_cfg
 

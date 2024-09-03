@@ -9,11 +9,14 @@ plot_intervention_combs <-
         (unique_combinations[comb, `Vulnerable Patient`])
       type_value <- unique_combinations[comb, type]
       metric_name <- unique_combinations[comb, variable]
-      
+      # browser()
       plot <- intBoxPLotFn(inputData = interventions_df[(`Vulnerable Patient` == vulnerable_patient) &
                                                           (type == type_value)][variable == metric_name],
                            y_ax = metric_name,
-                           grouping_var = 'concurrent_requests')
+                           grouping_var = 'concurrent_requests',
+                           plot_title = paste(vulnerable_patient,
+                                                    `if`(grepl('Transfer', type_value, ignore.case = T), "Transferred Admissions", "Internal Admissions")))
+                                               
       
       # Create a unique filename for each plot
       filename <-
@@ -40,7 +43,7 @@ plot_intervention_combs <-
     }
   }
 
-intBoxPLotFn <- function(inputData, y_ax, grouping_var) {
+intBoxPLotFn <- function(inputData, y_ax, grouping_var, plot_title = NA_character_) {
   ggplot(
     data = inputData,
     mapping = aes_string(
@@ -54,5 +57,6 @@ intBoxPLotFn <- function(inputData, y_ax, grouping_var) {
     xlab("Number of Transfer Requests Sent Concurrently") +
     ylab(y_ax) +
     theme_linedraw() +
-    theme(legend.position = "none")
+    theme(legend.position = "none") + 
+    ggtitle(plot_title)
 }

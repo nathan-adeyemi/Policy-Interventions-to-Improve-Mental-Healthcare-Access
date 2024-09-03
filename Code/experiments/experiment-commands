@@ -1,0 +1,19 @@
+
+    #----------------------------------------------------------------------#
+    #                   COMMANDS FOR GRID SEARCH JOBS                      #
+    #----------------------------------------------------------------------#
+
+# Command for executing the simulation intervention analysis
+python slurm-launch.py --num-workers 4 --partition short --time 18:00:00 --exp-name interventions --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job interventions --sim-params full\
+    --cluster-cfg grid-full"
+
+# Command for executing the ED arrival rate sensitivity analysis (40 scenarios, 20 workers, 12 cpus-per-worker)
+python slurm-launch.py --num-workers 4 --partition short --time 18:00:00 --exp-name ed-SA --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job lambda-sensitivity-analysis --sim-params full\
+    --cluster-cfg grid-full"
+
+# Command for executing the inpatient unit length of stay sensitivity analysis(40 scenarios, 20 workers, 12 cpus-per-worker)
+python slurm-launch.py --num-workers 4 --partition short --time 18:00:00 --exp-name los-SA --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job los-sensitivity-analysis --sim-params full\
+     --cluster-cfg grid-full"
