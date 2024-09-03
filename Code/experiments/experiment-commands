@@ -17,3 +17,34 @@ python slurm-launch.py --num-workers 4 --partition short --time 18:00:00 --exp-n
 python slurm-launch.py --num-workers 4 --partition short --time 18:00:00 --exp-name los-SA --backend dask\
     --command "python3.11 Code/experiments/__main__.py --tune-job los-sensitivity-analysis --sim-params full\
      --cluster-cfg grid-full"
+
+    #----------------------------------------------------------------------#
+    #              COMMANDS FOR PARAMETER TUNING JOBS                      #
+    #----------------------------------------------------------------------#
+
+# # Command for tuning the emergency department patient arrival rates
+python slurm-launch.py --num-cpus 192 --partition long --time 2-00:00:00 --exp-name ed-tune-sep --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job ed-arr-sep --sim-params tune\
+    --cluster-cfg=optim-full"
+
+# Command for tuning the inpatient unit acceptance probabilities
+python slurm-launch.py --num-workers 4 --partition long --time 2-00:00:00 --exp-name tune-probs --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job acceptance-probs --sim-params tune\
+    --cluster-cfg optim-full"
+
+# Command for tuning the inpatient unit acceptance probabilities (min-max normalized HCCIS admissions before RMSE calc)
+python slurm-launch.py --num-workers 4 --partition long --time 2-00:00:00 --exp-name tune-probs-norm --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job acceptance-probs-norm --sim-params tune\
+    --cluster-cfg optim-full"
+
+# Command for executing the simulation intervention analysis (min-max normalized coordination times)
+python slurm-launch.py --num-worker 4 --partition long --time 2-00:00:00 --exp-name tune-coord --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job acceptance-probs-Coord --sim-params tune\
+    --cluster-cfg optim-full"
+
+# Command for executing the simulation intervention analysis (min-max normalize all validation metrics and take RMSE)
+python slurm-launch.py --num-workers 4 --partition long --time 2-00:00:00 --exp-name tune-all-valid --backend dask\
+    --command "python3.11 Code/experiments/__main__.py --tune-job acceptance-probs-all-metrics --sim-params tune\
+    --cluster-cfg optim-full"
+
+
