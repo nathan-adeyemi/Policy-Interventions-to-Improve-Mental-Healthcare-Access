@@ -17,3 +17,6 @@ last.dump.rda
 logs/
 src/__pycache__/
 tests/
+deprecated/
+reprod/
+Manuscript/
