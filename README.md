@@ -3,15 +3,46 @@
 This repo holds code for the paper [*Policy Intervention to Improve Mental Health Access: A Discrete Event Simulation Study*](https://arxiv.org/abs/2304.13849). This project comprises of a discrete event simulation model detailing when and where patients presenting to the Emergency Department receive psychaitric inpatient care. Additionally, we include methods for determining simulation input parameters given limited data availability for individual hospitals/healthcare providers, sensitivity analysis around these input parameters, and systemic modifications to reduce time spent in the healthcare system where patients do not receive psychiatric care.
 
 # Structure
-The `src/` directory all source codes. The directory contrains the following modules:
-- `simulations/`: The DES itself along with any relevant input parameters (contained in the `function_requirements` subdirectory)
-- `r_functions/`: Helper functions written in R for various input parameter modelling and validation metric calculation tasks.
-- `parsers.py`: Python functions for helping to parse command line arguments
-- `trainables.py`: Python utilities for initiating simulation replications and receiving processed simulation outputs
-- `tuners.py`: Python utilities for initiating grid search type experiments (intervention and sensitivity analysis)
-- `sim_setup.R`: R script to run simulation and transmit results to main python program.
-- `sim_trigger.sh`: Shell script that triggers the `sim_setup.R execution in a python subprocess.
-- `utils.py`: Additional Python utilities
+
+```bash
+Policy_Interventions_to_Improve_Mental_Healthcare_Access
+├── Code
+│   ├── data_analysis
+│   ├── deprecated
+│   ├── experiments
+│   |   ├── __main__.py
+│   |   ├── configs             # Eperiment configs
+│   |   ├── experiment-commands # Shell script for running any experiments with parameters 
+│   |   └── validation
+├── Data
+│   ├── HCCIS
+│   └── Mayo Clinic Data
+├── Manuscript
+│   ├── Sections
+│   ├── deprecated
+│   └── images
+├── Results
+│   ├── baseline-model          # Model baseline raw results
+│   ├── debug
+│   ├── deprecated
+│   ├── interventions           # Raw results for intervention experiments
+│   ├── lambda-sensitivity-analysis # Arrival rate Sensitivity analysis raw results
+│   ├── los-sensitivity-analysis # Lenght-of-Stay Sensitivity analysis raw results
+│   ├── most_recent_run
+│   ├── sensitivity_analysis
+│   └── validation
+└── src                          # All source codes
+    ├── simulations             # The DES itself + input parameters (in `function_requirements`)
+    ├── r_functions             # R helper functions for param modeling + validation metrics
+    ├── parsers.py              # Python arg parser utilities
+    ├── trainables.py           # Simulation replication and output processing utilities
+    ├── tuners.py               # Grid search / experiment orchestration
+    ├── sim_setup.R             # R script for simulation execution
+    ├── sim_trigger.sh          # Shell script to run sim_setup.R from Python
+    ├── utils.py                # Additional Python utilities
+    ├── move_results.sh
+    └── __init__.py
+```
 
 <!-- # Usage
 All intervention analysis, sensitivity analysis, and model tuning experiments should be initiated with the `Code/experiments/__main__.py`. The file has the following arguments to configure the job being run:
@@ -29,7 +60,7 @@ All intervention analysis, sensitivity analysis, and model tuning experiments sh
 - **`tune-job=`**: Specifies the name of the experiment being run. Experiments are identified by their respective key in the `Code/experiments/configs/experiments.yaml` file. For example, to run the interventions analysis, you would use `--tune-job=interventions`.
 - **`sim-params=`**: Determines which simulation configuration to use. Currently, there are three options available for development/debugging, testing, and full simulation replications.
 - **`checkpoint-path=`**: The path created by SMAC during model tuning. Use this argument to resume a tuning job.
-- **`cluster-cfg=`**: Specifies the cluster configuration to use, based on the keys in the `Code/experiments/configs/cluster.yaml` file.
+- **`cluster-cfg`**: Specifies the cluster configuration to use, based on the keys in the `Code/experiments/configs/cluster.yaml` file.
 - **`backend=`**: Defines the method for running multiple simulation replications. The default is single replication execution, but parallelism is supported through the Python multiprocessing library and Dask distributed.
 - **`num-workers=`**: *Only used when `backend=Dask`*. Indicates the number of Dask workers to use.
 
